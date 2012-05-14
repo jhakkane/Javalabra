@@ -1,3 +1,3 @@
 Javalabra
 =========
-Hyvin toimii
+Hyvin toimii ja erinomaisesti toimiikin
