@@ -15,7 +15,7 @@ public class Kysymys {
     private int[] luvut;
     private String kysymysString;
     private Op[] operaattorit;
-    
+    private int oikeaVastaus;
 
     
     //talletetaan käyttäjän antama vastaus kysymyksen yhteyteen

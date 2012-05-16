@@ -73,13 +73,13 @@ public class OmaSovelluslogiikka implements Sovelluslogiikka {
             Random r = new Random();
             int opnro = r.nextInt(4);
             
-            if (opnro == 1) {
+            if (opnro == 0) {
                 operaattorit[i]=Op.PLUS;
-            } else if(opnro == 2) {
+            } else if(opnro == 1) {
                 operaattorit[i]=Op.MIN;                
-            } else if(opnro == 3) {
+            } else if(opnro == 2) {
                 operaattorit[i]=Op.DIV;                
-            } else if(opnro == 4) {
+            } else if(opnro == 3) {
                 operaattorit[i]=Op.MUL;                
             }
             
