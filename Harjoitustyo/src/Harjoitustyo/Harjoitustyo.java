@@ -4,6 +4,11 @@
  */
 package Harjoitustyo;
 
+import Harjoitustyo.kayttoliittyma.Kayttoliittyma;
+import Harjoitustyo.sovelluslogiikka.OmaSovelluslogiikka;
+import Harjoitustyo.sovelluslogiikka.Sovelluslogiikka;
+import javax.swing.SwingUtilities;
+
 /**
  *
  * @author jhakkane
@@ -16,11 +21,9 @@ public class Harjoitustyo {
     public static void main(String[] args) {
         // TODO code application logic here
         
-        System.out.println("ABC");
-        System.out.println("Lisätty 14.5. illalla!");
-        
-        testiMetodi(123);
-        
+        OmaSovelluslogiikka sovelluslogiikka = new OmaSovelluslogiikka();
+        Kayttoliittyma kayttoliittyma = new Kayttoliittyma(sovelluslogiikka);
+        SwingUtilities.invokeLater(kayttoliittyma);
     }
     
     
