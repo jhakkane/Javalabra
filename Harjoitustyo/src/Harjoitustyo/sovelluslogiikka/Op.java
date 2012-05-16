@@ -8,6 +8,6 @@ package Harjoitustyo.sovelluslogiikka;
  *
  * @author jhakkane
  */
-public interface Sovelluslogiikka {
-    String etene(String vastaus);
+public enum Op {
+    PLUS, MIN, DIV, MUL
 }

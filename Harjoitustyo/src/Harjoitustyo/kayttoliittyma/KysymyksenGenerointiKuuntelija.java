@@ -31,7 +31,8 @@ public class KysymyksenGenerointiKuuntelija implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent ae) {
-        String kysymysString = logiikka.generoi();
+        
+        String kysymysString = logiikka.etene(kentta.getText());
         kysymys.setText(kysymysString);
     }
     

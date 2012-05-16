@@ -4,19 +4,44 @@
  */
 package Harjoitustyo.sovelluslogiikka;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author jhakkane
  */
 public class Kysymys {
     
-    private int[] operandit;
+    private int[] luvut;
+    private String kysymysString;
+    private Op[] operaattorit;
     
+
     
+    //talletetaan käyttäjän antama vastaus kysymyksen yhteyteen
+    private int vastaus;
     
-    public int[] getOperandit() {
-        return operandit;
+    Kysymys(int[] luvut, Op[] operaattorit, String kysymysString) {
+        this.luvut = luvut;
+        this.operaattorit=operaattorit;
+        this.kysymysString=kysymysString;
     }
+
+    public String getKysymysString() {
+        return kysymysString;
+    }
+
+    public Op[] getOperaattorit() {
+        return operaattorit;
+    }
+
+
+    public int[] getOperandit() {
+        return luvut;
+    }
+
+
+    
     
     
 }
