@@ -19,7 +19,19 @@ public class Harjoitustyo {
         System.out.println("ABC");
         System.out.println("Lisätty 14.5. illalla!");
         
-        
+        testiMetodi(123);
         
     }
+    
+    
+    /**
+     * Tämä on vain testimetodi javadocin toiminnan selvittämistä varten.
+     * 
+     * @param x 
+     */
+    
+    public static void testiMetodi(int x) {
+        System.out.println("Testi: " + x);
+    }
+    
 }
