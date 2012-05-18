@@ -9,7 +9,7 @@ package Harjoitustyo.sovelluslogiikka;
  * @author jhakkane
  */
 public enum Op {
-    PLUS("+"), MIN("-"), DIV("/"), MUL("*");
+    PLUS("+"), MIN("-"), DIV("/"), MUL("*"), NULL("N");
     
     private String txt;
     

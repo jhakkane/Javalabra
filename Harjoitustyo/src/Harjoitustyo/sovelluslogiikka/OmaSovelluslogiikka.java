@@ -17,13 +17,20 @@ public class OmaSovelluslogiikka implements Sovelluslogiikka {
     //Vaihe 2 = Käyttäjälle näkyy vastaus
     private int vaihe = 2;
     private Kysymys kysymys;
+    private Asetukset asetukset;
+    
+    public OmaSovelluslogiikka() {
+        this.asetukset=new Asetukset();
+        asetukset.setOpLkm(3);
+        asetukset.setSulkuja(false);
+    }
     
     @Override
     public String etene(String vastaus) {
         //vaihe vaihdetaan tarkista- ja generoi-metodeissa!
         
         if (vaihe == 2) {
-            return generoi(2);
+            return generoi();
         } else {
             String output = tarkista(vastaus);
             return output;
@@ -32,20 +39,12 @@ public class OmaSovelluslogiikka implements Sovelluslogiikka {
     }
     
     private String tarkista(String vastaus) {
-        int oikeaVastaus=0;
-        int[] luvut = kysymys.getOperandit();
-        Op[] operaattorit = kysymys.getOperaattorit();
-        
-        for (int i = 0; i < operaattorit.length; i++) {
-            
-            oikeaVastaus=oikeaVastaus+luvut[i];
-            
-        }
+        int oikeaVastaus=(int)kysymys.ratkaise();
         
         if (vastaus.isEmpty()) {
             //huom. vaihe ei muutu, käyttäjä yrittää uudelleen
-            return "Et antanut vastausta! Tässä kysymys uudelleen: "
-                    +kysymys.getKysymysString();
+            return "Et antanut vastausta! Tässä kysymys uudelleen: \n\n "
+                    +kysymys;
         }
         
         vaihe = 2;
@@ -57,66 +56,11 @@ public class OmaSovelluslogiikka implements Sovelluslogiikka {
     }
     
     
-    private String generoi(int opLkm) {        
-
-        int luvut[] = new int[opLkm];
-        Op operaattorit[] = new Op[opLkm];
+    private String generoi() {        
         
-        //luodaan luvut
-        for (int i = 0; i < opLkm; i++) {         
-            luvut[i]=((int)(Math.random()*20));
-            
-        }
+        kysymys = new Kysymys(asetukset);
         
-        //luodaan operaattorit
-        for (int i = 0; i < opLkm-1; i++) {
-            Random r = new Random();
-            int opnro = r.nextInt(4);
-            
-            if (opnro == 0) {
-                operaattorit[i]=Op.PLUS;
-            } else if(opnro == 1) {
-                operaattorit[i]=Op.MIN;                
-            } else if(opnro == 2) {
-                operaattorit[i]=Op.DIV;                
-            } else if(opnro == 3) {
-                operaattorit[i]=Op.MUL;                
-            }
-            
-            
-            
-        }
-        
-
-        
-        //luo käyttäjälle näkyvä kysymys
-        String kysymysString="Miten paljon on ";
-        for (int i = 0; i < luvut.length; i++) {
-            
-            if (i == luvut.length-1) {
-                kysymysString=kysymysString+luvut[i]+"?";
-            } else {
-                kysymysString=kysymysString+luvut[i];
-                
-                if (i < operaattorit.length) {
-                    if (operaattorit[i]==Op.PLUS) {
-                        kysymysString=kysymysString+"+";
-                    } else if(operaattorit[i]==Op.MIN) {
-                       kysymysString=kysymysString+"-";        
-                    } else if(operaattorit[i]==Op.DIV) {
-                       kysymysString=kysymysString+"/";              
-                    } else if(operaattorit[i]==Op.MUL) {
-                       kysymysString=kysymysString+"*";              
-                    }
-                }
-                
-                
-            }
-            
-            
-        }
-
-        kysymys = new Kysymys(luvut,operaattorit, kysymysString);
+        String kysymysString=kysymys.toString();
         
         vaihe = 1;
         return kysymysString;

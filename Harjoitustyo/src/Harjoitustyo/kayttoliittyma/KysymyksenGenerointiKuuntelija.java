@@ -17,10 +17,10 @@ import javax.swing.*;
 public class KysymyksenGenerointiKuuntelija implements ActionListener {
     
     private Sovelluslogiikka logiikka;
-    private JLabel kysymys;
+    private JTextArea kysymys;
     private JTextField kentta;
     
-    public KysymyksenGenerointiKuuntelija(Sovelluslogiikka logiikka, JLabel kysymys,
+    public KysymyksenGenerointiKuuntelija(Sovelluslogiikka logiikka, JTextArea kysymys,
             JTextField kentta) {
         this.logiikka=logiikka;
         this.kysymys=kysymys;
@@ -33,6 +33,7 @@ public class KysymyksenGenerointiKuuntelija implements ActionListener {
     public void actionPerformed(ActionEvent ae) {
         
         String kysymysString = logiikka.etene(kentta.getText());
+        kentta.setText("");
         kysymys.setText(kysymysString);
     }
     
