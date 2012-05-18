@@ -1,3 +1,3 @@
-Javalabra
+﻿Javalabra
 =========
-Hyvin toimii ja erinomaisesti toimiikin, näin on!
+Ohjelmoinnin harjoitustyo
