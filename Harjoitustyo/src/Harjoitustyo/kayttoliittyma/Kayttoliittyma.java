@@ -41,8 +41,24 @@ public class Kayttoliittyma implements Runnable {
         JMenu menu = new JMenu("File");
         menuBar.add(menu);        
         JMenuItem options = new JMenuItem("Asetukset");
+        OptionsKuuntelija opKuuntelija = new OptionsKuuntelija(frame, logiikka.getAsetukset());
+        options.addActionListener(opKuuntelija);
+
+        JMenuItem tallenna = new JMenuItem("Tallenna");
+        TallennaKuuntelija taKuuntelija = new TallennaKuuntelija(frame, logiikka.getAsetukset());
+        tallenna.addActionListener(taKuuntelija);
+        
+        JMenuItem lataa = new JMenuItem("Lataa");
+        LopetaKuuntelija laKuuntelija = new LopetaKuuntelija();
+        lataa.addActionListener(laKuuntelija);
+        
         JMenuItem lopeta = new JMenuItem("Sulje");
+        LopetaKuuntelija loKuuntelija = new LopetaKuuntelija();
+        lopeta.addActionListener(loKuuntelija);
+        
         menu.add(options);
+        menu.add(tallenna);
+        menu.add(lataa);
         menu.add(lopeta);
         
         menuBar.setVisible(true);

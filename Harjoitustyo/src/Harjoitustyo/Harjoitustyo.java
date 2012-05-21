@@ -24,6 +24,7 @@ public class Harjoitustyo {
         OmaSovelluslogiikka sovelluslogiikka = new OmaSovelluslogiikka();
         Kayttoliittyma kayttoliittyma = new Kayttoliittyma(sovelluslogiikka);
         SwingUtilities.invokeLater(kayttoliittyma);
+
     }
     
     

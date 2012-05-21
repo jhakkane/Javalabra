@@ -10,4 +10,5 @@ package Harjoitustyo.sovelluslogiikka;
  */
 public interface Sovelluslogiikka {
     String etene(String vastaus);
+    Asetukset getAsetukset();
 }

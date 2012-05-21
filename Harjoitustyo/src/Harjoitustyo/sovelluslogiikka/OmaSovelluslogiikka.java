@@ -54,6 +54,10 @@ public class OmaSovelluslogiikka implements Sovelluslogiikka {
             return "Väärin! Oikea vastaus on "+oikeaVastaus;
         }
     }
+
+    public Asetukset getAsetukset() {
+        return asetukset;
+    }
     
     
     private String generoi() {        
