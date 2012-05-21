@@ -5,6 +5,7 @@
 package Harjoitustyo;
 
 import Harjoitustyo.kayttoliittyma.Kayttoliittyma;
+import Harjoitustyo.kayttoliittyma.KayttoliittymaLoader;
 import Harjoitustyo.sovelluslogiikka.OmaSovelluslogiikka;
 import Harjoitustyo.sovelluslogiikka.Sovelluslogiikka;
 import javax.swing.SwingUtilities;
@@ -21,9 +22,8 @@ public class Harjoitustyo {
     public static void main(String[] args) {
         // TODO code application logic here
         
-        OmaSovelluslogiikka sovelluslogiikka = new OmaSovelluslogiikka();
-        Kayttoliittyma kayttoliittyma = new Kayttoliittyma(sovelluslogiikka);
-        SwingUtilities.invokeLater(kayttoliittyma);
+        KayttoliittymaLoader kl = new KayttoliittymaLoader();
+        SwingUtilities.invokeLater(kl);
 
     }
     

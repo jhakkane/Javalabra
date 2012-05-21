@@ -13,27 +13,25 @@ import javax.swing.WindowConstants;
  *
  * @author jhakkane
  */
-public class Kayttoliittyma implements Runnable {
+public class Kayttoliittyma {
     private JFrame frame;
     private Sovelluslogiikka logiikka;
     
     public Kayttoliittyma(Sovelluslogiikka logiikka) {
         this.logiikka = logiikka;
-    }
-    
-    @Override
-    public void run() {
+        
         frame = new JFrame("Aritmetiikkaharjoituksia");
         frame.setJMenuBar(menubar());
         
         frame.setPreferredSize(new Dimension(400,600));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-    
+     
         luoKomponentit(frame.getContentPane());
         
-        frame.pack();
+        frame.pack(); 
         frame.setVisible(true);
     }
+    
     
     public JMenuBar menubar() {
         //menubar
@@ -49,14 +47,14 @@ public class Kayttoliittyma implements Runnable {
         tallenna.addActionListener(taKuuntelija);
         
         JMenuItem lataa = new JMenuItem("Lataa");
-        LopetaKuuntelija laKuuntelija = new LopetaKuuntelija();
+        LataaKuuntelija laKuuntelija = new LataaKuuntelija(frame, logiikka.getAsetukset());
         lataa.addActionListener(laKuuntelija);
         
         JMenuItem lopeta = new JMenuItem("Sulje");
         LopetaKuuntelija loKuuntelija = new LopetaKuuntelija();
         lopeta.addActionListener(loKuuntelija);
         
-        menu.add(options);
+        menu.add(options); 
         menu.add(tallenna);
         menu.add(lataa);
         menu.add(lopeta);

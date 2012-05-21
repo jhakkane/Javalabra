@@ -21,7 +21,7 @@ public class OmaSovelluslogiikka implements Sovelluslogiikka {
     
     public OmaSovelluslogiikka() {
         this.asetukset=new Asetukset();
-        asetukset.setOpLkm(3);
+        asetukset.setOpLkm(2);
         asetukset.setSulkuja(false);
     }
     
@@ -55,10 +55,14 @@ public class OmaSovelluslogiikka implements Sovelluslogiikka {
         }
     }
 
+    @Override
     public Asetukset getAsetukset() {
         return asetukset;
     }
     
+    public String testiString() {
+        return "Terve";
+    }
     
     private String generoi() {        
         
