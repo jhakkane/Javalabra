@@ -87,9 +87,9 @@ public class Kysymys {
             Kysymys osaToimitus = new Kysymys(operandit[0]);
             this.operandit[i]=osaToimitus;
         }
+        
         this.operaattorit=operaattorit;
 
-        
         arvo = ratkaise();
     }
 

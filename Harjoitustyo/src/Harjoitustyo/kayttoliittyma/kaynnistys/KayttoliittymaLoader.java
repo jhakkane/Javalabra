@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Harjoitustyo.kayttoliittyma;
+package Harjoitustyo.kayttoliittyma.kaynnistys;
 
+import Harjoitustyo.kayttoliittyma.LopetaKuuntelija;
 import Harjoitustyo.sovelluslogiikka.OmaSovelluslogiikka;
 import Harjoitustyo.sovelluslogiikka.Sovelluslogiikka;
 import java.awt.Container;
@@ -21,10 +22,6 @@ public class KayttoliittymaLoader implements Runnable {
     
     public KayttoliittymaLoader(Sovelluslogiikka logiikka) {
         this.logiikka = logiikka;
-    }
-
-    public KayttoliittymaLoader() {
-        logiikka = new OmaSovelluslogiikka();
     }
     
     @Override
@@ -50,8 +47,9 @@ public class KayttoliittymaLoader implements Runnable {
         JButton lopeta = new JButton("Lopeta");
         
 
-        uusiPeli.addActionListener(new UusiPeliKuuntelija(logiikka));
+        uusiPeli.addActionListener(new UusiPeliKuuntelija(logiikka,frame));
         lopeta.addActionListener(new LopetaKuuntelija());
+        lataaPeli.addActionListener(new LataaPeliKuuntelija(logiikka,frame));;
         
         container.add(uusiPeli);
         container.add(lataaPeli);

@@ -56,13 +56,14 @@ public class OmaSovelluslogiikka implements Sovelluslogiikka {
     }
 
     @Override
-    public Asetukset getAsetukset() {
-        return asetukset;
+    public void asetaAsetuksetTekstinPerusteella(String teksti) {
+        asetukset.asetaAsetukset(teksti);
     }
     
-    public String testiString() {
-        return "Terve";
-    }
+    @Override
+    public Asetukset getAsetukset() {
+        return asetukset;
+    }   
     
     private String generoi() {        
         

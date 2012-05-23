@@ -27,8 +27,6 @@ public class KysymyksenGenerointiKuuntelija implements ActionListener {
         this.kentta=kentta;
     }
 
-    
-    
     @Override
     public void actionPerformed(ActionEvent ae) {
         
