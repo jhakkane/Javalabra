@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -22,12 +23,12 @@ import javax.swing.JFrame;
  */
 public class LataaKuuntelija implements ActionListener {
     private JFrame frame;
-    private PeliTilanne asetukset;
+    private PeliTilanne tilanne;
     private Scanner scan;
     
-    public LataaKuuntelija(JFrame frame, PeliTilanne asetukset) {
+    public LataaKuuntelija(JFrame frame, PeliTilanne tilanne) {
         this.frame=frame;
-        this.asetukset=asetukset;
+        this.tilanne=tilanne;
     }
 
     @Override
@@ -44,10 +45,15 @@ public class LataaKuuntelija implements ActionListener {
                     sisalto=sisalto+scan.nextLine()+"\n";
                 }
                 
-                asetukset.asetaAsetukset(sisalto);
+                //virheellinen save-tiedosto
+                try {
+                    tilanne.asetaAsetukset(sisalto);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(frame, "Tiedosto ei ole kelvollinen.");
+                }
                 
             } catch (IOException ex) {
-                Logger.getLogger(TallennaKuuntelija.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(frame, "Tiedostoa ei voi avata.");
             }
             
                      

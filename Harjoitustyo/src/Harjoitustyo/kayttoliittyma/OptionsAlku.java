@@ -16,7 +16,7 @@ import javax.swing.*;
  *
  * @author JH
  */
-public class OptionsAlku implements ActionListener {
+public class OptionsAlku implements ActionListener, Runnable {
     JFrame frame2;
     PeliTilanne asetukset;
     JRadioButton paalla;
@@ -47,7 +47,14 @@ public class OptionsAlku implements ActionListener {
         asetukset.setOpLkm(uusiOpLkm);
         
         Kayttoliittyma kl = new Kayttoliittyma(logiikka);
+        SwingUtilities.invokeLater(kl);
         frame2.dispose();
+    }
+
+    @Override
+    public void run() {
+        frame2.pack();
+        frame2.setVisible(true);      
     }
     
     public OptionsAlku(Sovelluslogiikka logiikka) {
@@ -60,9 +67,6 @@ public class OptionsAlku implements ActionListener {
         frame2.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         
         luoKomponentit(frame2.getContentPane());
-        
-        frame2.pack();
-        frame2.setVisible(true);
     }
     
     private void luoKomponentit(Container container) {
@@ -70,6 +74,7 @@ public class OptionsAlku implements ActionListener {
         paalla = new JRadioButton("Päällä");
         pois = new JRadioButton("Pois");
 
+        
         ButtonGroup sulkuja = new ButtonGroup();
         sulkuja.add(paalla);
         sulkuja.add(pois);

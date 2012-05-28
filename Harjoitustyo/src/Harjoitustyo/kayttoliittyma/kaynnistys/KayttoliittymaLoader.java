@@ -14,6 +14,8 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -150,6 +152,7 @@ public class KayttoliittymaLoader extends javax.swing.JFrame implements Runnable
 
     private void uusiPeliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uusiPeliActionPerformed
         OptionsAlku options = new OptionsAlku(logiikka);
+        SwingUtilities.invokeLater(options);
         this.dispose();
     }//GEN-LAST:event_uusiPeliActionPerformed
 
@@ -166,12 +169,20 @@ public class KayttoliittymaLoader extends javax.swing.JFrame implements Runnable
                     sisalto=sisalto+scan.nextLine()+"\n";
                 }
                 
-                Kayttoliittyma kl = new Kayttoliittyma(logiikka);
-                logiikka.getTilanne().asetaAsetukset(sisalto);
-                this.dispose();
+                //save virheellinen
+                try {
+                    logiikka.getTilanne().asetaAsetukset(sisalto);
+                    Kayttoliittyma kl = new Kayttoliittyma(logiikka);
+                    SwingUtilities.invokeLater(kl);
+
+                    this.dispose();
                 
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Tiedosto ei ole kelvollinen.");
+                }
+                                
             } catch (IOException ex) {
-                Logger.getLogger(TallennaKuuntelija.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(this, "Tiedostoa ei voi avata.");
             }
             
                      

@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 /**
@@ -29,6 +30,7 @@ public class OptionsKuuntelija implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Options options = new Options(asetukset);
+        SwingUtilities.invokeLater(options);
     }
     
     

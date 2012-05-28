@@ -47,9 +47,17 @@ public class PeliTilanneTest {
         assertTrue(tilanne.getOpLkm()==4);
         assertTrue(tilanne.isSulkuja()==false);
     }
+
+    @Test
+    public void PeliTilanneSetjaGet2() {
+        tilanne.setOpLkm(4);
+        tilanne.setSulkuja(false);
+        assertFalse(tilanne.getOpLkm()==3);
+        assertFalse(tilanne.isSulkuja()==true);
+    }
     
     @Test
-    public void onnistuukoAsetustenVaihtoPeliTilanteenKautta() {
+    public void onnistuukoAsetustenVaihtoPeliTilanteenKautta() throws Exception {
         String uudetAsetukset="TestiNimi\n3\ntrue";
         tilanne.asetaAsetukset(uudetAsetukset);
         assertTrue(tilanne.getOpLkm()==3);

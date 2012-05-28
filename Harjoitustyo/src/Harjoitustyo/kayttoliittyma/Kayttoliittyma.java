@@ -13,13 +13,13 @@ import javax.swing.WindowConstants;
  *
  * @author jhakkane
  */
-public class Kayttoliittyma {
+public class Kayttoliittyma implements Runnable {
     private JFrame frame;
     private Sovelluslogiikka logiikka;
     
     public Kayttoliittyma(Sovelluslogiikka logiikka) {
-        this.logiikka = logiikka;
-        
+        this.logiikka = logiikka;        
+
         frame = new JFrame("Aritmetiikkaharjoituksia");
         frame.setJMenuBar(menubar());
         
@@ -28,10 +28,13 @@ public class Kayttoliittyma {
      
         luoKomponentit(frame.getContentPane());
         
-        frame.pack(); 
-        frame.setVisible(true);
     }
     
+    @Override
+    public void run() {        
+        frame.pack(); 
+        frame.setVisible(true);    
+    }
     
     public JMenuBar menubar() {
         //menubar

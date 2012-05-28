@@ -4,6 +4,7 @@
  */
 
 import Harjoitustyo.sovelluslogiikka.Kysymys;
+import Harjoitustyo.sovelluslogiikka.PeliTilanne;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -28,7 +29,7 @@ public class KysymysTest {
     
     @Before
     public void setUp() {
-        k = new Kysymys(1,false);
+        k = new Kysymys(new PeliTilanne());
     }
     
     @After
@@ -42,14 +43,10 @@ public class KysymysTest {
     
     @Test
     public void kysymyksenLuontiOnnistuu() {
-        Kysymys uk = new Kysymys(4,false);
-        assertTrue(uk.operandienMaara()==4);
+        PeliTilanne ot = new PeliTilanne();
+        ot.setOpLkm(14);
+        
+        Kysymys uk = new Kysymys(ot);
+        assertTrue(uk.operandienMaara()==ot.getOpLkm());
     }
-    
-    @Test
-    public void kysymysRatkaiseJaSettoimivat() {
-        k.setArvo(5);
-        assertTrue(k.ratkaise()==5);
-    }
-    
 }

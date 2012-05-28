@@ -17,32 +17,35 @@ public class Kysymys {
     private Kysymys[] operandit;
     private Op[] operaattorit;
     private double arvo;
+
+    private boolean sulkuja;
+    private boolean plus;
+    private boolean miinus;
+    private boolean kerto;
+    private boolean jako;
     
     //laskutoimituksia on 2. lajia
     //joko ne koostuvat muista laskutoimituksista tai edustavat yksittäistä arvoa
     //Kysymys voi myös satunnaisgeneroida itsensa
     
-    public Kysymys(PeliTilanne asetukset) {
-        this(asetukset.getOpLkm(), asetukset.isSulkuja());
-    }
     
-    public Kysymys(int operandiLkm, boolean sulkuja) {   
+    public Kysymys(PeliTilanne tilanne) {   
 
-        if (operandiLkm <= 1) {
+        if (tilanne.getOpLkm()<= 1) {
             Random r = new Random();
             this.arvo=(int)satunnaisluku();
             return;
         }
         
-        if (operandiLkm == 2) {
+        if (tilanne.getOpLkm() == 2) {
             sulkuja=false;
         }
         
         if (sulkuja == false) {
-            this.operandit = new Kysymys[operandiLkm];
-            this.operaattorit = new Op[operandiLkm-1];
+            this.operandit = new Kysymys[tilanne.getOpLkm()];
+            this.operaattorit = new Op[tilanne.getOpLkm()-1];
             
-            for (int i = 0; i < operandiLkm; i++) {
+            for (int i = 0; i < tilanne.getOpLkm(); i++) {
                 operandit[i] = new Kysymys((int)satunnaisluku());
             }
             
@@ -63,10 +66,16 @@ public class Kysymys {
             this.operaattorit = new Op[1];
             
             Random r = new Random();
-            int vali = r.nextInt(operandiLkm-1)+1;
+            int vali = r.nextInt(tilanne.getOpLkm()-1)+1;
 
-            operandit[0]=new Kysymys(vali,true);
-            operandit[1]=new Kysymys(operandiLkm-vali,true);     
+            PeliTilanne asetukset = tilanne;
+            asetukset.setOpLkm(vali);
+            asetukset.setSulkuja(true);
+            operandit[0]=new Kysymys(asetukset);
+            
+            asetukset.setOpLkm(tilanne.getOpLkm()-vali);
+            operandit[1]=new Kysymys(asetukset);
+            
             int opnro = r.nextInt(2);
 
             if (opnro == 0) {

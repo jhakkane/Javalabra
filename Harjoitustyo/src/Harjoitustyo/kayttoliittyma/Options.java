@@ -15,67 +15,115 @@ import javax.swing.*;
  *
  * @author JH
  */
-public class Options implements ActionListener {
+public class Options implements ActionListener, Runnable {
     JFrame frame2;
-    PeliTilanne asetukset;
-    JRadioButton paalla;
-    JRadioButton pois;
+    PeliTilanne tilanne;
+    JCheckBox sulut;
+    JCheckBox plus;
+    JCheckBox miinus;
+    JCheckBox kerto;
+    JCheckBox jako;
+    
     JTextField opLkmField;
     
     @Override
     public void actionPerformed(ActionEvent e) {
         int uusiOpLkm=2;
         
-        if (paalla.isSelected()) {
-            asetukset.setSulkuja(true);
+        if (sulut.isSelected()) {
+            tilanne.setSulkuja(true);
         } else {
-            asetukset.setSulkuja(false);
+            tilanne.setSulkuja(false);
+        }
+
+        if (plus.isSelected()) {
+            tilanne.setPlus(true);
+        } else {
+            tilanne.setPlus(false);
+        }
+
+        if (miinus.isSelected()) {
+            tilanne.setMiinus(true);
+        } else {
+            tilanne.setMiinus(false);
+        }
+        
+        if (kerto.isSelected()) {
+            tilanne.setKerto(true);
+        } else {
+            tilanne.setKerto(false);
+        }
+
+        if (jako.isSelected()) {
+            tilanne.setJako(true);
+        } else {
+            tilanne.setJako(false);
         }
         
         try {
             uusiOpLkm = Integer.parseInt(opLkmField.getText());
         } catch (Exception o) {
-            uusiOpLkm=asetukset.getOpLkm();
+            uusiOpLkm=tilanne.getOpLkm();
         }
         
-        asetukset.setOpLkm(uusiOpLkm);
+        tilanne.setOpLkm(uusiOpLkm);
         
+    }
+    
+    @Override
+    public void run() {
+        frame2.pack();
+        frame2.setVisible(true);      
     }
     
     public Options(PeliTilanne asetukset) {
         frame2 = new JFrame("Asetukset");
-        this.asetukset=asetukset;
+        this.tilanne=asetukset;
         
         frame2.setPreferredSize(new Dimension(400,600));
         frame2.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         
-        luoKomponentit(frame2.getContentPane());
-        
-        frame2.pack();
-        frame2.setVisible(true);
+        luoKomponentit(frame2.getContentPane());  
     }
     
     private void luoKomponentit(Container container) {
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-        paalla = new JRadioButton("Päällä");
-        pois = new JRadioButton("Pois");
-
-        ButtonGroup sulkuja = new ButtonGroup();
-        sulkuja.add(paalla);
-        sulkuja.add(pois);
+        sulut = new JCheckBox();
+        plus = new JCheckBox();
+        miinus = new JCheckBox();
+        kerto = new JCheckBox();
+        jako = new JCheckBox();
         
         JLabel teksti1 = new JLabel("Käytetäänkö sulkuja?");    
-
-        JLabel teksti2 = new JLabel("Kuinka monta lukua laskutoimituksessa?");
+        JLabel teksti2 = new JLabel("Pluslaskuja?");   
+        JLabel teksti3 = new JLabel("Miinuslaskuja?");   
+        JLabel teksti4 = new JLabel("Kertolaskuja?");   
+        JLabel teksti5 = new JLabel("Jakolaskuja??");   
+        
+        
+        JLabel teksti6 = new JLabel("Kuinka monta lukua laskutoimituksessa?");
         opLkmField = new JTextField();
         
         JButton lopeta = new JButton("Valmis");
         lopeta.addActionListener(this);    
         
         frame2.add(teksti1);
-        frame2.add(paalla);
-        frame2.add(pois);
+        frame2.add(sulut);
+        
         frame2.add(teksti2);
+        frame2.add(plus);
+        
+        frame2.add(teksti3);
+        frame2.add(miinus);
+        
+        frame2.add(teksti4);
+        frame2.add(kerto);
+        
+        frame2.add(teksti5);
+        frame2.add(jako);
+        
+        frame2.add(teksti6);
+        
         frame2.add(opLkmField);
         frame2.add(lopeta);
     }

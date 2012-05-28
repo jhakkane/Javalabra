@@ -35,7 +35,8 @@ public class KysymyksenGenerointiKuuntelija implements ActionListener {
         kentta.setText("");
         kysymys.setText(kysymysString);
         
-        suhdeluku.setText("Oikeiden vastausten"
+        suhdeluku.setText("Nimesi:"+logiikka.getTilanne().getNimi()+"\n"
+                + "Oikeiden vastausten "
                 + "osuus kaikista vastauksista: "+logiikka.getTilanne().oikeitaVastauksiaSuhteellisesti()+"%");
         
     }
