@@ -66,8 +66,13 @@ public class PeliTilanne {
         this.jako = jako;
     }
 
+    public void yksiOperaatioSallitaanAina() {
+        if ((isJako() == false) && (isKerto() == false) &&
+                (isMiinus() == false) && (isPlus() == false)) {
+            setPlus(true);
+        }
+    }
 
-    
     public int getOpLkm() {
         return opLkm;
     }

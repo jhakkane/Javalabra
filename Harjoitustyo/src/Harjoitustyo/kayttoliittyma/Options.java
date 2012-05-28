@@ -60,6 +60,8 @@ public class Options implements ActionListener, Runnable {
             tilanne.setJako(false);
         }
         
+        tilanne.yksiOperaatioSallitaanAina();
+        
         try {
             uusiOpLkm = Integer.parseInt(opLkmField.getText());
         } catch (Exception o) {
@@ -76,9 +78,9 @@ public class Options implements ActionListener, Runnable {
         frame2.setVisible(true);      
     }
     
-    public Options(PeliTilanne asetukset) {
+    public Options(PeliTilanne tilanne) {
         frame2 = new JFrame("Asetukset");
-        this.tilanne=asetukset;
+        this.tilanne=tilanne;
         
         frame2.setPreferredSize(new Dimension(400,600));
         frame2.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -98,7 +100,7 @@ public class Options implements ActionListener, Runnable {
         JLabel teksti2 = new JLabel("Pluslaskuja?");   
         JLabel teksti3 = new JLabel("Miinuslaskuja?");   
         JLabel teksti4 = new JLabel("Kertolaskuja?");   
-        JLabel teksti5 = new JLabel("Jakolaskuja??");   
+        JLabel teksti5 = new JLabel("Jakolaskuja? (keskeneräinen)");   
         
         
         JLabel teksti6 = new JLabel("Kuinka monta lukua laskutoimituksessa?");

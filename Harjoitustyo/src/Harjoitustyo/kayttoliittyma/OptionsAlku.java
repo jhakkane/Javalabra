@@ -18,11 +18,15 @@ import javax.swing.*;
  */
 public class OptionsAlku implements ActionListener, Runnable {
     JFrame frame2;
-    PeliTilanne asetukset;
-    JRadioButton paalla;
-    JRadioButton pois;
+    PeliTilanne tilanne;
     JTextField opLkmField;
     JTextField nimiField;
+    
+    JCheckBox sulut;
+    JCheckBox plus;
+    JCheckBox miinus;
+    JCheckBox kerto;
+    JCheckBox jako;
     
     Sovelluslogiikka logiikka;
     
@@ -30,21 +34,46 @@ public class OptionsAlku implements ActionListener, Runnable {
     public void actionPerformed(ActionEvent e) {
         int uusiOpLkm=2;
         
-        asetukset.setNimi(nimiField.getText());
-        
-        if (paalla.isSelected()) {
-            asetukset.setSulkuja(true);
+        if (sulut.isSelected()) {
+            tilanne.setSulkuja(true);
         } else {
-            asetukset.setSulkuja(false);
+            tilanne.setSulkuja(false);
         }
+
+        if (plus.isSelected()) {
+            tilanne.setPlus(true);
+        } else {
+            tilanne.setPlus(false);
+        }
+
+        if (miinus.isSelected()) {
+            tilanne.setMiinus(true);
+        } else {
+            tilanne.setMiinus(false);
+        }
+        
+        if (kerto.isSelected()) {
+            tilanne.setKerto(true);
+        } else {
+            tilanne.setKerto(false);
+        }
+
+        if (jako.isSelected()) {
+            tilanne.setJako(true);
+        } else {
+            tilanne.setJako(false);
+        }
+        
+        tilanne.yksiOperaatioSallitaanAina();
         
         try {
             uusiOpLkm = Integer.parseInt(opLkmField.getText());
         } catch (Exception o) {
-            uusiOpLkm=asetukset.getOpLkm();
+            uusiOpLkm=tilanne.getOpLkm();
         }
         
-        asetukset.setOpLkm(uusiOpLkm);
+        tilanne.setOpLkm(uusiOpLkm);
+        tilanne.setNimi(nimiField.getText());
         
         Kayttoliittyma kl = new Kayttoliittyma(logiikka);
         SwingUtilities.invokeLater(kl);
@@ -61,7 +90,7 @@ public class OptionsAlku implements ActionListener, Runnable {
         frame2 = new JFrame("Asetukset");
         
         this.logiikka=logiikka;
-        asetukset=logiikka.getTilanne();
+        tilanne=logiikka.getTilanne();
         
         frame2.setPreferredSize(new Dimension(400,600));
         frame2.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -71,31 +100,52 @@ public class OptionsAlku implements ActionListener, Runnable {
     
     private void luoKomponentit(Container container) {
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-        paalla = new JRadioButton("Päällä");
-        pois = new JRadioButton("Pois");
-
-        
+  
         ButtonGroup sulkuja = new ButtonGroup();
-        sulkuja.add(paalla);
-        sulkuja.add(pois);
 
-        JLabel teksti1 = new JLabel("Mikä on nimesi?");
+        JLabel teksti = new JLabel("Mikä on nimesi?");
         nimiField = new JTextField();
         
-        JLabel teksti2 = new JLabel("Käytetäänkö sulkuja?");  
-
-        JLabel teksti3 = new JLabel("Kuinka monta lukua laskutoimituksessa?");
+        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+        sulut = new JCheckBox();
+        plus = new JCheckBox();
+        miinus = new JCheckBox();
+        kerto = new JCheckBox();
+        jako = new JCheckBox();
+        
+        JLabel teksti1 = new JLabel("Käytetäänkö sulkuja?");    
+        JLabel teksti2 = new JLabel("Pluslaskuja?");   
+        JLabel teksti3 = new JLabel("Miinuslaskuja?");   
+        JLabel teksti4 = new JLabel("Kertolaskuja?");   
+        JLabel teksti5 = new JLabel("Jakolaskuja? (keskeneräinen)");   
+        
+        
+        JLabel teksti6 = new JLabel("Kuinka monta lukua laskutoimituksessa?");
         opLkmField = new JTextField();
         
         JButton lopeta = new JButton("Valmis");
-        lopeta.addActionListener(this);      
+        lopeta.addActionListener(this);    
+        
+        frame2.add(teksti);
+        frame2.add(nimiField);
         
         frame2.add(teksti1);
-        frame2.add(nimiField);
+        frame2.add(sulut);
+        
         frame2.add(teksti2);
-        frame2.add(paalla);
-        frame2.add(pois);
+        frame2.add(plus);
+        
         frame2.add(teksti3);
+        frame2.add(miinus);
+        
+        frame2.add(teksti4);
+        frame2.add(kerto);
+        
+        frame2.add(teksti5);
+        frame2.add(jako);
+        
+        frame2.add(teksti6);
+        
         frame2.add(opLkmField);
         frame2.add(lopeta);
     }

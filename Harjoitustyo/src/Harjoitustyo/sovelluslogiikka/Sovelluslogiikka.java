@@ -6,7 +6,6 @@ package Harjoitustyo.sovelluslogiikka;
 
 import java.util.ArrayList;
 import java.util.Random;
-
 /**
  *
  * @author jhakkane
@@ -71,12 +70,21 @@ public class Sovelluslogiikka {
         tilanne.vastattu();
         
         vaihe = 2;
-        if (Integer.parseInt(vastaus)==oikeaVastaus) {
+        
+        int pelaajanVastaus = analysoiPelaajanVastaus(vastaus);
+        
+        if (pelaajanVastaus==oikeaVastaus) {
             tilanne.oikeinVastattu();
             return "Oikein! Vastaus on juuri "+oikeaVastaus;
         } else {
             return "Väärin! Oikea vastaus on "+oikeaVastaus;
         }
+    }
+    
+    public int analysoiPelaajanVastaus(String vastaus) {
+       
+        int vastausLukuna=Integer.parseInt(vastaus);
+        return vastausLukuna;
     }
     
     /**

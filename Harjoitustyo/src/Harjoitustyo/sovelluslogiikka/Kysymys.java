@@ -7,6 +7,8 @@ package Harjoitustyo.sovelluslogiikka;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -18,6 +20,7 @@ public class Kysymys {
     private Op[] operaattorit;
     private double arvo;
 
+    private int opLkm;
     private boolean sulkuja;
     private boolean plus;
     private boolean miinus;
@@ -31,61 +34,89 @@ public class Kysymys {
     
     public Kysymys(PeliTilanne tilanne) {   
 
-        if (tilanne.getOpLkm()<= 1) {
+        opLkm=tilanne.getOpLkm();
+        sulkuja=tilanne.isSulkuja();
+        plus=tilanne.isPlus();
+        miinus=tilanne.isMiinus();
+        kerto=tilanne.isKerto();
+        jako=tilanne.isJako();
+        
+        if (opLkm<= 1) {
             Random r = new Random();
             this.arvo=(int)satunnaisluku();
             return;
         }
         
-        if (tilanne.getOpLkm() == 2) {
+        if (opLkm == 2) {
             sulkuja=false;
         }
         
         if (sulkuja == false) {
-            this.operandit = new Kysymys[tilanne.getOpLkm()];
-            this.operaattorit = new Op[tilanne.getOpLkm()-1];
+            this.operandit = new Kysymys[opLkm];
+            this.operaattorit = new Op[opLkm-1];
             
-            for (int i = 0; i < tilanne.getOpLkm(); i++) {
+            for (int i = 0; i < opLkm; i++) {
                 operandit[i] = new Kysymys((int)satunnaisluku());
             }
             
-            for (int i = 0; i < operaattorit.length; i++) {
-                Random r = new Random();
-                int opnro = r.nextInt(2);
-
-                if (opnro == 0) {
-                    operaattorit[i]=Op.PLUS;               
-                } else if(opnro == 1) {               
-                    operaattorit[i]=Op.MUL;                
-                }
-            }
+            arvoOperaattorit(operaattorit.length, tilanne);
+            
+        //vähintään 3 operandia
         } else {
 
-            //vähintään 3 operandia
             this.operandit = new Kysymys[2];
             this.operaattorit = new Op[1];
             
             Random r = new Random();
-            int vali = r.nextInt(tilanne.getOpLkm()-1)+1;
+            int vali = r.nextInt(opLkm-1)+1;
 
-            PeliTilanne asetukset = tilanne;
-            asetukset.setOpLkm(vali);
-            asetukset.setSulkuja(true);
-            operandit[0]=new Kysymys(asetukset);
+            int vanhaOpLkm = tilanne.getOpLkm();
             
-            asetukset.setOpLkm(tilanne.getOpLkm()-vali);
-            operandit[1]=new Kysymys(asetukset);
+            tilanne.setOpLkm(vali);
+            operandit[0]=new Kysymys(tilanne);
             
-            int opnro = r.nextInt(2);
-
-            if (opnro == 0) {
-                operaattorit[0]=Op.PLUS;               
-            } else if(opnro == 1) {               
-                operaattorit[0]=Op.MUL;                
-            }
+            tilanne.setOpLkm(opLkm-vali);
+            operandit[1]=new Kysymys(tilanne);
+            
+            tilanne.setOpLkm(vanhaOpLkm);
+            
+            arvoOperaattorit(1, tilanne);
         }
         
         arvo = this.ratkaise();
+    }
+    
+    public void arvoOperaattorit(int maara, PeliTilanne tilanne) {
+        for (int i = 0; i < maara; i++) {
+            Random r = new Random();
+            int opnro = r.nextInt(4);
+
+            if (opnro == 0) {
+                operaattorit[i]=Op.PLUS;               
+            } else if(opnro == 1) {               
+                operaattorit[i]=Op.MUL;                
+            } else if(opnro == 2) {               
+                operaattorit[i]=Op.DIV;                
+            } else if(opnro == 3) {               
+                operaattorit[i]=Op.MIN;                
+            }
+        }       
+
+        //muutetaan sopimattomat operaattorit ensimmäiseksi sopivaksi (joita on ainakin 1)
+        Op sopiva=Op.PLUS;
+        if (tilanne.isJako()) { sopiva = Op.DIV; }
+        if (tilanne.isKerto()) { sopiva = Op.MUL; }
+        if (tilanne.isMiinus()) { sopiva = Op.MIN; }
+        if (tilanne.isPlus()) { sopiva = Op.PLUS; }
+        
+        for (int i = 0; i < maara; i++) {
+            if ((operaattorit[i]==Op.DIV && tilanne.isJako()==false) ||
+                   (operaattorit[i]==Op.MUL && tilanne.isKerto()==false) ||
+                    (operaattorit[i]==Op.MIN && tilanne.isMiinus()==false) ||
+                    (operaattorit[i]==Op.PLUS && tilanne.isPlus()==false)) {
+                operaattorit[i]=sopiva;
+            }
+        }       
     }
     
     public Kysymys(double operandit[], Op operaattorit[]) {        
@@ -134,6 +165,12 @@ public class Kysymys {
                     operanditTemp.get(i).setArvo(0);
                     operanditTemp.get(i+1).setArvo(tulos);
                     operaattoritTemp.set(i, Op.PLUS);
+                } else if (operaattorit[i]==Op.DIV) {
+                    tulos = operanditTemp.get(i).ratkaise()/operanditTemp.get(i+1).ratkaise();                    
+
+                    operanditTemp.get(i).setArvo(0);
+                    operanditTemp.get(i+1).setArvo(tulos);
+                    operaattoritTemp.set(i, Op.PLUS);
                 }
             }
                   
@@ -147,7 +184,13 @@ public class Kysymys {
                     operanditTemp.get(i).setArvo(0);
                     operanditTemp.get(i+1).setArvo(tulos);
                     operaattoritTemp.set(i, Op.PLUS);
-                }    
+                } else if (operaattorit[i]==Op.MIN) {
+                    tulos = operanditTemp.get(i).ratkaise()-operanditTemp.get(i+1).ratkaise();                  
+                    
+                    operanditTemp.get(i).setArvo(0);
+                    operanditTemp.get(i+1).setArvo(tulos);
+                    operaattoritTemp.set(i, Op.PLUS);                    
+                }
             }        
 
             //lasketaan jäljellä olevat yhteen
