@@ -19,20 +19,25 @@ public class KysymyksenGenerointiKuuntelija implements ActionListener {
     private Sovelluslogiikka logiikka;
     private JTextArea kysymys;
     private JTextField kentta;
+    private JTextArea suhdeluku;
     
     public KysymyksenGenerointiKuuntelija(Sovelluslogiikka logiikka, JTextArea kysymys,
-            JTextField kentta) {
+            JTextField kentta, JTextArea suhdeluku) {
         this.logiikka=logiikka;
         this.kysymys=kysymys;
         this.kentta=kentta;
+        this.suhdeluku=suhdeluku;
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        
         String kysymysString = logiikka.etene(kentta.getText());
         kentta.setText("");
         kysymys.setText(kysymysString);
+        
+        suhdeluku.setText("Oikeiden vastausten"
+                + "osuus kaikista vastauksista: "+logiikka.getTilanne().oikeitaVastauksiaSuhteellisesti()+"%");
+        
     }
     
 }

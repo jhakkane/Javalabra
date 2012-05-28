@@ -6,7 +6,8 @@ package Harjoitustyo;
 
 import Harjoitustyo.kayttoliittyma.Kayttoliittyma;
 import Harjoitustyo.kayttoliittyma.kaynnistys.KayttoliittymaLoader;
-import Harjoitustyo.sovelluslogiikka.OmaSovelluslogiikka;
+import Harjoitustyo.kayttoliittyma.kaynnistys.KayttoliittymaLoader;
+import Harjoitustyo.sovelluslogiikka.Sovelluslogiikka;
 import Harjoitustyo.sovelluslogiikka.Sovelluslogiikka;
 import javax.swing.SwingUtilities;
 
@@ -22,21 +23,10 @@ public class Harjoitustyo {
     public static void main(String[] args) {
         // TODO code application logic here
         
-        OmaSovelluslogiikka logiikka = new OmaSovelluslogiikka();
+        Sovelluslogiikka logiikka = new Sovelluslogiikka();
         KayttoliittymaLoader kl = new KayttoliittymaLoader(logiikka);
         SwingUtilities.invokeLater(kl);
 
-    }
-    
-    
-    /**
-     * Tämä on vain testimetodi javadocin toiminnan selvittämistä varten.
-     * 
-     * @param x 
-     */
-    
-    public static void testiMetodi(int x) {
-        System.out.println("Testi: " + x);
     }
     
 }

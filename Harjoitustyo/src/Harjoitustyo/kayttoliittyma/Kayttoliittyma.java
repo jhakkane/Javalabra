@@ -39,15 +39,15 @@ public class Kayttoliittyma {
         JMenu menu = new JMenu("File");
         menuBar.add(menu);        
         JMenuItem options = new JMenuItem("Asetukset");
-        OptionsKuuntelija opKuuntelija = new OptionsKuuntelija(frame, logiikka.getAsetukset());
+        OptionsKuuntelija opKuuntelija = new OptionsKuuntelija(frame, logiikka.getTilanne());
         options.addActionListener(opKuuntelija);
 
         JMenuItem tallenna = new JMenuItem("Tallenna");
-        TallennaKuuntelija taKuuntelija = new TallennaKuuntelija(frame, logiikka.getAsetukset());
+        TallennaKuuntelija taKuuntelija = new TallennaKuuntelija(frame, logiikka.getTilanne());
         tallenna.addActionListener(taKuuntelija);
         
         JMenuItem lataa = new JMenuItem("Lataa");
-        LataaKuuntelija laKuuntelija = new LataaKuuntelija(frame, logiikka.getAsetukset());
+        LataaKuuntelija laKuuntelija = new LataaKuuntelija(frame, logiikka.getTilanne());
         lataa.addActionListener(laKuuntelija);
         
         JMenuItem lopeta = new JMenuItem("Sulje");
@@ -65,9 +65,12 @@ public class Kayttoliittyma {
     }
     
     public void luoKomponentit(Container container) {
-        GridLayout layout = new GridLayout(3,1);
+        GridLayout layout = new GridLayout(4,1);
         container.setLayout(layout);
     
+        JTextArea suhdeluku = new JTextArea();
+        suhdeluku.setEditable(false);
+        
         JTextArea kysymys = new JTextArea(5,20);
         kysymys.setEditable(false);
         kysymys.setLineWrap(true);
@@ -78,10 +81,11 @@ public class Kayttoliittyma {
         JTextField tekstiKentta = new JTextField();
         
         KysymyksenGenerointiKuuntelija kgKuuntelija = 
-                new KysymyksenGenerointiKuuntelija(logiikka,kysymys,tekstiKentta);
+                new KysymyksenGenerointiKuuntelija(logiikka,kysymys,tekstiKentta,
+                suhdeluku);
         tarkistaJaGeneroiNappula.addActionListener(kgKuuntelija);
         
-        
+        container.add(suhdeluku);
         container.add(kysymys);
         container.add(tekstiKentta);
         container.add(tarkistaJaGeneroiNappula);

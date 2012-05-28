@@ -4,7 +4,7 @@
  */
 package Harjoitustyo.kayttoliittyma;
 
-import Harjoitustyo.sovelluslogiikka.Asetukset;
+import Harjoitustyo.sovelluslogiikka.PeliTilanne;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,9 +19,9 @@ import javax.swing.WindowConstants;
 public class OptionsKuuntelija implements ActionListener {
 
     private JFrame frame;
-    private Asetukset asetukset;
+    private PeliTilanne asetukset;
     
-    public OptionsKuuntelija(JFrame frame, Asetukset asetukset) {
+    public OptionsKuuntelija(JFrame frame, PeliTilanne asetukset) {
         this.frame=frame;
         this.asetukset=asetukset;
     }

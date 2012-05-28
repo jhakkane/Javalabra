@@ -4,22 +4,18 @@
  */
 
 import Harjoitustyo.sovelluslogiikka.PeliTilanne;
-import Harjoitustyo.sovelluslogiikka.Kysymys;
-import Harjoitustyo.sovelluslogiikka.Sovelluslogiikka;
-import Harjoitustyo.sovelluslogiikka.Op;
 import org.junit.*;
 import static org.junit.Assert.*;
 
 /**
  *
- * @author jhakkane
+ * @author JH
  */
-public class OmaSovelluslogiikkaTest {
+public class PeliTilanneTest {
+ 
+    private PeliTilanne tilanne;
     
-    private Sovelluslogiikka logiikka;
-    
-    public OmaSovelluslogiikkaTest() {
-        
+    public PeliTilanneTest() {
     }
 
     @BeforeClass
@@ -32,7 +28,7 @@ public class OmaSovelluslogiikkaTest {
     
     @Before
     public void setUp() {
-        logiikka = new Sovelluslogiikka(); 
+        tilanne = new PeliTilanne();
     }
     
     @After
@@ -44,15 +40,18 @@ public class OmaSovelluslogiikkaTest {
     // @Test
     // public void hello() {}
     
-
     @Test
-    public void eteneTuottaaOikeanPituisenKysymyksen() {
-        
-        String[] osat = logiikka.etene("").split(" ");
-        int lkm = logiikka.getTilanne().getOpLkm();
-        
-        //operandit + operaattorit (joita yksi vähemmän kuin operandeja)
-        assertTrue(osat.length==(lkm*2-1));
-        
+    public void PeliTilanneSetjaGet() {
+        tilanne.setOpLkm(4);
+        tilanne.setSulkuja(false);
+        assertTrue(tilanne.getOpLkm()==4);
+        assertTrue(tilanne.isSulkuja()==false);
+    }
+    
+    @Test
+    public void onnistuukoAsetustenVaihtoPeliTilanteenKautta() {
+        String uudetAsetukset="TestiNimi\n3\ntrue";
+        tilanne.asetaAsetukset(uudetAsetukset);
+        assertTrue(tilanne.getOpLkm()==3);
     }
 }

@@ -3,23 +3,17 @@
  * and open the template in the editor.
  */
 
-import Harjoitustyo.sovelluslogiikka.PeliTilanne;
-import Harjoitustyo.sovelluslogiikka.Kysymys;
-import Harjoitustyo.sovelluslogiikka.Sovelluslogiikka;
 import Harjoitustyo.sovelluslogiikka.Op;
 import org.junit.*;
 import static org.junit.Assert.*;
 
 /**
  *
- * @author jhakkane
+ * @author JH
  */
-public class OmaSovelluslogiikkaTest {
+public class OpTesti {
     
-    private Sovelluslogiikka logiikka;
-    
-    public OmaSovelluslogiikkaTest() {
-        
+    public OpTesti() {
     }
 
     @BeforeClass
@@ -32,7 +26,6 @@ public class OmaSovelluslogiikkaTest {
     
     @Before
     public void setUp() {
-        logiikka = new Sovelluslogiikka(); 
     }
     
     @After
@@ -44,15 +37,18 @@ public class OmaSovelluslogiikkaTest {
     // @Test
     // public void hello() {}
     
-
     @Test
-    public void eteneTuottaaOikeanPituisenKysymyksen() {
+    public void OpMerkitOikein() {
+        Op op = Op.DIV;
+        assertTrue(op.toString()=="/");
+    
+        op = Op.MIN;
+        assertTrue(op.toString()=="-");
+
+        op = Op.PLUS;
+        assertTrue(op.toString()=="+");
         
-        String[] osat = logiikka.etene("").split(" ");
-        int lkm = logiikka.getTilanne().getOpLkm();
-        
-        //operandit + operaattorit (joita yksi vähemmän kuin operandeja)
-        assertTrue(osat.length==(lkm*2-1));
-        
+        op = Op.MUL;
+        assertTrue(op.toString()=="*");
     }
 }

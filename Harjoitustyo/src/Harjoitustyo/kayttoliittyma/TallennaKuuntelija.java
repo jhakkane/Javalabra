@@ -4,7 +4,7 @@
  */
 package Harjoitustyo.kayttoliittyma;
 
-import Harjoitustyo.sovelluslogiikka.Asetukset;
+import Harjoitustyo.sovelluslogiikka.PeliTilanne;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -21,9 +21,9 @@ import javax.swing.JFrame;
  */
 public class TallennaKuuntelija implements ActionListener {
     private JFrame frame;
-    private Asetukset asetukset;
+    private PeliTilanne asetukset;
     
-    public TallennaKuuntelija(JFrame frame, Asetukset asetukset) {
+    public TallennaKuuntelija(JFrame frame, PeliTilanne asetukset) {
         this.frame=frame;
         this.asetukset=asetukset;
     }

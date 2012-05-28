@@ -22,7 +22,7 @@ public class Kysymys {
     //joko ne koostuvat muista laskutoimituksista tai edustavat yksittäistä arvoa
     //Kysymys voi myös satunnaisgeneroida itsensa
     
-    public Kysymys(Asetukset asetukset) {
+    public Kysymys(PeliTilanne asetukset) {
         this(asetukset.getOpLkm(), asetukset.isSulkuja());
     }
     

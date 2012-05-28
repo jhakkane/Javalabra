@@ -3,23 +3,19 @@
  * and open the template in the editor.
  */
 
-import Harjoitustyo.sovelluslogiikka.PeliTilanne;
 import Harjoitustyo.sovelluslogiikka.Kysymys;
-import Harjoitustyo.sovelluslogiikka.Sovelluslogiikka;
-import Harjoitustyo.sovelluslogiikka.Op;
 import org.junit.*;
 import static org.junit.Assert.*;
 
 /**
  *
- * @author jhakkane
+ * @author JH
  */
-public class OmaSovelluslogiikkaTest {
+public class KysymysTest {
     
-    private Sovelluslogiikka logiikka;
+    private Kysymys k;
     
-    public OmaSovelluslogiikkaTest() {
-        
+    public KysymysTest() {
     }
 
     @BeforeClass
@@ -32,7 +28,7 @@ public class OmaSovelluslogiikkaTest {
     
     @Before
     public void setUp() {
-        logiikka = new Sovelluslogiikka(); 
+        k = new Kysymys(1,false);
     }
     
     @After
@@ -44,15 +40,16 @@ public class OmaSovelluslogiikkaTest {
     // @Test
     // public void hello() {}
     
-
     @Test
-    public void eteneTuottaaOikeanPituisenKysymyksen() {
-        
-        String[] osat = logiikka.etene("").split(" ");
-        int lkm = logiikka.getTilanne().getOpLkm();
-        
-        //operandit + operaattorit (joita yksi vähemmän kuin operandeja)
-        assertTrue(osat.length==(lkm*2-1));
-        
+    public void kysymyksenLuontiOnnistuu() {
+        Kysymys uk = new Kysymys(4,false);
+        assertTrue(uk.operandienMaara()==4);
     }
+    
+    @Test
+    public void kysymysRatkaiseJaSettoimivat() {
+        k.setArvo(5);
+        assertTrue(k.ratkaise()==5);
+    }
+    
 }
