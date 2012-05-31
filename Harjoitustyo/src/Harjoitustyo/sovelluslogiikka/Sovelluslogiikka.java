@@ -6,7 +6,12 @@ package Harjoitustyo.sovelluslogiikka;
 
 import java.util.ArrayList;
 import java.util.Random;
-/**
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**Toteuttaa itse ohjelman toiminnan käyttöliittymää lukuunottamatta.
+ * Pääasiassa hoitaa pelaajan vastauksen tarkistamisen ja oikean vastauksen
+ * näyttämisen.
  *
  * @author jhakkane
  */
@@ -15,7 +20,7 @@ public class Sovelluslogiikka {
     //Vaihe 1 = Käyttäjälle näkyy kysymys
     //Vaihe 2 = Käyttäjälle näkyy vastaus
     private int vaihe = 2;
-    private Kysymys kysymys;
+    private Lauseke kysymys;
     private PeliTilanne tilanne;
     
     public Sovelluslogiikka() {
@@ -59,7 +64,6 @@ public class Sovelluslogiikka {
      */
     
     private String tarkista(String vastaus) {
-        int oikeaVastaus=(int)kysymys.ratkaise();
         
         if (vastaus.isEmpty()) {
             //huom. vaihe ei muutu, käyttäjä yrittää uudelleen
@@ -71,9 +75,37 @@ public class Sovelluslogiikka {
         
         vaihe = 2;
         
-        int pelaajanVastaus = analysoiPelaajanVastaus(vastaus);
+        Luku oikeaVastaus = kysymys.lukuarvo(); 
         
-        if (pelaajanVastaus==oikeaVastaus) {
+        //pelaajan vastaus on muotoa x y/z
+        String vastauksenOsat[] = vastaus.split("[ /]");
+        int vastausKokonaisluku= 0;
+        int vastausOsoittaja = 0;
+        int vastausNimittaja = 1;     
+        
+        Luku pelaajanVastaus=null;
+
+        //pelaaja vastasi sekaluvulla
+        if (vastauksenOsat.length==3) {
+            vastausKokonaisluku= Integer.parseInt(vastauksenOsat[0]);
+            vastausOsoittaja = Integer.parseInt(vastauksenOsat[1]);
+            vastausNimittaja = Integer.parseInt(vastauksenOsat[2]);            
+        
+            pelaajanVastaus = new Sekaluku(vastausOsoittaja,vastausNimittaja,vastausKokonaisluku);   
+        } else if (vastauksenOsat.length==2) {
+            //pelaaja vastasi murtoluvulla
+            vastausOsoittaja = Integer.parseInt(vastauksenOsat[0]);
+            vastausNimittaja = Integer.parseInt(vastauksenOsat[1]);
+            
+            pelaajanVastaus = new Murtoluku(vastausOsoittaja,vastausNimittaja);            
+        } else if (vastauksenOsat.length==1) {
+            //pelaaja vastasi kokonaisluvulla
+            vastausKokonaisluku= Integer.parseInt(vastauksenOsat[0]);
+            pelaajanVastaus = new Sekaluku(0,0,vastausKokonaisluku);             
+        }
+        
+        
+        if (pelaajanVastaus.samaLuku(oikeaVastaus)) {
             tilanne.oikeinVastattu();
             return "Oikein! Vastaus on juuri "+oikeaVastaus;
         } else {
@@ -81,11 +113,6 @@ public class Sovelluslogiikka {
         }
     }
     
-    public int analysoiPelaajanVastaus(String vastaus) {
-       
-        int vastausLukuna=Integer.parseInt(vastaus);
-        return vastausLukuna;
-    }
     
     /**
      * Tätä metodia täytyy kutsua, kun halutaan saada tietoja vallitsevasta
@@ -103,8 +130,11 @@ public class Sovelluslogiikka {
      * @return 
      */
     private String generoi() {        
-        
-        kysymys = new Kysymys(tilanne);
+        try {
+            kysymys = new Lauseke(tilanne);
+        } catch (Exception ex) {
+            Logger.getLogger(Sovelluslogiikka.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         String kysymysString=kysymys.toString();
         

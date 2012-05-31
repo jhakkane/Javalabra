@@ -12,141 +12,44 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
-/**
+/** Valikko, jossa pelaaja säätää pelin asetukset ennen peliä.
+ * Tämä luokka perii luokan Options, ja on suurelta osin samankaltainen.
  *
  * @author JH
  */
-public class OptionsAlku implements ActionListener, Runnable {
-    JFrame frame2;
-    PeliTilanne tilanne;
-    JTextField opLkmField;
+public class OptionsAlku extends Options implements ActionListener, Runnable {
+
     JTextField nimiField;
-    
-    JCheckBox sulut;
-    JCheckBox plus;
-    JCheckBox miinus;
-    JCheckBox kerto;
-    JCheckBox jako;
-    
     Sovelluslogiikka logiikka;
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        int uusiOpLkm=2;
+        super.actionPerformed(e);
         
-        if (sulut.isSelected()) {
-            tilanne.setSulkuja(true);
-        } else {
-            tilanne.setSulkuja(false);
-        }
-
-        if (plus.isSelected()) {
-            tilanne.setPlus(true);
-        } else {
-            tilanne.setPlus(false);
-        }
-
-        if (miinus.isSelected()) {
-            tilanne.setMiinus(true);
-        } else {
-            tilanne.setMiinus(false);
-        }
-        
-        if (kerto.isSelected()) {
-            tilanne.setKerto(true);
-        } else {
-            tilanne.setKerto(false);
-        }
-
-        if (jako.isSelected()) {
-            tilanne.setJako(true);
-        } else {
-            tilanne.setJako(false);
-        }
-        
-        tilanne.yksiOperaatioSallitaanAina();
-        
-        try {
-            uusiOpLkm = Integer.parseInt(opLkmField.getText());
-        } catch (Exception o) {
-            uusiOpLkm=tilanne.getOpLkm();
-        }
-        
-        tilanne.setOpLkm(uusiOpLkm);
         tilanne.setNimi(nimiField.getText());
         
         Kayttoliittyma kl = new Kayttoliittyma(logiikka);
         SwingUtilities.invokeLater(kl);
         frame2.dispose();
     }
-
-    @Override
-    public void run() {
-        frame2.pack();
-        frame2.setVisible(true);      
-    }
     
     public OptionsAlku(Sovelluslogiikka logiikka) {
-        frame2 = new JFrame("Asetukset");
-        
+        super(logiikka.getTilanne());
         this.logiikka=logiikka;
-        tilanne=logiikka.getTilanne();
-        
-        frame2.setPreferredSize(new Dimension(400,600));
-        frame2.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        
-        luoKomponentit(frame2.getContentPane());
     }
     
-    private void luoKomponentit(Container container) {
-        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-  
-        ButtonGroup sulkuja = new ButtonGroup();
 
-        JLabel teksti = new JLabel("Mikä on nimesi?");
+    @Override
+    protected void luoKomponentit(Container container) {
+        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+        
+        JLabel teksti1 = new JLabel("Mikä on nimesi?");
         nimiField = new JTextField();
         
-        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-        sulut = new JCheckBox();
-        plus = new JCheckBox();
-        miinus = new JCheckBox();
-        kerto = new JCheckBox();
-        jako = new JCheckBox();
+        container.add(teksti1);
+        container.add(nimiField);
         
-        JLabel teksti1 = new JLabel("Käytetäänkö sulkuja?");    
-        JLabel teksti2 = new JLabel("Pluslaskuja?");   
-        JLabel teksti3 = new JLabel("Miinuslaskuja?");   
-        JLabel teksti4 = new JLabel("Kertolaskuja?");   
-        JLabel teksti5 = new JLabel("Jakolaskuja? (keskeneräinen)");   
+        super.luoKomponentit(container);
         
-        
-        JLabel teksti6 = new JLabel("Kuinka monta lukua laskutoimituksessa?");
-        opLkmField = new JTextField();
-        
-        JButton lopeta = new JButton("Valmis");
-        lopeta.addActionListener(this);    
-        
-        frame2.add(teksti);
-        frame2.add(nimiField);
-        
-        frame2.add(teksti1);
-        frame2.add(sulut);
-        
-        frame2.add(teksti2);
-        frame2.add(plus);
-        
-        frame2.add(teksti3);
-        frame2.add(miinus);
-        
-        frame2.add(teksti4);
-        frame2.add(kerto);
-        
-        frame2.add(teksti5);
-        frame2.add(jako);
-        
-        frame2.add(teksti6);
-        
-        frame2.add(opLkmField);
-        frame2.add(lopeta);
     }
 }

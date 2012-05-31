@@ -7,7 +7,7 @@ import Harjoitustyo.sovelluslogiikka.PeliTilanne;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-/**
+/**Testaa PeliTilanne-luokan toimintaa.
  *
  * @author JH
  */
@@ -55,10 +55,11 @@ public class PeliTilanneTest {
         assertFalse(tilanne.getOpLkm()==3);
         assertFalse(tilanne.isSulkuja()==true);
     }
-    
+
     @Test
     public void onnistuukoAsetustenVaihtoPeliTilanteenKautta() throws Exception {
-        String uudetAsetukset="TestiNimi\n3\ntrue";
+        String uudetAsetukset="TestiNimi\n3\ntrue\ntrue\ntrue\n"
+                + "true\ntrue\n20";
         tilanne.asetaAsetukset(uudetAsetukset);
         assertTrue(tilanne.getOpLkm()==3);
     }

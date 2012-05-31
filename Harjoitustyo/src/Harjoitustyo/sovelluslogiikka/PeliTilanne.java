@@ -6,32 +6,31 @@ package Harjoitustyo.sovelluslogiikka;
 
 import java.util.ArrayList;
 
-/**
+/**Sisältää kaikki pelin asetukset, mm. pelaajan nimen ja käytetäänkö
+ * laskuissa sulkuja tai murtolukuja.
  *
  * @author JH
  */
 public class PeliTilanne {
 
-    private String nimi;
-    private int vastattuja;
-    private int oikeitaVastauksia;
-    private int opLkm;
-    private boolean sulkuja;
-    private boolean plus;
-    private boolean miinus;
-    private boolean kerto;
-    private boolean jako;
+    private String nimi="Anonyymi";
+    private int vastattuja=0;
+    private int oikeitaVastauksia=0;
+    private int opLkm=2;
+    private int operandMax=20;
+    private boolean sulkuja=false;
+    private boolean plus=true;
+    private boolean miinus=false;
+    private boolean kerto=false;
+    private boolean jako=false;
+    private boolean murtolukuja=false;
+    
+    public int getOperandMax() {
+        return operandMax;
+    }
 
-    public PeliTilanne() {
-        this.nimi="Anonyymi";
-        this.vastattuja=0;
-        this.oikeitaVastauksia=0;
-        this.opLkm=2;
-        this.sulkuja=false;
-        this.plus=true;
-        this.miinus=false;
-        this.kerto=false;
-        this.jako=false;
+    public void setOperandMax(int operandMax) {
+        this.operandMax = operandMax;
     }
     
     public boolean isJako() {
@@ -40,6 +39,14 @@ public class PeliTilanne {
 
     public boolean isKerto() {
         return kerto;
+    }
+
+    public void setMurtolukuja(boolean murtolukuja) {
+        this.murtolukuja = murtolukuja;
+    }
+
+    public boolean isMurtolukuja() {
+        return murtolukuja;
     }
 
     public boolean isMiinus() {
@@ -103,6 +110,10 @@ public class PeliTilanne {
     
     public void setOpLkm(int opLkm) {
         this.opLkm = opLkm;
+        
+        if (opLkm < 2) {
+            opLkm=2;
+        }
     }
 
     public boolean isSulkuja() {
@@ -134,6 +145,7 @@ public class PeliTilanne {
             miinus = Boolean.parseBoolean(asetuksetTaulukko[4]);                
             kerto = Boolean.parseBoolean(asetuksetTaulukko[5]);                
             jako = Boolean.parseBoolean(asetuksetTaulukko[6]);    
+            operandMax = Integer.parseInt(asetuksetTaulukko[7]); 
         } catch (Exception e) {
             throw e;
         }
@@ -151,6 +163,7 @@ public class PeliTilanne {
         teksti=teksti+miinus+"\n";
         teksti=teksti+kerto+"\n";        
         teksti=teksti+jako+"\n";    
+        teksti=teksti+operandMax+"\n";    
         
         return teksti;
     }

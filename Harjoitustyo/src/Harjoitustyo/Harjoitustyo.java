@@ -11,7 +11,9 @@ import Harjoitustyo.sovelluslogiikka.Sovelluslogiikka;
 import Harjoitustyo.sovelluslogiikka.Sovelluslogiikka;
 import javax.swing.SwingUtilities;
 
-/**
+/**Sisältää main-metodin, jossa käynnistetään pelin toimintaa ohjaava
+ * Sovelluslogiikka-luokka ja käyttöliittymän ensimmäisen vaiheen
+ * toteuttava KäyttöliittymäLoader.
  *
  * @author jhakkane
  */

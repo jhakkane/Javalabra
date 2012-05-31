@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
-/**
+/**Valikko, jossa pelaaja voi muuttaa pelin asetuksia kesken pelin.
  *
  * @author JH
  */
@@ -24,11 +24,13 @@ public class Options implements ActionListener, Runnable {
     JCheckBox kerto;
     JCheckBox jako;
     
+    JCheckBox murtolukuja;
+    
     JTextField opLkmField;
+    JTextField kokoField;
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        int uusiOpLkm=2;
         
         if (sulut.isSelected()) {
             tilanne.setSulkuja(true);
@@ -60,15 +62,30 @@ public class Options implements ActionListener, Runnable {
             tilanne.setJako(false);
         }
         
-        tilanne.yksiOperaatioSallitaanAina();
-        
-        try {
-            uusiOpLkm = Integer.parseInt(opLkmField.getText());
-        } catch (Exception o) {
-            uusiOpLkm=tilanne.getOpLkm();
+        if (murtolukuja.isSelected()) {
+            tilanne.setMurtolukuja(true);
+        } else {
+            tilanne.setMurtolukuja(false);
         }
         
-        tilanne.setOpLkm(uusiOpLkm);
+        tilanne.yksiOperaatioSallitaanAina();
+        
+        
+        int i=2;
+        try {
+            i = Integer.parseInt(opLkmField.getText());
+        } catch (Exception o) {
+            i=tilanne.getOpLkm();
+        }
+        tilanne.setOpLkm(i);
+        
+        try {
+            i = Integer.parseInt(kokoField.getText());
+        } catch (Exception o) {
+            i=tilanne.getOperandMax();
+        }
+        tilanne.setOperandMax(i);
+
         
     }
     
@@ -88,7 +105,7 @@ public class Options implements ActionListener, Runnable {
         luoKomponentit(frame2.getContentPane());  
     }
     
-    private void luoKomponentit(Container container) {
+    protected void luoKomponentit(Container container) {
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
         sulut = new JCheckBox();
         plus = new JCheckBox();
@@ -96,15 +113,21 @@ public class Options implements ActionListener, Runnable {
         kerto = new JCheckBox();
         jako = new JCheckBox();
         
+        murtolukuja = new JCheckBox();
+        
         JLabel teksti1 = new JLabel("Käytetäänkö sulkuja?");    
         JLabel teksti2 = new JLabel("Pluslaskuja?");   
         JLabel teksti3 = new JLabel("Miinuslaskuja?");   
         JLabel teksti4 = new JLabel("Kertolaskuja?");   
-        JLabel teksti5 = new JLabel("Jakolaskuja? (keskeneräinen)");   
+        JLabel teksti5 = new JLabel("Jakolaskuja?");   
         
+        JLabel teksti6 = new JLabel("Saako laskuissa olla murtolukuja?");  
         
-        JLabel teksti6 = new JLabel("Kuinka monta lukua laskutoimituksessa?");
+        JLabel teksti7 = new JLabel("Kuinka monta lukua laskutoimituksessa?");
         opLkmField = new JTextField();
+
+        JLabel teksti8 = new JLabel("Mikä on itseisarvoltaan suurin luku, joka saa esiintyä laskutoimituksessa?");
+        kokoField = new JTextField();
         
         JButton lopeta = new JButton("Valmis");
         lopeta.addActionListener(this);    
@@ -123,10 +146,16 @@ public class Options implements ActionListener, Runnable {
         
         frame2.add(teksti5);
         frame2.add(jako);
-        
+
         frame2.add(teksti6);
+        frame2.add(murtolukuja);
         
+        frame2.add(teksti7);
         frame2.add(opLkmField);
+        
+        frame2.add(teksti8);
+        frame2.add(kokoField);
+        
         frame2.add(lopeta);
     }
 }

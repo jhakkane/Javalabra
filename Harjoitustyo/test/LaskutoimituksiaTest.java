@@ -3,20 +3,18 @@
  * and open the template in the editor.
  */
 
-import Harjoitustyo.sovelluslogiikka.Kysymys;
-import Harjoitustyo.sovelluslogiikka.PeliTilanne;
+import Harjoitustyo.sovelluslogiikka.Laskutoimituksia;
+import java.util.ArrayList;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-/**
+/**Testaa Laskutoimituksia-luokan toimintaa.
  *
  * @author JH
  */
-public class KysymysTest {
+public class LaskutoimituksiaTest {
     
-    private Kysymys k;
-    
-    public KysymysTest() {
+    public LaskutoimituksiaTest() {
     }
 
     @BeforeClass
@@ -29,7 +27,6 @@ public class KysymysTest {
     
     @Before
     public void setUp() {
-        k = new Kysymys(new PeliTilanne());
     }
     
     @After
@@ -42,11 +39,11 @@ public class KysymysTest {
     // public void hello() {}
     
     @Test
-    public void kysymyksenLuontiOnnistuu() {
-        PeliTilanne ot = new PeliTilanne();
-        ot.setOpLkm(14);
-        
-        Kysymys uk = new Kysymys(ot);
-        assertTrue(uk.operandienMaara()==ot.getOpLkm());
+    public void alkulukuhajotelmaTest() {
+        ArrayList<Integer>oikeat = new ArrayList<Integer>();
+        oikeat.add(2);
+        oikeat.add(5);
+        oikeat.add(3);
+        assertTrue(Laskutoimituksia.Alkulukuhajotelma(30).containsAll(oikeat));
     }
 }

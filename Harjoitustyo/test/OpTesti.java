@@ -7,7 +7,7 @@ import Harjoitustyo.sovelluslogiikka.Op;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-/**
+/**Testaa Op-enumin toimintaa.
  *
  * @author JH
  */

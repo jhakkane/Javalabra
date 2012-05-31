@@ -4,7 +4,8 @@
  */
 package Harjoitustyo.sovelluslogiikka;
 
-/**
+/**Tämä enum kuvaa kaikki operaatiot, joita luvuille voidaan
+ * tässä ohjelmassa suorittaa.
  *
  * @author jhakkane
  */

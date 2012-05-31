@@ -4,21 +4,21 @@
  */
 
 import Harjoitustyo.sovelluslogiikka.PeliTilanne;
-import Harjoitustyo.sovelluslogiikka.Kysymys;
+import Harjoitustyo.sovelluslogiikka.Lauseke;
 import Harjoitustyo.sovelluslogiikka.Sovelluslogiikka;
 import Harjoitustyo.sovelluslogiikka.Op;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-/**
+/**Testaa Sovelluslogiikka-luokan toimintaa.
  *
  * @author jhakkane
  */
-public class OmaSovelluslogiikkaTest {
+public class SovelluslogiikkaTest {
     
     private Sovelluslogiikka logiikka;
     
-    public OmaSovelluslogiikkaTest() {
+    public SovelluslogiikkaTest() {
         
     }
 
