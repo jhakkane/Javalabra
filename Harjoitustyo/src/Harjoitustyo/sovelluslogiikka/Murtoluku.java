@@ -218,10 +218,17 @@ public class Murtoluku implements Laskettava {
         this.osoittaja = osoittaja;
     }
 
+    /**
+     * Tällä metodilla Lauseke erottaa operandeistaan, onko kyse Lausekkeesta
+     * vai Murtoluvusta.
+     * @return 
+     */
+    @Override
     public boolean onLauseke() {
         return false;
     }
 
+    @Override
     public Murtoluku lukuarvo() {
         return this;
     }

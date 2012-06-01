@@ -55,4 +55,11 @@ public class SovelluslogiikkaTest {
         assertTrue(osat.length==(lkm*2-1));
         
     }
+    
+    @Test
+    public void eteneEiEteneJosVastausOnTyhja() {
+        logiikka.etene(""); //luo kysymyksen
+        assertTrue(logiikka.etene("").substring(0, 46).equals(
+                "Et antanut vastausta! Tässä kysymys uudelleen:"));
+    }
 }

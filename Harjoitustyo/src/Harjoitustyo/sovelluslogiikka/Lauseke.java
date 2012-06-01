@@ -11,9 +11,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**Laskettava-rajapinnan toteuttava luokka, joka kuvaa useammasta Luvusta
- * koostuvaa laskutoimitusta. Tätä luokkaa ei voi toteuttaa vain yhdellä
- * operandilla, ja sen yrittäminen aiheuttaa virhetilanteen. Yksittäinen
- * luku luodaan jollain Luku-rajapinnan toteuttavalla luokalla.
+ * tai toisista Lausekkeista koostuvaa laskutoimitusta. Tätä luokkaa ei voi 
+ * toteuttaa vain yhdellä operandilla, ja sen yrittäminen aiheuttaa virhetilanteen. 
+ * Yksittäinen luku luodaan jollain Luku-rajapinnan toteuttavalla luokalla.
 *
 * @author jhakkane
 */
@@ -36,12 +36,27 @@ public class Lauseke implements Laskettava {
     
     private int operandinMaksimiSuuruus=20;
     private int nimittajanMaksimiSuuruus=operandinMaksimiSuuruus; //väliaikaisesti
+   
+    /**
+     * Luo Lausekkeen suoraan Laskettava- ja Op-listoista. Tämä konstruktori
+     * on tällä hetkellä vain ja ainoastaan testikäyttöä varten. Normaalisti
+     * Lauseke luodaan antamalla PeliTilanne konstruktorille, joka luo Lausekkeen
+     * asetusten perusteella.
+     * @param operandit
+     * @param operaattorit 
+     */
+    public Lauseke(Laskettava[] operandit, Op[] operaattorit) {
+        this.operandit=operandit;
+        this.operaattorit=operaattorit;
+    }
     
-    //laskutoimituksia on 2. lajia
-    //joko ne koostuvat muista laskutoimituksista tai edustavat yksittäistä arvoa
-    //Kysymys voi myös satunnaisgeneroida itsensa
-    
-    
+    /**Luo Lausekkeen PeliTilanteen asetusten perusteella. On virhetilanne yrittää
+     * luoda lauseketta, jossa on vain yksi operandi. Sitä tarkoitusta varten on olemassa
+     * Murtoluku.
+     * 
+     * @param tilanne
+     * @throws Exception 
+     */
     public Lauseke(PeliTilanne tilanne) throws Exception {
 
         //PeliTilanteen muuttujia ei saa muuttaa, koska muuten pelin asetuksetkin muuttuvat.
@@ -83,7 +98,7 @@ public class Lauseke implements Laskettava {
        
     }
     
-    public void luoSulullinenLauseke(PeliTilanne tilanne) {
+    private void luoSulullinenLauseke(PeliTilanne tilanne) {
         //jaetaan luvut kahteen lausekkeeseen tai yhteen lausekkeeseen ja yhteen satunnaislukuun
 
         this.operandit = new Laskettava[2];
@@ -122,7 +137,7 @@ public class Lauseke implements Laskettava {
         arvoOperaattorit(tilanne);
     }
     
-    public void luoSulutonLauseke(PeliTilanne tilanne) {
+    private void luoSulutonLauseke(PeliTilanne tilanne) {
         this.operandit = new Laskettava[opLkm];
         this.operaattorit = new Op[opLkm-1];
 
@@ -130,7 +145,7 @@ public class Lauseke implements Laskettava {
         arvoOperanditSuluttomaanLausekkeeseen(tilanne);  
     }
     
-    public void arvoOperanditSuluttomaanLausekkeeseen(PeliTilanne tilanne) {
+    private void arvoOperanditSuluttomaanLausekkeeseen(PeliTilanne tilanne) {
         boolean saaOllaNolla;
         
         for (int i = 0; i < opLkm; i++) {
@@ -146,7 +161,7 @@ public class Lauseke implements Laskettava {
         }
     }
     
-    public void arvoOperaattorit(PeliTilanne tilanne) {
+    private void arvoOperaattorit(PeliTilanne tilanne) {
         ArrayList<Op>sallitutOperaattorit = new ArrayList<Op>();
         if (plus) { sallitutOperaattorit.add(Op.PLUS); }
         if (miinus) { sallitutOperaattorit.add(Op.MIN); }
@@ -167,7 +182,7 @@ public class Lauseke implements Laskettava {
      * @param tilanne
      * @return 
      */
-    public Op sopivaOperaattori(PeliTilanne tilanne) {
+    private Op sopivaOperaattori(PeliTilanne tilanne) {
         Op sopiva=Op.PLUS;
         if (tilanne.isJako()) { sopiva = Op.DIV; }
         if (tilanne.isKerto()) { sopiva = Op.MUL; }
@@ -177,7 +192,7 @@ public class Lauseke implements Laskettava {
         return sopiva;
     }
     
-    public void poistaNollallaJako(PeliTilanne tilanne) {
+    private void poistaNollallaJako(PeliTilanne tilanne) {
         
         for (int i = 1; i < operandit.length; i++) {
             if (operandit[i].lukuarvo().onNolla() && operaattorit[i-1]==Op.DIV) {
@@ -394,6 +409,11 @@ public class Lauseke implements Laskettava {
         return teksti;
     }
 
+    /**
+     * Tällä metodilla Lauseke erottaa operandeistaan, onko kyse Lausekkeesta
+     * vai Murtoluvusta.
+     * @return 
+     */
     @Override
     public boolean onLauseke() {
         return true;

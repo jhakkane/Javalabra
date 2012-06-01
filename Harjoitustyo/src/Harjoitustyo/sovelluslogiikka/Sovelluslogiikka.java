@@ -24,9 +24,7 @@ public class Sovelluslogiikka {
     private PeliTilanne tilanne;
     
     public Sovelluslogiikka() {
-        this.tilanne=new PeliTilanne();
-        tilanne.setOpLkm(2);
-        tilanne.setSulkuja(false);
+        tilanne=new PeliTilanne();
     }
     
     /**
@@ -62,12 +60,11 @@ public class Sovelluslogiikka {
      * @param vastaus
      * @return 
      */
-    
     private String tarkista(String vastaus) {
         
         if (vastaus.isEmpty()) {
             //huom. vaihe ei muutu, käyttäjä yrittää uudelleen
-            return "Et antanut vastausta! Tässä kysymys uudelleen: \n\n "
+            return "Et antanut vastausta! Tässä kysymys uudelleen: \n\n"
                     +kysymys;
         }
 
@@ -77,14 +74,23 @@ public class Sovelluslogiikka {
         
         Murtoluku oikeaVastaus = kysymys.lukuarvo(); 
         
+        Murtoluku pelaajanVastaus = parsePelaajanVastaus(vastaus);       
+        
+        if (pelaajanVastaus.samaLuku(oikeaVastaus)) {
+            tilanne.oikeinVastattu();
+            return "Oikein! Vastaus on juuri "+oikeaVastaus;
+        } else {
+            return "Väärin! Oikea vastaus on "+oikeaVastaus;
+        }
+    }
+    
+    private Murtoluku parsePelaajanVastaus(String vastaus) {
         //pelaajan vastaus on muotoa x y/z
         String vastauksenOsat[] = vastaus.split("[ /]");
         int vastausKokonaisluku= 0;
         int vastausOsoittaja = 0;
-        int vastausNimittaja = 1;     
+        int vastausNimittaja = 1;    
         
-        Murtoluku pelaajanVastaus=null;
-
         //pelaaja vastasi sekaluvulla
         if (vastauksenOsat.length==3) {
             vastausKokonaisluku= Integer.parseInt(vastauksenOsat[0]);
@@ -102,17 +108,10 @@ public class Sovelluslogiikka {
             vastausKokonaisluku= Integer.parseInt(vastauksenOsat[0]);
             vastausNimittaja = 1;
             vastausOsoittaja = vastausKokonaisluku;
-        }
-        pelaajanVastaus = new Murtoluku(vastausOsoittaja, vastausNimittaja);            
+        }    
         
-        if (pelaajanVastaus.samaLuku(oikeaVastaus)) {
-            tilanne.oikeinVastattu();
-            return "Oikein! Vastaus on juuri "+oikeaVastaus;
-        } else {
-            return "Väärin! Oikea vastaus on "+oikeaVastaus;
-        }
+        return new Murtoluku(vastausOsoittaja, vastausNimittaja);    
     }
-    
     
     /**
      * Tätä metodia täytyy kutsua, kun halutaan saada tietoja vallitsevasta
@@ -125,7 +124,7 @@ public class Sovelluslogiikka {
     }   
     
     /**
-     * Tuottaa uuden Kysymy-solion, asettaa sen kysymys-muuttujan
+     * Tuottaa uuden Lauseke-olion, asettaa sen kysymys-muuttujan
      * arvoksi ja palauttaa kyseisen olion toStringin.
      * @return 
      */

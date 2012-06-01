@@ -10,7 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
-/**
+/** Kuuntelija, joka päivittää pelajaalle näkyvät tiedot, kuten pelaaja nimen,
+ * kysymyksen ja kysymyksen vastauksen.
  *
  * @author jhakkane
  */

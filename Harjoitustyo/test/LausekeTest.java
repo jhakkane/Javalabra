@@ -4,6 +4,8 @@
  */
 
 import Harjoitustyo.sovelluslogiikka.Lauseke;
+import Harjoitustyo.sovelluslogiikka.Murtoluku;
+import Harjoitustyo.sovelluslogiikka.Op;
 import Harjoitustyo.sovelluslogiikka.PeliTilanne;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,6 +19,7 @@ import static org.junit.Assert.*;
 public class LausekeTest {
     
     private Lauseke k;
+    private Lauseke l;
     
     public LausekeTest() {
     }
@@ -33,6 +36,17 @@ public class LausekeTest {
     public void setUp() {
         try {
             k = new Lauseke(new PeliTilanne());
+            
+            Murtoluku[] oper = new Murtoluku[3];
+            oper[0] = new Murtoluku(6,3);
+            oper[1] = new Murtoluku(12,4);
+            oper[2] = new Murtoluku(1,2);
+            
+            Op[] ops = new Op[2];
+            ops[0]=Op.MUL;
+            ops[1]=Op.PLUS;
+            
+            l = new Lauseke(oper,ops);
         } catch (Exception ex) {
             Logger.getLogger(LausekeTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -59,6 +73,12 @@ public class LausekeTest {
         } catch (Exception ex) {
             Logger.getLogger(LausekeTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
+    
+    @Test
+    public void lausekkeenRatkaisuOnOikein() {
+        assertTrue(l.lukuarvo().samaLuku(new Murtoluku(13,2)));
+    }
+    
+    
 }
