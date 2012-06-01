@@ -33,6 +33,27 @@ public class Options implements ActionListener, Runnable {
     @Override
     public void actionPerformed(ActionEvent e) {
         
+        asetaTilanne();
+        
+        
+        int i=2;
+        try {
+            i = Integer.parseInt(opLkmField.getText());
+        } catch (Exception o) {
+            i=tilanne.getOpLkm();
+        }
+        tilanne.setOpLkm(i);
+        
+        try {
+            i = Integer.parseInt(kokoField.getText());
+        } catch (Exception o) {
+            i=tilanne.getOperandMax();
+        }
+        tilanne.setOperandMax(i);
+
+    }
+    
+    public void asetaTilanne() {
         if (sulut.isSelected()) {
             tilanne.setSulkuja(true);
         } else {
@@ -76,23 +97,6 @@ public class Options implements ActionListener, Runnable {
         }
         
         tilanne.yksiOperaatioSallitaanAina();
-        
-        
-        int i=2;
-        try {
-            i = Integer.parseInt(opLkmField.getText());
-        } catch (Exception o) {
-            i=tilanne.getOpLkm();
-        }
-        tilanne.setOpLkm(i);
-        
-        try {
-            i = Integer.parseInt(kokoField.getText());
-        } catch (Exception o) {
-            i=tilanne.getOperandMax();
-        }
-        tilanne.setOperandMax(i);
-
     }
     
     @Override
@@ -114,13 +118,25 @@ public class Options implements ActionListener, Runnable {
     protected void luoKomponentit(Container container) {
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
         sulut = new JCheckBox();
+        sulut.setSelected(tilanne.isSulkuja());
+        
         plus = new JCheckBox();
+        plus.setSelected(tilanne.isPlus());
+        
         miinus = new JCheckBox();
+        miinus.setSelected(tilanne.isMiinus());
+        
         kerto = new JCheckBox();
+        kerto.setSelected(tilanne.isKerto());
+    
         jako = new JCheckBox();
+        jako.setSelected(tilanne.isJako());
         
         murtolukuja = new JCheckBox();
+        murtolukuja.setSelected(tilanne.isMurtolukuja());
+        
         negatiivisia = new JCheckBox();
+        negatiivisia.setSelected(tilanne.isNegatiivisia());
         
         JLabel teksti1 = new JLabel("Käytetäänkö sulkuja?");    
         JLabel teksti2 = new JLabel("Pluslaskuja?");   
@@ -133,9 +149,11 @@ public class Options implements ActionListener, Runnable {
         
         JLabel teksti8 = new JLabel("Kuinka monta lukua laskutoimituksessa?");
         opLkmField = new JTextField();
+        opLkmField.setText(""+tilanne.getOpLkm());
 
         JLabel teksti9 = new JLabel("Mikä on itseisarvoltaan suurin luku, joka saa esiintyä laskutoimituksessa?");
         kokoField = new JTextField();
+        kokoField.setText(""+tilanne.getOperandMax());
         
         JButton lopeta = new JButton("Valmis");
         lopeta.addActionListener(this);    

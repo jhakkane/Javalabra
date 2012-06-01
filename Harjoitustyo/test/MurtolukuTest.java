@@ -85,4 +85,5 @@ public class MurtolukuTest {
         assertTrue(l2.kokonaisluku());
         assertFalse(l3.kokonaisluku());
     }
+    
 }

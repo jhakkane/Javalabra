@@ -17,6 +17,15 @@ public class Murtoluku implements Laskettava {
     private int nimittaja;
 
     /**
+     * Ainut tapa luoda murtoluku 0/0. Tarpeen vain erikoislukuna esim. Lausekkeessa,
+     * tällä ei lasketa mitään.
+     */
+    public Murtoluku() {
+        osoittaja = 0;
+        nimittaja = 0;
+    }
+    
+    /**
      * Luo uuden murtoluvun ja pitää huolen, että vain osoittaja voi olla negatiivinen.
      * Nimittäjä ei myöskään voi olla nolla.
      * @param o
@@ -46,12 +55,19 @@ public class Murtoluku implements Laskettava {
         return this;
     }
     
+    public boolean onErikoisMerkki() {
+        if (nimittaja==0) {
+            return true;
+        }
+        return false;
+    }
+    
     public double desimaalilukuna() {
         return osoittaja/nimittaja;
     }
     
     public boolean kokonaisluku() {
-        double osamaara=osoittaja/nimittaja;
+        double osamaara=osoittaja*1.0/nimittaja;
         if (osamaara == Math.round(osamaara)) {
             return true;
         }

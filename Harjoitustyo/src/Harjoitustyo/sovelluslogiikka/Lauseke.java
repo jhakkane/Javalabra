@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 * @author jhakkane
 */
 public class Lauseke implements Laskettava {
+    private final Murtoluku POISTETTU = new Murtoluku();
     private final Murtoluku NOLLA = new Murtoluku(0,1);
     
     private Laskettava[] operandit; //sisältää siis sekä Lukuja että Lausekkeita
@@ -43,6 +44,7 @@ public class Lauseke implements Laskettava {
     
     public Lauseke(PeliTilanne tilanne) throws Exception {
 
+        //PeliTilanteen muuttujia ei saa muuttaa, koska muuten pelin asetuksetkin muuttuvat.
         opLkm=tilanne.getOpLkm();
         sulkuja=tilanne.isSulkuja();
         plus=tilanne.isPlus();
@@ -64,46 +66,13 @@ public class Lauseke implements Laskettava {
         //yhtenäinen sulkujen sisällä oleva kokonaisuus
         //tai laskutoimitus jossa ei ole sulkuja ollenkaan
         if (sulkuja == false) {
-            this.operandit = new Laskettava[opLkm];
-            this.operaattorit = new Op[opLkm-1];
             
-
-            arvoOperaattorit(tilanne);
-            arvoOperandit(tilanne);
-
+            luoSulutonLauseke(tilanne);
 
         //vähintään 3 operandia
         } else {
             
-            //jaetaan luvut kahteen lausekkeeseen
-
-            this.operandit = new Laskettava[2];
-            this.operaattorit = new Op[1];
-            
-            Random r = new Random();
-            int vali = r.nextInt(opLkm-1)+1;
-
-            int vanhaOpLkm = tilanne.getOpLkm();
-            
-            tilanne.setOpLkm(vali);
-            if (vali == 1) {
-                operandit[0]=satunnaisluku(true,murtolukuOperandi);                        
-            } else {
-
-                operandit[0]=new Lauseke(tilanne);                
-            }
-
-            vali=opLkm-vali;
-            tilanne.setOpLkm(vali);
-            if (vali == 1) {
-                operandit[1]=satunnaisluku(true,murtolukuOperandi);                        
-            } else {
-                operandit[1]=new Lauseke(tilanne);                
-            }
-            
-            tilanne.setOpLkm(vanhaOpLkm);
-            
-            arvoOperaattorit(tilanne);
+            luoSulullinenLauseke(tilanne);
         }
         
         
@@ -114,7 +83,54 @@ public class Lauseke implements Laskettava {
        
     }
     
-    public void arvoOperandit(PeliTilanne tilanne) {
+    public void luoSulullinenLauseke(PeliTilanne tilanne) {
+        //jaetaan luvut kahteen lausekkeeseen tai yhteen lausekkeeseen ja yhteen satunnaislukuun
+
+        this.operandit = new Laskettava[2];
+        this.operaattorit = new Op[1];
+
+        Random r = new Random();
+        int vali = r.nextInt(opLkm-1)+1;
+
+        int vanhaOpLkm = tilanne.getOpLkm();
+
+        tilanne.setOpLkm(vali);
+        if (vali == 1) {
+            operandit[0]=satunnaisluku(true,murtolukuOperandi);                        
+        } else {
+            try {
+                operandit[0]=new Lauseke(tilanne);
+            } catch (Exception ex) {
+                Logger.getLogger(Lauseke.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        vali=opLkm-vali;
+        tilanne.setOpLkm(vali);
+        if (vali == 1) {
+            operandit[1]=satunnaisluku(true,murtolukuOperandi);                        
+        } else {
+            try {
+                operandit[1]=new Lauseke(tilanne);
+            } catch (Exception ex) {
+                Logger.getLogger(Lauseke.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        tilanne.setOpLkm(vanhaOpLkm);
+
+        arvoOperaattorit(tilanne);
+    }
+    
+    public void luoSulutonLauseke(PeliTilanne tilanne) {
+        this.operandit = new Laskettava[opLkm];
+        this.operaattorit = new Op[opLkm-1];
+
+        arvoOperaattorit(tilanne);
+        arvoOperanditSuluttomaanLausekkeeseen(tilanne);  
+    }
+    
+    public void arvoOperanditSuluttomaanLausekkeeseen(PeliTilanne tilanne) {
         boolean saaOllaNolla;
         
         for (int i = 0; i < opLkm; i++) {
@@ -131,31 +147,18 @@ public class Lauseke implements Laskettava {
     }
     
     public void arvoOperaattorit(PeliTilanne tilanne) {
-        for (int i = 0; i < operaattorit.length; i++) {
-            Random r = new Random();
-            int opnro = r.nextInt(4);
-
-            if (opnro == 0) {
-                operaattorit[i]=Op.PLUS;
-            } else if(opnro == 1) {
-                operaattorit[i]=Op.MUL;
-            } else if(opnro == 2) {
-                operaattorit[i]=Op.DIV;
-            } else if(opnro == 3) {
-                operaattorit[i]=Op.MIN;
-            }
-        }
-
-        //muutetaan sopimattomat operaattorit ensimmäiseksi sopivaksi (joita on ainakin 1)
-        Op sopiva = sopivaOperaattori(tilanne);
+        ArrayList<Op>sallitutOperaattorit = new ArrayList<Op>();
+        if (plus) { sallitutOperaattorit.add(Op.PLUS); }
+        if (miinus) { sallitutOperaattorit.add(Op.MIN); }
+        if (kerto) { sallitutOperaattorit.add(Op.MUL); }
+        if (jako) { sallitutOperaattorit.add(Op.DIV); }
+        
         
         for (int i = 0; i < operaattorit.length; i++) {
-            if ((operaattorit[i]==Op.DIV && tilanne.isJako()==false) ||
-                   (operaattorit[i]==Op.MUL && tilanne.isKerto()==false) ||
-                    (operaattorit[i]==Op.MIN && tilanne.isMiinus()==false) ||
-                    (operaattorit[i]==Op.PLUS && tilanne.isPlus()==false)) {
-                operaattorit[i]=sopiva;
-            }
+            Random r = new Random();
+            int opnro = r.nextInt(sallitutOperaattorit.size());
+
+            operaattorit[i]=sallitutOperaattorit.get(opnro);
         }
     }
     
@@ -229,10 +232,31 @@ public class Lauseke implements Laskettava {
         luku = new Murtoluku(osoittaja,nimittaja);   
         return luku;
     }
+
+    /**
+     * Palauttaa tekstinä kaikki operandit. Käyttö pääasiassa testitarkoituksiin
+     * ja voidaan poistaa myöhemmin.
+     * @return 
+     */
+    public String optext() {
+        String teksti="";
+        for (Laskettava laskettava : operandit) {
+            teksti=teksti+laskettava+", ";
+        }
+     
+        return teksti;
+    }
     
     /**
      * Palauttaa Luku-tyyppisen muuttujan, jonka arvo on sama kuin tämän
      * kysymyksen ratkaisu.
+     * 
+     * Toiminta perustuu siihen, että ensin lasketaan kaikki kerto- ja jakolaskut
+     * ja kerrottavan tai jakajan paikalle laitetaan tulo tai osamäärä.
+     * Jaettavan tai kerrottavan paikalle laitetaan erikoismerkki 0/0.
+     * Sitten lasketaan plus- ja vähennyslaskut jäljelle jääneillä operandeilla.
+     * Seuraavaksi korvataan erikoismerkit nollilla.
+     * Lopuksi lasketaan luvut yhteen.
      * @return 
      */
     @Override
@@ -251,49 +275,18 @@ public class Lauseke implements Laskettava {
         }
         operaattoritTemp.addAll(Arrays.asList(operaattorit));
 
-
-        //ensin kerto- ja jakolaskut
-        for (int i = 0; i < operaattorit.length; i++) {
-
-            if (operaattorit[i]==Op.MUL) {
-                tulos = operanditTemp.get(i).lukuarvo().tulo(operanditTemp.get(i+1).lukuarvo());
-
-                operanditTemp.get(i).setArvo(NOLLA);
-                operanditTemp.get(i+1).setArvo(tulos);
-                operaattoritTemp.set(i, Op.PLUS);
-            } else if (operaattorit[i]==Op.DIV) {
-                tulos = operanditTemp.get(i).lukuarvo().jaettuna(operanditTemp.get(i+1).lukuarvo());
-
-                operanditTemp.get(i).setArvo(NOLLA);
-                operanditTemp.get(i+1).setArvo(tulos);
-                operaattoritTemp.set(i, Op.PLUS);
-            }
-        }
-
-
-        //plus- ja vähennyslaskut
-        for (int i = 0; i < operaattorit.length; i++) {
-            if (operaattorit[i] == Op.PLUS) {
-                tulos = operanditTemp.get(i).lukuarvo().summa(operanditTemp.get(i+1).lukuarvo());
-
-                operanditTemp.get(i).setArvo(NOLLA);
-                operanditTemp.get(i+1).setArvo(tulos);
-                operaattoritTemp.set(i, Op.PLUS);
-            } else if (operaattorit[i]==Op.MIN) {
-                tulos = operanditTemp.get(i).lukuarvo().vahennys(operanditTemp.get(i+1).lukuarvo());
-
-                operanditTemp.get(i).setArvo(NOLLA);
-                operanditTemp.get(i+1).setArvo(tulos);
-                operaattoritTemp.set(i, Op.PLUS);
-            }
-        }
+        
+        lukuarvonLaskentaKertoJaJako(operanditTemp, operaattoritTemp, tulos);
+        lukuarvonLaskentaPlusJaMiinus(operanditTemp, operaattoritTemp, tulos);
+        
+        lukuarvonLaskentaMuutaErikoismerkitNolliksi(operanditTemp);
 
         //lasketaan jäljellä olevat yhteen
         tulos.asetaLuvuksi(0,1);
         for (int i = 0; i < operaattorit.length; i++) {
             tulos = operanditTemp.get(i).lukuarvo().summa(operanditTemp.get(i+1).lukuarvo());
 
-            operanditTemp.get(i).setArvo(NOLLA);
+            operanditTemp.get(i).setArvo(POISTETTU);
             operanditTemp.get(i+1).setArvo(tulos);
             operaattoritTemp.set(i, Op.PLUS);
         }
@@ -301,6 +294,77 @@ public class Lauseke implements Laskettava {
         //pitäisi olla vain 1 luku jäljellä, taulukon viimeiesessä solussa
         return operanditTemp.get(operanditTemp.size()-1).lukuarvo();
 
+    }
+    
+    private void lukuarvonLaskentaMuutaErikoismerkitNolliksi(ArrayList<Murtoluku> operanditTemp) {
+        for (Murtoluku murtoluku : operanditTemp) {
+            if (murtoluku.onErikoisMerkki()) {
+                murtoluku.setArvo(NOLLA);
+            }
+        }
+        
+    }
+    
+    private void lukuarvonLaskentaPlusJaMiinus(ArrayList<Murtoluku> operanditTemp,
+        ArrayList<Op> operaattoritTemp, Murtoluku tulos) {
+        //plus- ja vähennyslaskut
+        for (int i = 0; i < operaattoritTemp.size(); i++) {
+            
+            //jos _TÄMÄ_ merkki on erikoismerkki, muutetaan se nollaksi
+            if (operanditTemp.get(i).onErikoisMerkki()) {
+                operanditTemp.get(i).setArvo(NOLLA);
+            }
+            
+            //Siirretään lukua ja operaatiota yksi askel eteenpäin
+            //jos _SEURAAVA_ merkki on erikoismerkki
+            if (operanditTemp.get(i+1).onErikoisMerkki()) {
+
+                operanditTemp.get(i+1).setArvo(operanditTemp.get(i));
+                operanditTemp.get(i).setArvo(POISTETTU);
+
+                operaattoritTemp.set(i+1, operaattoritTemp.get(i));        
+                operaattoritTemp.set(i, Op.PLUS);
+                continue;
+            }
+            
+            
+            if (operaattoritTemp.get(i) == Op.PLUS) {
+                
+                tulos = operanditTemp.get(i).lukuarvo().summa(operanditTemp.get(i+1).lukuarvo());
+
+                operanditTemp.get(i).setArvo(POISTETTU);
+                operanditTemp.get(i+1).setArvo(tulos);
+                operaattoritTemp.set(i, Op.PLUS);
+            } else if (operaattoritTemp.get(i) == Op.MIN) {
+                
+                tulos = operanditTemp.get(i).lukuarvo().vahennys(operanditTemp.get(i+1).lukuarvo());
+
+                operanditTemp.get(i).setArvo(POISTETTU);
+                operanditTemp.get(i+1).setArvo(tulos);
+                operaattoritTemp.set(i, Op.PLUS);
+            }
+        }
+    }
+    
+    private void lukuarvonLaskentaKertoJaJako(ArrayList<Murtoluku> operanditTemp,
+        ArrayList<Op> operaattoritTemp, Murtoluku tulos) {
+
+        for (int i = 0; i < operaattoritTemp.size(); i++) {
+
+            if (operaattoritTemp.get(i)==Op.MUL) {
+                tulos = operanditTemp.get(i).lukuarvo().tulo(operanditTemp.get(i+1).lukuarvo());
+
+                operanditTemp.get(i).setArvo(POISTETTU);
+                operanditTemp.get(i+1).setArvo(tulos);
+                operaattoritTemp.set(i, Op.PLUS);
+            } else if (operaattoritTemp.get(i)==Op.DIV) {
+                tulos = operanditTemp.get(i).lukuarvo().jaettuna(operanditTemp.get(i+1).lukuarvo());
+
+                operanditTemp.get(i).setArvo(POISTETTU);
+                operanditTemp.get(i+1).setArvo(tulos);
+                operaattoritTemp.set(i, Op.PLUS);
+            }
+        }
     }
 
     public int operandienMaara() {
