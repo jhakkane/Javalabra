@@ -24,6 +24,7 @@ public class PeliTilanne {
     private boolean kerto=false;
     private boolean jako=false;
     private boolean murtolukuja=false;
+    private boolean negatiivisia=false;
     
     public int getOperandMax() {
         return operandMax;
@@ -84,6 +85,14 @@ public class PeliTilanne {
         return opLkm;
     }
 
+    public void setNegatiivisia(boolean negatiivisia) {
+        this.negatiivisia = negatiivisia;
+    }
+
+    public boolean isNegatiivisia() {
+        return negatiivisia;
+    }
+
     public void oikeinVastattu() {
         oikeitaVastauksia++;
     }
@@ -132,6 +141,7 @@ public class PeliTilanne {
         this.sulkuja = sulkuja;
     }
 
+    
     public void asetaAsetukset(String asetukset) throws Exception {
         //asetusten järjestys näkyy ylempää
         
@@ -145,12 +155,12 @@ public class PeliTilanne {
             miinus = Boolean.parseBoolean(asetuksetTaulukko[4]);                
             kerto = Boolean.parseBoolean(asetuksetTaulukko[5]);                
             jako = Boolean.parseBoolean(asetuksetTaulukko[6]);    
-            operandMax = Integer.parseInt(asetuksetTaulukko[7]); 
+            murtolukuja = Boolean.parseBoolean(asetuksetTaulukko[7]);   
+            negatiivisia = Boolean.parseBoolean(asetuksetTaulukko[8]);   
+            operandMax = Integer.parseInt(asetuksetTaulukko[9]); 
         } catch (Exception e) {
             throw e;
         }
-
-        
     }
     
     @Override
@@ -163,6 +173,8 @@ public class PeliTilanne {
         teksti=teksti+miinus+"\n";
         teksti=teksti+kerto+"\n";        
         teksti=teksti+jako+"\n";    
+        teksti=teksti+murtolukuja+"\n";    
+        teksti=teksti+negatiivisia+"\n";   
         teksti=teksti+operandMax+"\n";    
         
         return teksti;

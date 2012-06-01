@@ -11,13 +11,23 @@ import java.util.ArrayList;
  *
  * @author JH
  */
-public class Murtoluku implements Luku {
+public class Murtoluku implements Laskettava {
     
     private int osoittaja;
     private int nimittaja;
 
-    
+    /**
+     * Luo uuden murtoluvun ja pitää huolen, että vain osoittaja voi olla negatiivinen.
+     * Nimittäjä ei myöskään voi olla nolla.
+     * @param o
+     * @param n 
+     */
     public Murtoluku(int o, int n) {
+        if ((o < 0 && n < 0) || (n < 0 && o > 0)) {
+            o=-o;
+            n=-n;
+        }
+        
         osoittaja=o;
         nimittaja=n;
         
@@ -32,7 +42,6 @@ public class Murtoluku implements Luku {
         return nimittaja;
     }
     
-    @Override
     public Murtoluku murtolukuna() {
         return this;
     }
@@ -41,21 +50,16 @@ public class Murtoluku implements Luku {
         return osoittaja/nimittaja;
     }
     
-    @Override
     public boolean kokonaisluku() {
-        if (sekalukuna().kokonaisluku()) {
+        double osamaara=osoittaja/nimittaja;
+        if (osamaara == Math.round(osamaara)) {
             return true;
         }
+        
         return false;
     }
     
-    @Override
-    public Sekaluku sekalukuna() {
-        return new Sekaluku(osoittaja,nimittaja);
-    }
-    
-    @Override
-    public boolean samaLuku(Luku p) {
+    public boolean samaLuku(Murtoluku p) {
         Murtoluku l = p.murtolukuna();
         
         if (l.getOsoittaja()==0 && this.osoittaja==0) {
@@ -80,8 +84,7 @@ public class Murtoluku implements Luku {
     //Kaikki laskutoimitukset tehdään tosiasiassa murtoluvuilla, ja mahdollisesti
     //muutetaan sitten sekaluvuiksi.
     
-    @Override
-    public Murtoluku tulo(Luku l) {
+    public Murtoluku tulo(Murtoluku l) {
         Murtoluku kerrottava = l.murtolukuna();
         Murtoluku tulo;
         
@@ -93,8 +96,7 @@ public class Murtoluku implements Luku {
         return tulo;
     }
     
-    @Override
-    public Murtoluku jaettuna(Luku l) {
+    public Murtoluku jaettuna(Murtoluku l) {
         Murtoluku jakaja = l.murtolukuna();
         Murtoluku osamaara;
         
@@ -106,8 +108,7 @@ public class Murtoluku implements Luku {
         return osamaara;
     }    
 
-    @Override
-    public Murtoluku summa(Luku l) {
+    public Murtoluku summa(Murtoluku l) {
         Murtoluku summattava = l.murtolukuna();
         Murtoluku summa;
         
@@ -120,8 +121,7 @@ public class Murtoluku implements Luku {
         return summa;
     }   
    
-    @Override
-    public Murtoluku vahennys(Luku l) {
+    public Murtoluku vahennys(Murtoluku l) {
         Murtoluku vahennettava = l.murtolukuna();
         Murtoluku summa;
         
@@ -140,13 +140,60 @@ public class Murtoluku implements Luku {
      */
     @Override
     public String toString() {
+        String teksti="";
         if (nimittaja==1) {
-            return ""+osoittaja;
+            teksti=teksti+osoittaja;
         } else {
-            return osoittaja+"/"+nimittaja;
+            if (sekaluku()) {
+                teksti=teksti+sekalukuna()[0]+"  "+sekalukuna()[1]
+                        +"/"+sekalukuna()[2];
+            } else {
+                teksti=teksti+osoittaja+"/"+nimittaja;   
+            }
         }
+        
+        if (negatiivinen()) {
+            teksti="("+teksti+")";
+        }
+        
+        return teksti;
     }
 
+    /**
+     * Palauttaa murtoluvun sekalukumuodossa int-taulukossa.
+     * osat[0]=kokonaisosa
+     * osat[1]=osoittaja
+     * osat[2]=nimittäjä
+     * @return 
+     */
+    public int[] sekalukuna() {
+        int[] osat = new int[3];
+        
+        osat[0]=(int)Math.floor(osoittaja/nimittaja);
+        osat[1]=osoittaja-osat[0]*nimittaja;
+        osat[2]=nimittaja;
+        
+        return osat;
+    }
+    
+    public boolean sekaluku() {
+        if (osoittaja > nimittaja && nimittaja != 1) {
+            return true;
+        }
+        return false;
+    }
+    /**
+     * Tarkistaa osoittajan perusteella, onko luku negatiivinen.
+     * Nimittäjä ei voi olla negatiivinen, konstruktori pitää siitä huolen.
+     * @return 
+     */
+    public boolean negatiivinen() {
+        if (osoittaja < 0) {
+            return true;
+        }
+        return false;
+    }
+    
     public void setNimittaja(int nimittaja) {
         this.nimittaja = nimittaja;
     }
@@ -155,23 +202,19 @@ public class Murtoluku implements Luku {
         this.osoittaja = osoittaja;
     }
 
-    @Override
     public boolean onLauseke() {
         return false;
     }
 
-    @Override
     public Murtoluku lukuarvo() {
         return this;
     }
 
-    @Override
     public void setArvo(Murtoluku m) {
         this.nimittaja=m.getNimittaja();
         this.osoittaja=m.getOsoittaja();
     }
 
-    @Override
     public boolean onNolla() {
         if (osoittaja==0) {
             return true;

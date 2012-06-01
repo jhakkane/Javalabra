@@ -4,7 +4,6 @@
  */
 
 import Harjoitustyo.sovelluslogiikka.Murtoluku;
-import Harjoitustyo.sovelluslogiikka.Sekaluku;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -71,8 +70,8 @@ public class MurtolukuTest {
     
     @Test
     public void samaLukuToimii() {
-        assertTrue(l1.samaLuku(new Sekaluku(12,24,0)));
-        assertFalse(l1.samaLuku(new Sekaluku(11,24,0)));
+        assertTrue(l1.samaLuku(new Murtoluku(12,24)));
+        assertFalse(l1.samaLuku(new Murtoluku(11,24)));
     }
     
     @Test

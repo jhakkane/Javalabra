@@ -25,6 +25,7 @@ public class Options implements ActionListener, Runnable {
     JCheckBox jako;
     
     JCheckBox murtolukuja;
+    JCheckBox negatiivisia;
     
     JTextField opLkmField;
     JTextField kokoField;
@@ -67,6 +68,12 @@ public class Options implements ActionListener, Runnable {
         } else {
             tilanne.setMurtolukuja(false);
         }
+
+        if (negatiivisia.isSelected()) {
+            tilanne.setNegatiivisia(true);
+        } else {
+            tilanne.setNegatiivisia(false);
+        }
         
         tilanne.yksiOperaatioSallitaanAina();
         
@@ -86,7 +93,6 @@ public class Options implements ActionListener, Runnable {
         }
         tilanne.setOperandMax(i);
 
-        
     }
     
     @Override
@@ -114,6 +120,7 @@ public class Options implements ActionListener, Runnable {
         jako = new JCheckBox();
         
         murtolukuja = new JCheckBox();
+        negatiivisia = new JCheckBox();
         
         JLabel teksti1 = new JLabel("Käytetäänkö sulkuja?");    
         JLabel teksti2 = new JLabel("Pluslaskuja?");   
@@ -122,11 +129,12 @@ public class Options implements ActionListener, Runnable {
         JLabel teksti5 = new JLabel("Jakolaskuja?");   
         
         JLabel teksti6 = new JLabel("Saako laskuissa olla murtolukuja?");  
+        JLabel teksti7 = new JLabel("Saako laskuissa olla negatiivisia lukuja?");   
         
-        JLabel teksti7 = new JLabel("Kuinka monta lukua laskutoimituksessa?");
+        JLabel teksti8 = new JLabel("Kuinka monta lukua laskutoimituksessa?");
         opLkmField = new JTextField();
 
-        JLabel teksti8 = new JLabel("Mikä on itseisarvoltaan suurin luku, joka saa esiintyä laskutoimituksessa?");
+        JLabel teksti9 = new JLabel("Mikä on itseisarvoltaan suurin luku, joka saa esiintyä laskutoimituksessa?");
         kokoField = new JTextField();
         
         JButton lopeta = new JButton("Valmis");
@@ -151,9 +159,12 @@ public class Options implements ActionListener, Runnable {
         frame2.add(murtolukuja);
         
         frame2.add(teksti7);
-        frame2.add(opLkmField);
+        frame2.add(negatiivisia);
         
         frame2.add(teksti8);
+        frame2.add(opLkmField);
+
+        frame2.add(teksti9);
         frame2.add(kokoField);
         
         frame2.add(lopeta);

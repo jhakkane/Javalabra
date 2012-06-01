@@ -31,6 +31,7 @@ public class Lauseke implements Laskettava {
     private boolean jako=false;
     
     private boolean murtolukuOperandi=false;
+    private boolean negatiivisia=false;
     
     private int operandinMaksimiSuuruus=20;
     private int nimittajanMaksimiSuuruus=operandinMaksimiSuuruus; //väliaikaisesti
@@ -50,6 +51,7 @@ public class Lauseke implements Laskettava {
         jako=tilanne.isJako();
         operandinMaksimiSuuruus=tilanne.getOperandMax();
         murtolukuOperandi=tilanne.isMurtolukuja();
+        negatiivisia=tilanne.isNegatiivisia();
         
         if (opLkm < 2) {
             throw new Exception("Operandien määrän pitää olla vähintään 2");
@@ -179,14 +181,14 @@ public class Lauseke implements Laskettava {
                 //Huomaa, että pelkästään jakolaskuja sisältävässä laskutoimituksessa
                 //ei voida joutua tähän, sillä siihen ei luoda yhtään 0-operandia.
                 operaattorit[i-1]=sopivaOperaattori(tilanne);
-            }
-            
+            }     
         }
     }
     
     
     /**
-     * Luo Luku-tyyppisen muuttujan annettujen parametrien mukaisesti.
+     * Luo Luku-tyyppisen muuttujan annettujen parametrien ja 
+     * tilanne-olion mukaisesti.
      * @param saaOllaNolla
      * @param murtoluku
      * @return 
@@ -197,35 +199,34 @@ public class Lauseke implements Laskettava {
         Murtoluku luku;
         
         if (saaOllaNolla) {
-            if (murtoluku) {            
+            if (murtoluku) {      
                 //(nimittaja*operandinMaksimiSuuruus)/nimittaja = operandinMaksimiSuuruus
                 nimittaja=(int)Math.round(Math.random()*(nimittajanMaksimiSuuruus-1)+1);
-                osoittaja=(int)Math.round(Math.random()*nimittaja*operandinMaksimiSuuruus);
-                           
-                luku = new Murtoluku(osoittaja,nimittaja);      
+                osoittaja=(int)Math.round(Math.random()*operandinMaksimiSuuruus);           
             } else {
                 nimittaja=1;
-                osoittaja=(int)Math.round(Math.random()*operandinMaksimiSuuruus);
-                           
-                luku = new Murtoluku(osoittaja,nimittaja);    
+                osoittaja=(int)Math.round(Math.random()*operandinMaksimiSuuruus);                   
             }
 
         } else {
             if (murtoluku) {
                 //(nimittaja*operandinMaksimiSuuruus)/nimittaja = operandinMaksimiSuuruus
                 nimittaja=(int)Math.round(Math.random()*(nimittajanMaksimiSuuruus-1)+1);
-                osoittaja=(int)Math.round(Math.random()*nimittaja*(operandinMaksimiSuuruus-1)+1);
- 
-                luku = new Murtoluku(osoittaja,nimittaja);                
+                osoittaja=(int)Math.round(Math.random()*(operandinMaksimiSuuruus-1)+1);  
             } else {
                 //(nimittaja*operandinMaksimiSuuruus)/nimittaja = operandinMaksimiSuuruus
                 nimittaja=1;
-                osoittaja=(int)Math.round(Math.random()*nimittaja*(operandinMaksimiSuuruus-1)+1);
-                           
-                luku = new Murtoluku(osoittaja,nimittaja);   
+                osoittaja=(int)Math.round(Math.random()*nimittaja*(operandinMaksimiSuuruus-1)+1);                        
             }
         }
 
+        int negaatio=1;
+        if (negatiivisia) {
+            negaatio = (int)Math.round(Math.random()*2-1);   
+        }
+               
+        osoittaja=osoittaja*negaatio;
+        luku = new Murtoluku(osoittaja,nimittaja);   
         return luku;
     }
     
@@ -302,9 +303,6 @@ public class Lauseke implements Laskettava {
 
     }
 
-
-    
-    
     public int operandienMaara() {
         if (operandit == null) {
             return 1;

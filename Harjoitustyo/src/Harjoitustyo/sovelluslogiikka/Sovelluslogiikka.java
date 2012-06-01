@@ -75,7 +75,7 @@ public class Sovelluslogiikka {
         
         vaihe = 2;
         
-        Luku oikeaVastaus = kysymys.lukuarvo(); 
+        Murtoluku oikeaVastaus = kysymys.lukuarvo(); 
         
         //pelaajan vastaus on muotoa x y/z
         String vastauksenOsat[] = vastaus.split("[ /]");
@@ -83,27 +83,27 @@ public class Sovelluslogiikka {
         int vastausOsoittaja = 0;
         int vastausNimittaja = 1;     
         
-        Luku pelaajanVastaus=null;
+        Murtoluku pelaajanVastaus=null;
 
         //pelaaja vastasi sekaluvulla
         if (vastauksenOsat.length==3) {
             vastausKokonaisluku= Integer.parseInt(vastauksenOsat[0]);
-            vastausOsoittaja = Integer.parseInt(vastauksenOsat[1]);
             vastausNimittaja = Integer.parseInt(vastauksenOsat[2]);            
-        
-            pelaajanVastaus = new Sekaluku(vastausOsoittaja,vastausNimittaja,vastausKokonaisluku);   
+            vastausOsoittaja = Integer.parseInt(vastauksenOsat[1])
+                    +vastausKokonaisluku*vastausNimittaja;
+       
         } else if (vastauksenOsat.length==2) {
             //pelaaja vastasi murtoluvulla
             vastausOsoittaja = Integer.parseInt(vastauksenOsat[0]);
             vastausNimittaja = Integer.parseInt(vastauksenOsat[1]);
-            
-            pelaajanVastaus = new Murtoluku(vastausOsoittaja,vastausNimittaja);            
+                     
         } else if (vastauksenOsat.length==1) {
             //pelaaja vastasi kokonaisluvulla
             vastausKokonaisluku= Integer.parseInt(vastauksenOsat[0]);
-            pelaajanVastaus = new Sekaluku(0,0,vastausKokonaisluku);             
+            vastausNimittaja = 1;
+            vastausOsoittaja = vastausKokonaisluku;
         }
-        
+        pelaajanVastaus = new Murtoluku(vastausOsoittaja, vastausNimittaja);            
         
         if (pelaajanVastaus.samaLuku(oikeaVastaus)) {
             tilanne.oikeinVastattu();

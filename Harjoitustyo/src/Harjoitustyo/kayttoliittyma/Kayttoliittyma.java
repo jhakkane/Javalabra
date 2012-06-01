@@ -9,7 +9,9 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.WindowConstants;
 
-/**
+/**Toteuttaa näkymän, joka hoitaa itse pelin ja näkyy pelaajalle valtaosan
+ * ajasta. Näyttää kysymyksen ja tarjoaa pelaajalle mahdollisuuden vastata siihen.
+ * Sisältää myös valikon.
  *
  * @author jhakkane
  */
