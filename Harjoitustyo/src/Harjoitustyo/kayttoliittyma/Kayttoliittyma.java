@@ -96,7 +96,9 @@ public class Kayttoliittyma implements Runnable {
         container.add(tarkistaJaGeneroiNappula);
         
         kysymys.setText("Tervetuloa aritmetiikan pariin. Paina alla olevaa"
-                + " nappulaa generoidaksesi kysymyksen.");
+                + " nappulaa generoidaksesi kysymyksen.\n"
+                + "Anna vastaus joko murtolukuna ('x/y'), kokonaislukuna ('x')\n"
+                + "tai sekalukuna ('x y/z').");
     }
     
 }

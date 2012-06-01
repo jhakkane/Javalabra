@@ -117,11 +117,14 @@ public class Sovelluslogiikka {
      * Tätä metodia täytyy kutsua, kun halutaan saada tietoja vallitsevasta
      * pelitilanteesta.
      * @return 
-     */
-    
+     */   
     public PeliTilanne getTilanne() {
         return tilanne;
-    }   
+    }
+
+    public Lauseke getKysymys() {
+        return kysymys;
+    }
     
     /**
      * Tuottaa uuden Lauseke-olion, asettaa sen kysymys-muuttujan

@@ -57,6 +57,12 @@ public class SovelluslogiikkaTest {
     }
     
     @Test
+    public void eteneEteneeOikeallaVastauksella() {
+        logiikka.etene(""); //luo kysymyksen
+        assertTrue(logiikka.etene(""+logiikka.getKysymys().lukuarvo()).substring(0, 7).equals("Oikein!"));
+    }
+    
+    @Test
     public void eteneEiEteneJosVastausOnTyhja() {
         logiikka.etene(""); //luo kysymyksen
         assertTrue(logiikka.etene("").substring(0, 46).equals(

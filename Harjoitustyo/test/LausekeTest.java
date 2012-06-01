@@ -18,7 +18,6 @@ import static org.junit.Assert.*;
  */
 public class LausekeTest {
     
-    private Lauseke k;
     private Lauseke l;
     
     public LausekeTest() {
@@ -34,22 +33,6 @@ public class LausekeTest {
     
     @Before
     public void setUp() {
-        try {
-            k = new Lauseke(new PeliTilanne());
-            
-            Murtoluku[] oper = new Murtoluku[3];
-            oper[0] = new Murtoluku(6,3);
-            oper[1] = new Murtoluku(12,4);
-            oper[2] = new Murtoluku(1,2);
-            
-            Op[] ops = new Op[2];
-            ops[0]=Op.MUL;
-            ops[1]=Op.PLUS;
-            
-            l = new Lauseke(oper,ops);
-        } catch (Exception ex) {
-            Logger.getLogger(LausekeTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     @After
@@ -77,8 +60,34 @@ public class LausekeTest {
     
     @Test
     public void lausekkeenRatkaisuOnOikein() {
+        Murtoluku[] oper = new Murtoluku[3];
+        oper[0] = new Murtoluku(6,3);
+        oper[1] = new Murtoluku(12,4);
+        oper[2] = new Murtoluku(1,2);
+
+        Op[] ops = new Op[2];
+        ops[0]=Op.MUL;
+        ops[1]=Op.PLUS;
+
+        l = new Lauseke(oper,ops);   
+        
         assertTrue(l.lukuarvo().samaLuku(new Murtoluku(13,2)));
     }
     
+    @Test
+    public void lausekkeenRatkaisuOnOikein2() {
+        Murtoluku[] oper = new Murtoluku[3];
+        oper[0] = new Murtoluku(24,2);
+        oper[1] = new Murtoluku(6,1);
+        oper[2] = new Murtoluku(1,2);
+
+        Op[] ops = new Op[2];
+        ops[0]=Op.MIN;
+        ops[1]=Op.DIV;
+
+        l = new Lauseke(oper,ops);   
+        
+        assertTrue(l.lukuarvo().samaLuku(new Murtoluku(0,2)));
+    }
     
 }
