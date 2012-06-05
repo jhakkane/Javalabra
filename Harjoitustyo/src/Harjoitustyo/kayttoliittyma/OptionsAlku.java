@@ -6,10 +6,12 @@ package Harjoitustyo.kayttoliittyma;
 
 import Harjoitustyo.sovelluslogiikka.PeliTilanne;
 import Harjoitustyo.sovelluslogiikka.Sovelluslogiikka;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.*;
 
 /** Valikko, jossa pelaaja säätää pelin asetukset ennen peliä.
@@ -17,39 +19,91 @@ import javax.swing.*;
  *
  * @author JH
  */
-public class OptionsAlku extends Options implements ActionListener, Runnable {
+public class OptionsAlku extends Options implements Runnable {
 
+    JLabel tekstiA1;
+    JLabel tekstiA2;
     JTextField nimiField;
+    JCheckBox tasopeli;
     Sovelluslogiikka logiikka;
     
+    ArrayList<Component> ainaNakyvatKomponentit;
+
     @Override
-    public void actionPerformed(ActionEvent e) {
-        super.actionPerformed(e);
+    public void lopetaActionPerformed(ActionEvent e) {
+        super.lopetaActionPerformed(e);
         
         tilanne.setNimi(nimiField.getText());
+        tilanne.setTasopeli(tasopeli.isSelected());
         
         Kayttoliittyma kl = new Kayttoliittyma(logiikka);
         SwingUtilities.invokeLater(kl);
-        frame2.dispose();
+        frame.dispose();
+    }
+
+    /**
+     * Mikäli pelaaja valitsee "tasopelin", piilotetaan turhat asetukset. Tasopelin idea
+     * on, että peli itse säätää asetukset pelaajan suoritumisen mukaan.
+     * @param e 
+     */
+    public void tasopeliActionPerformed(ActionEvent e) {
+        Component[] komponentit = frame.getContentPane().getComponents();
+        for (Component component : komponentit) {
+            if (tasopeli.isSelected()) {
+                component.setVisible(false);
+            } else {
+                component.setVisible(true);   
+            }
+        
+            for (Component component1 : ainaNakyvatKomponentit) {
+                if (component == component1 || component == lopeta) {
+                    component.setVisible(true);
+                }
+            }   
+        }
     }
     
     public OptionsAlku(Sovelluslogiikka logiikka) {
         super(logiikka.getTilanne());
         this.logiikka=logiikka;
     }
-    
 
     @Override
     protected void luoKomponentit(Container container) {
+        ainaNakyvatKomponentit = new ArrayList<Component>();
+        
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
         
-        JLabel teksti1 = new JLabel("Mikä on nimesi?");
+        tekstiA1 = new JLabel("Mikä on nimesi?");
         nimiField = new JTextField();
         
-        container.add(teksti1);
+        container.add(tekstiA1);
         container.add(nimiField);
+
+        tekstiA2 = new JLabel("Haluatko, että peli säätää asetukset itse "
+                + "pelin aikana?");
+        tasopeli = new JCheckBox();
         
+        tasopeli.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tasopeliActionPerformed(evt);
+            }
+        });
+        
+        container.add(tekstiA2);
+        container.add(tasopeli);
+        
+        lisaaAinaNakyvatKomponentit();
+
         super.luoKomponentit(container);
         
+    }
+    
+    public void lisaaAinaNakyvatKomponentit() {
+        ainaNakyvatKomponentit.add(tekstiA1);
+        ainaNakyvatKomponentit.add(nimiField);
+        ainaNakyvatKomponentit.add(tekstiA2);
+        ainaNakyvatKomponentit.add(tasopeli); 
     }
 }

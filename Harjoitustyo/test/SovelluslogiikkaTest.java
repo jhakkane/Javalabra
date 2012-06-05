@@ -59,7 +59,7 @@ public class SovelluslogiikkaTest {
     @Test
     public void eteneEteneeOikeallaVastauksella() {
         logiikka.etene(""); //luo kysymyksen
-        assertTrue(logiikka.etene(""+logiikka.getKysymys().lukuarvo()).substring(0, 7).equals("Oikein!"));
+        assertTrue(logiikka.etene(""+logiikka.getKysymys().oikeaVastaus()).substring(0, 7).equals("Oikein!"));
     }
     
     @Test
@@ -68,4 +68,6 @@ public class SovelluslogiikkaTest {
         assertTrue(logiikka.etene("").substring(0, 46).equals(
                 "Et antanut vastausta! Tässä kysymys uudelleen:"));
     }
+
+
 }

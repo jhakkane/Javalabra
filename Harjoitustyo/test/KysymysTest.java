@@ -3,17 +3,20 @@
  * and open the template in the editor.
  */
 
-import Harjoitustyo.sovelluslogiikka.Op;
+import Harjoitustyo.sovelluslogiikka.Kysymys;
+import Harjoitustyo.sovelluslogiikka.PeliTilanne;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-/**Testaa Op-enumin toimintaa.
+/**
  *
  * @author JH
  */
-public class OpTesti {
+public class KysymysTest {
     
-    public OpTesti() {
+    private Kysymys k;
+    
+    public KysymysTest() {
     }
 
     @BeforeClass
@@ -26,6 +29,7 @@ public class OpTesti {
     
     @Before
     public void setUp() {
+        k = new Kysymys(new PeliTilanne());
     }
     
     @After
@@ -38,17 +42,7 @@ public class OpTesti {
     // public void hello() {}
     
     @Test
-    public void OpMerkitOikein() {
-        Op op = Op.DIV;
-        assertTrue(op.toString()=="/");
-    
-        op = Op.MIN;
-        assertTrue(op.toString()=="-");
-
-        op = Op.PLUS;
-        assertTrue(op.toString()=="+");
-        
-        op = Op.MUL;
-        assertTrue(op.toString()=="*");
+    public void onkoKysymysOikeantyyppinen() {
+        assertTrue(k.toString().contains("+"));
     }
 }

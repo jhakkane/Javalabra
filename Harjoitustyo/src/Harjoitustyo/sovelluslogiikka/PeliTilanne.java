@@ -25,9 +25,30 @@ public class PeliTilanne {
     private boolean jako=false;
     private boolean murtolukuja=false;
     private boolean negatiivisia=false;
+    private boolean tasopeli=false;
+    private int oikeitaVastauksiaTallaKierroksella;
+    private int kierros=0;
+    private int vaihe=2;
+    private Kysymys kysymys=null;
+
+    public Kysymys getKysymys() {
+        return kysymys;
+    }
+
+    public void setKysymys(Kysymys kysymys) {
+        this.kysymys = kysymys;
+    }
     
     public int getOperandMax() {
         return operandMax;
+    }
+
+    public int getVaihe() {
+        return vaihe;
+    }
+
+    public void setVaihe(int vaihe) {
+        this.vaihe = vaihe;
     }
 
     public void setOperandMax(int operandMax) {
@@ -38,12 +59,36 @@ public class PeliTilanne {
         return jako;
     }
 
+    public void setTasopeli(boolean tasopeli) {
+        this.tasopeli = tasopeli;
+    }
+
+    public boolean isTasopeli() {
+        return tasopeli;
+    }
+
     public boolean isKerto() {
         return kerto;
     }
 
     public void setMurtolukuja(boolean murtolukuja) {
         this.murtolukuja = murtolukuja;
+    }
+
+    public void setKierros(int kierros) {
+        this.kierros = kierros;
+    }
+
+    public int getKierros() {
+        return kierros;
+    }
+
+    public void setOikeitaVastauksiaTallaKierroksella(int oikeitaVastauksiaTallaKierroksella) {
+        this.oikeitaVastauksiaTallaKierroksella = oikeitaVastauksiaTallaKierroksella;
+    }
+
+    public int getOikeitaVastauksiaTallaKierroksella() {
+        return oikeitaVastauksiaTallaKierroksella;
     }
 
     public boolean isMurtolukuja() {
@@ -58,23 +103,56 @@ public class PeliTilanne {
         return plus;
     }
 
+    /**
+     * Setterinä toimimisen lisäksi tarkistaa, että vähintään yksi operaatio
+     * on aina sallittu. Jos pelaaja yrittää ottaa kaikki operaatiot pois käytöstä,
+     * sallitaan pluslasku.
+     * @param plus 
+     */
     public void setPlus(boolean plus) {
         this.plus = plus;
+        yksiOperaatioSallitaanAina();
     }
 
+    /**
+     * Setterinä toimimisen lisäksi tarkistaa, että vähintään yksi operaatio
+     * on aina sallittu. Jos pelaaja yrittää ottaa kaikki operaatiot pois käytöstä,
+     * sallitaan pluslasku.
+     * @param miinus 
+     */
     public void setMiinus(boolean miinus) {
         this.miinus = miinus;
+        yksiOperaatioSallitaanAina();
     }
 
+    /**
+     * Setterinä toimimisen lisäksi tarkistaa, että vähintään yksi operaatio
+     * on aina sallittu. Jos pelaaja yrittää ottaa kaikki operaatiot pois käytöstä,
+     * sallitaan pluslasku.
+     * @param kerto 
+     */
     public void setKerto(boolean kerto) {
         this.kerto = kerto;
+        yksiOperaatioSallitaanAina();
     }
 
+    /**
+     * Setterinä toimimisen lisäksi tarkistaa, että vähintään yksi operaatio
+     * on aina sallittu. Jos pelaaja yrittää ottaa kaikki operaatiot pois käytöstä,
+     * sallitaan pluslasku.
+     * @param jako 
+     */
     public void setJako(boolean jako) {
         this.jako = jako;
+        yksiOperaatioSallitaanAina();
     }
 
-    public void yksiOperaatioSallitaanAina() {
+    /**
+     * Tarkistaa, että vähintään yksi operaatio
+     * on aina sallittu. Jos pelaaja yrittää ottaa kaikki operaatiot pois käytöstä,
+     * sallitaan pluslasku.
+     */
+    private void yksiOperaatioSallitaanAina() {
         if ((isJako() == false) && (isKerto() == false) &&
                 (isMiinus() == false) && (isPlus() == false)) {
             setPlus(true);
@@ -92,12 +170,16 @@ public class PeliTilanne {
     public boolean isNegatiivisia() {
         return negatiivisia;
     }
-
-    public void oikeinVastattu() {
-        oikeitaVastauksia++;
-    }
     
-    public void vastattu() {
+    
+    /**
+     * Pitää kirjaa kaikista vastauksista ja oikeista vastauksista.
+     * @param oikeaVastaus 
+     */
+    public void vastattu(boolean oikeaVastaus) {
+        if (oikeaVastaus) {
+            oikeitaVastauksia++;
+        }
         vastattuja++;
     }
 
@@ -158,6 +240,12 @@ public class PeliTilanne {
             murtolukuja = Boolean.parseBoolean(asetuksetTaulukko[7]);   
             negatiivisia = Boolean.parseBoolean(asetuksetTaulukko[8]);   
             operandMax = Integer.parseInt(asetuksetTaulukko[9]); 
+            tasopeli = Boolean.parseBoolean(asetuksetTaulukko[10]); 
+            oikeitaVastauksiaTallaKierroksella = Integer.parseInt(asetuksetTaulukko[11]); 
+            kierros = Integer.parseInt(asetuksetTaulukko[12]); 
+            vaihe = Integer.parseInt(asetuksetTaulukko[13]); 
+            vastattuja = Integer.parseInt(asetuksetTaulukko[14]); 
+            
         } catch (Exception e) {
             throw e;
         }
@@ -176,6 +264,11 @@ public class PeliTilanne {
         teksti=teksti+murtolukuja+"\n";    
         teksti=teksti+negatiivisia+"\n";   
         teksti=teksti+operandMax+"\n";    
+        teksti=teksti+tasopeli+"\n";
+        teksti=teksti+oikeitaVastauksiaTallaKierroksella+"\n";
+        teksti=teksti+kierros+"\n";
+        teksti=teksti+vaihe+"\n";        
+        teksti=teksti+vastattuja+"\n";  
         
         return teksti;
     }

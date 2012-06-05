@@ -19,8 +19,6 @@ public class Sovelluslogiikka {
     
     //Vaihe 1 = Käyttäjälle näkyy kysymys
     //Vaihe 2 = Käyttäjälle näkyy vastaus
-    private int vaihe = 2;
-    private Lauseke kysymys;
     private PeliTilanne tilanne;
     
     public Sovelluslogiikka() {
@@ -37,21 +35,23 @@ public class Sovelluslogiikka {
      * b) Kutsumalla metodia, joka tarkistaa käyttäjän antaman vastauksen
      * ja palauttaa kommentin vastauksesta.
      * 
-     * Metodi palauttaa edelleen näiden metodien paluuarvon.
+     * Metodi palauttaa edelleen näiden metodien paluuarvon, joka on pelaajalle
+     * näkyvä teksti.
      * 
      * @param vastaus
      * @return 
      */
     public String etene(String vastaus) {
         
-        if (vaihe == 2) {
-            return generoi();
+        if (tilanne.getVaihe() == 2) {
+            return luoUusiKysymys();
         } else {
-            String output = tarkista(vastaus);
+            String output = tarkistaPelaajanVastaus(vastaus);
             return output;
         }
     }
     
+
     /**
      * Tarkistaa käyttäjän antaman vastauksen ja palauttaa vastauksesta riippuen
      * joko "oikein", "väärin" tai "ei vastausta" -paluuarvon. Mikäli vastaus on
@@ -60,30 +60,107 @@ public class Sovelluslogiikka {
      * @param vastaus
      * @return 
      */
-    private String tarkista(String vastaus) {
+    private String tarkistaPelaajanVastaus(String vastaus) {
         
         if (vastaus.isEmpty()) {
             //huom. vaihe ei muutu, käyttäjä yrittää uudelleen
-            return "Et antanut vastausta! Tässä kysymys uudelleen: \n\n"
-                    +kysymys;
+            return Luokkakirjasto.kysymyksenVastausPelaajaEiAntanutVastausta(tilanne);
         }
-
-        tilanne.vastattu();
         
-        vaihe = 2;
+        tilanne.setVaihe(2);
         
-        Murtoluku oikeaVastaus = kysymys.lukuarvo(); 
-        
+        Murtoluku oikeaVastaus = tilanne.getKysymys().oikeaVastaus(); 
         Murtoluku pelaajanVastaus = parsePelaajanVastaus(vastaus);       
         
         if (pelaajanVastaus.samaLuku(oikeaVastaus)) {
-            tilanne.oikeinVastattu();
-            return "Oikein! Vastaus on juuri "+oikeaVastaus;
+            return pelaajaVastasiKysymykseenOikein(oikeaVastaus);
         } else {
-            return "Väärin! Oikea vastaus on "+oikeaVastaus;
+            return pelaajaVastasiKysymykseenVaarin(oikeaVastaus);
         }
     }
     
+    /**
+     * Päivittää PeliTilanteen ja Kysymyksen, sekä palauttaa pelaajalle näkyvän tekstin,
+     * kun pelaaja vastasi kysymykseen väärin.
+     * @param oikeaVastaus
+     * @return 
+     */
+    private String pelaajaVastasiKysymykseenVaarin(Murtoluku oikeaVastaus) {
+        tilanne.vastattu(false);
+        tilanne.getKysymys().setOikeinVastattu(false);
+        return Luokkakirjasto.kysymyksenVastausVaaraVastaus(oikeaVastaus);  
+    }
+    
+    /**
+     * Päivittää PeliTilanteen ja Kysymyksen sekä palauttaa pelaajalle näkyvän
+     * tekstin, kun pelaaja vastasi kysymykseen oikein.
+     * @param vastaus
+     * @return 
+     */
+    private String pelaajaVastasiKysymykseenOikein(Murtoluku vastaus) {
+            tilanne.vastattu(true);
+            tilanne.getKysymys().setOikeinVastattu(true);
+            
+            boolean vaihtuikoKierros = asetustenMuuttaminenTasopelissa();
+            
+            if (vaihtuikoKierros) {
+                return Luokkakirjasto.kysymyksenVastausOikeaVastausJaKierrosVaihtuu(vastaus);
+            }
+            return Luokkakirjasto.kysymyksenVastausOikeaVastausKierrosEiVaihdu(vastaus);
+    }
+    
+    /**
+     * Huolehtii kierroksen vaihtumisesta tasopelissä ja palauttaa boolean-
+     * muuttujan, joka kertoo vaihtuiko kierros vai ei.
+     * @return 
+     */
+    public boolean asetustenMuuttaminenTasopelissa() {
+        boolean vaihtuikoKierros = false;
+        int oikeitaVastauksiaTallaKierroksella = tilanne.getOikeitaVastauksiaTallaKierroksella();
+        int kierros = tilanne.getKierros();
+        if (tilanne.isTasopeli()) {
+            oikeitaVastauksiaTallaKierroksella++;
+
+            if (oikeitaVastauksiaTallaKierroksella > 3) {
+                kierros++;
+                oikeitaVastauksiaTallaKierroksella=0;
+                vaihtuikoKierros = true;
+            }
+
+            tilanne.setOikeitaVastauksiaTallaKierroksella(oikeitaVastauksiaTallaKierroksella);
+            tilanne.setKierros(kierros);
+            asetaAsetuksetKierroksenMukaanTasopelissa();
+        }
+        
+        return vaihtuikoKierros;
+    }
+
+    /**
+     * Muutetaan asetuksia kierroksen perusteella. Mitä paremmin pelaaja on
+     * pärjännyt, sitä vaikeammat asetukset.
+     */
+    private void asetaAsetuksetKierroksenMukaanTasopelissa() {
+        //Kierros 0 = alkutilanne (ks. alkuarvot luokan alussa)
+        int kierros = tilanne.getKierros();
+        
+        if (kierros == 1) {
+            tilanne.setMiinus(true);
+        } else if (kierros == 2) {
+            tilanne.setKerto(true);
+        } else if (kierros == 3) {
+            tilanne.setOpLkm(3);
+        } else {
+            tilanne.setSulkuja(true);
+        }
+        
+    }
+    
+    /**
+     * Tulkitsee parametrina annetun String-muuttujan ja muuttaa sen
+     * Murtoluvuksi, mikäli mahdollista.
+     * @param vastaus
+     * @return 
+     */
     private Murtoluku parsePelaajanVastaus(String vastaus) {
         //pelaajan vastaus on muotoa x y/z
         String vastauksenOsat[] = vastaus.split("[ /]");
@@ -122,25 +199,20 @@ public class Sovelluslogiikka {
         return tilanne;
     }
 
-    public Lauseke getKysymys() {
-        return kysymys;
+    public Kysymys getKysymys() {
+        return tilanne.getKysymys();
     }
-    
+
     /**
      * Tuottaa uuden Lauseke-olion, asettaa sen kysymys-muuttujan
      * arvoksi ja palauttaa kyseisen olion toStringin.
      * @return 
      */
-    private String generoi() {        
-        try {
-            kysymys = new Lauseke(tilanne);
-        } catch (Exception ex) {
-            Logger.getLogger(Sovelluslogiikka.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        String kysymysString=kysymys.toString();
-        
-        vaihe = 1;
-        return kysymysString;
+    private String luoUusiKysymys() {        
+        Kysymys kysymys = new Kysymys(tilanne);
+        tilanne.setKysymys(kysymys);
+
+        tilanne.setVaihe(1);
+        return kysymys.toString();
     }
 }

@@ -7,7 +7,8 @@ package Harjoitustyo.sovelluslogiikka;
 import java.util.ArrayList;
 
 /**Luku, jolla ei ole kokonaisosaa, vaan vain osoittaja ja nimittäjä.
- * Toteuttaa rajapinnan Luku ja sitä kautta on Laskettava.
+ * Toteuttaa rajapinnan Laskettava joten sitä voidaan käyttää
+ * laskutoimituksissa.
  *
  * @author JH
  */
@@ -51,10 +52,12 @@ public class Murtoluku implements Laskettava {
         return nimittaja;
     }
     
-    public Murtoluku murtolukuna() {
-        return this;
-    }
     
+    /**
+     * Kertoo onko Murtoluku erikoismerkki eli onko sen nimittäjä nolla.
+     * Tätä ominaisuutta tarvitaan ainakin Lausekkeiden ratkaisemisessa.
+     * @return 
+     */
     public boolean onErikoisMerkki() {
         if (nimittaja==0) {
             return true;
@@ -62,10 +65,18 @@ public class Murtoluku implements Laskettava {
         return false;
     }
     
+    /**
+     * Palauttaa murtoluvun desimaalimuotoisen (liki)arvon.
+     * @return 
+     */
     public double desimaalilukuna() {
         return osoittaja/nimittaja;
     }
     
+    /**
+     * Kertoo onko luku kokonaisluku vai ei.
+     * @return 
+     */
     public boolean kokonaisluku() {
         double osamaara=osoittaja*1.0/nimittaja;
         if (osamaara == Math.round(osamaara)) {
@@ -75,15 +86,21 @@ public class Murtoluku implements Laskettava {
         return false;
     }
     
+    /**
+     * Kertoo onko tämä Murtoluku sama kuin parametrina annettava Murtoluku p.
+     * Samuus tarkoittaa tässä samaa etäisyyttä nollasta, joten 1/2 ja 2/4 ovat 
+     * sama luku.
+     * @param p
+     * @return 
+     */
     public boolean samaLuku(Murtoluku p) {
-        Murtoluku l = p.murtolukuna();
         
-        if (l.getOsoittaja()==0 && this.osoittaja==0) {
+        if (p.getOsoittaja()==0 && this.osoittaja==0) {
             return true;
         }
 
-        if (l.getOsoittaja() != 0) {
-            Murtoluku osamaara = this.jaettuna(l);
+        if (p.getOsoittaja() != 0) {
+            Murtoluku osamaara = this.jaettuna(p);
             if (osamaara.getOsoittaja()==osamaara.getNimittaja()) {
                 return true;
             }            
@@ -92,16 +109,24 @@ public class Murtoluku implements Laskettava {
         return false;
     }
     
+    /**
+     * Asettaa osoittajan ja nimittäjän parametrien mukaisesti.
+     * @param o
+     * @param n 
+     */
     public void asetaLuvuksi(int o, int n) {
         this.osoittaja=o;
         this.nimittaja=n;
     }
     
-    //Kaikki laskutoimitukset tehdään tosiasiassa murtoluvuilla, ja mahdollisesti
-    //muutetaan sitten sekaluvuiksi.
-    
-    public Murtoluku tulo(Murtoluku l) {
-        Murtoluku kerrottava = l.murtolukuna();
+
+    /**
+     * Laskee tämän Murtoluvun ja parametrina annettavan Murtoluvun l tulon
+     * ja antaa sen paluuarvona. Metodi ei yritä sieventää tuloa.
+     * @param l
+     * @return 
+     */
+    public Murtoluku tulo(Murtoluku kerrottava) {
         Murtoluku tulo;
         
         int uusiOsoittaja=this.osoittaja*kerrottava.getOsoittaja();
@@ -112,8 +137,13 @@ public class Murtoluku implements Laskettava {
         return tulo;
     }
     
-    public Murtoluku jaettuna(Murtoluku l) {
-        Murtoluku jakaja = l.murtolukuna();
+    /**
+     * Laskee tämän Murtoluvun ja parametrina annettava Murtoluvun l osamäärän
+     * ja antaa sen paluuarvona. Metodi ei yritä sieventää osamäärää.
+     * @param l
+     * @return 
+     */
+    public Murtoluku jaettuna(Murtoluku jakaja) {
         Murtoluku osamaara;
         
         int uusiOsoittaja=this.osoittaja*jakaja.getNimittaja();
@@ -124,8 +154,13 @@ public class Murtoluku implements Laskettava {
         return osamaara;
     }    
 
-    public Murtoluku summa(Murtoluku l) {
-        Murtoluku summattava = l.murtolukuna();
+    /**
+     * Laskee tämän Murtoluvun ja parametrina annettavan Murtoluvun l summan
+     * ja antaa sen paluuarvona. Metodi ei yritä sieventää summaa.
+     * @param l
+     * @return 
+     */
+    public Murtoluku summa(Murtoluku summattava) {
         Murtoluku summa;
         
         int uusiOsoittaja=this.osoittaja*summattava.getNimittaja()+
@@ -137,8 +172,13 @@ public class Murtoluku implements Laskettava {
         return summa;
     }   
    
-    public Murtoluku vahennys(Murtoluku l) {
-        Murtoluku vahennettava = l.murtolukuna();
+    /**
+     * Laskee tämän Murtoluvun ja parametrina annettavan Murtoluvun l erotuksen
+     * ja antaa sen paluuarvona. Metodi ei yritä sieventää erotusta.
+     * @param l
+     * @return 
+     */
+    public Murtoluku vahennys(Murtoluku vahennettava) {
         Murtoluku summa;
         
         int uusiOsoittaja=this.osoittaja*vahennettava.getNimittaja()-
@@ -192,6 +232,11 @@ public class Murtoluku implements Laskettava {
         return osat;
     }
     
+    /**
+     * Kertoo voidaanko Murtoluku ilmaista sekalukuna. Näin voidaan tehdä,
+     * jos osoittaja on suurempi kuin nimittäjä ja luku ei ole kokonaisluku.
+     * @return 
+     */
     public boolean sekaluku() {
         if (osoittaja > nimittaja && nimittaja != 1) {
             return true;
@@ -233,11 +278,19 @@ public class Murtoluku implements Laskettava {
         return this;
     }
 
+    /**
+     * Asettaa tällä murtuluvulle saman arvon kuin parametrina annetulle Murtoluvulle m.
+     * @param m 
+     */
     public void setArvo(Murtoluku m) {
         this.nimittaja=m.getNimittaja();
         this.osoittaja=m.getOsoittaja();
     }
 
+    /**
+     * Kertoo onko Murtoluku nolla. Näin on, mikäli osoittaja on nolla.
+     * @return 
+     */
     public boolean onNolla() {
         if (osoittaja==0) {
             return true;

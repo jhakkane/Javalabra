@@ -4,6 +4,7 @@
  */
 package Harjoitustyo.kayttoliittyma;
 
+import Harjoitustyo.sovelluslogiikka.Luokkakirjasto;
 import Harjoitustyo.sovelluslogiikka.Sovelluslogiikka;
 import java.awt.*;
 import javax.swing.*;
@@ -18,18 +19,19 @@ import javax.swing.WindowConstants;
 public class Kayttoliittyma implements Runnable {
     private JFrame frame;
     private Sovelluslogiikka logiikka;
+    JTextArea kysymysKentta;
+    JTextArea suhdeluku;
     
     public Kayttoliittyma(Sovelluslogiikka logiikka) {
         this.logiikka = logiikka;        
 
         frame = new JFrame("Aritmetiikkaharjoituksia");
-        frame.setJMenuBar(menubar());
-        
+
         frame.setPreferredSize(new Dimension(400,600));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
      
         luoKomponentit(frame.getContentPane());
-        
+        frame.setJMenuBar(menubar());        
     }
     
     @Override
@@ -52,7 +54,8 @@ public class Kayttoliittyma implements Runnable {
         tallenna.addActionListener(taKuuntelija);
         
         JMenuItem lataa = new JMenuItem("Lataa");
-        LataaKuuntelija laKuuntelija = new LataaKuuntelija(frame, logiikka.getTilanne());
+        LataaKuuntelija laKuuntelija = new LataaKuuntelija(frame, logiikka,
+                kysymysKentta, suhdeluku);
         lataa.addActionListener(laKuuntelija);
         
         JMenuItem lopeta = new JMenuItem("Sulje");
@@ -73,32 +76,29 @@ public class Kayttoliittyma implements Runnable {
         GridLayout layout = new GridLayout(4,1);
         container.setLayout(layout);
     
-        JTextArea suhdeluku = new JTextArea();
+        suhdeluku = new JTextArea();
         suhdeluku.setEditable(false);
         
-        JTextArea kysymys = new JTextArea(5,20);
-        kysymys.setEditable(false);
-        kysymys.setLineWrap(true);
-        kysymys.setWrapStyleWord(true);
+        kysymysKentta = new JTextArea(5,20);
+        kysymysKentta.setEditable(false);
+        kysymysKentta.setLineWrap(true);
+        kysymysKentta.setWrapStyleWord(true);
         
         JButton tarkistaJaGeneroiNappula = new JButton();
         
         JTextField tekstiKentta = new JTextField();
         
         KysymyksenGenerointiKuuntelija kgKuuntelija = 
-                new KysymyksenGenerointiKuuntelija(logiikka,kysymys,tekstiKentta,
+                new KysymyksenGenerointiKuuntelija(logiikka,kysymysKentta,tekstiKentta,
                 suhdeluku);
         tarkistaJaGeneroiNappula.addActionListener(kgKuuntelija);
         
         container.add(suhdeluku);
-        container.add(kysymys);
+        container.add(kysymysKentta);
         container.add(tekstiKentta);
         container.add(tarkistaJaGeneroiNappula);
         
-        kysymys.setText("Tervetuloa aritmetiikan pariin. Paina alla olevaa"
-                + " nappulaa generoidaksesi kysymyksen.\n"
-                + "Anna vastaus joko murtolukuna ('x/y'), kokonaislukuna ('x')\n"
-                + "tai sekalukuna ('x y/z').");
+        kysymysKentta.setText(Luokkakirjasto.alkuTervehdys);
     }
     
 }

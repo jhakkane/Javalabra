@@ -249,16 +249,28 @@ public class Lauseke implements Laskettava {
     }
 
     /**
-     * Palauttaa tekstinä kaikki operandit. Käyttö pääasiassa testitarkoituksiin
+     * Palauttaa taulukkona kaikki operandit. Käyttö pääasiassa testitarkoituksiin
      * ja voidaan poistaa myöhemmin.
      * @return 
      */
-    public String optext() {
-        String teksti="";
-        for (Laskettava laskettava : operandit) {
-            teksti=teksti+laskettava+", ";
+    public Laskettava[] operandiTaulukko() {
+        Laskettava[] teksti = new Laskettava[operandit.length];
+        for (int i = 0; i < operandit.length; i++) {
+            teksti[i]=operandit[i];        
         }
-     
+        return teksti;
+    }
+
+    /**
+     * Palauttaa tekstitaulukkona kaikki operaattorit. Käyttö pääasiassa testitarkoituksiin
+     * ja voidaan poistaa myöhemmin.
+     * @return 
+     */
+    public String[] operaattoriText() {
+        String[] teksti = new String[operaattorit.length];
+        for (int i = 0; i < operaattorit.length; i++) {
+            teksti[i]=operaattorit[i].toString();        
+        }
         return teksti;
     }
     

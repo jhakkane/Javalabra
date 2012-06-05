@@ -29,8 +29,13 @@ public class OptionsKuuntelija implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Options options = new Options(asetukset);
-        SwingUtilities.invokeLater(options);
+        if (asetukset.isTasopeli()) {
+            OptionsTyhja options = new OptionsTyhja();
+            SwingUtilities.invokeLater(options);               
+        } else {
+            Options options = new Options(asetukset);
+            SwingUtilities.invokeLater(options);   
+        }
     }
     
     

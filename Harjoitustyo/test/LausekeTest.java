@@ -89,5 +89,61 @@ public class LausekeTest {
         
         assertTrue(l.lukuarvo().samaLuku(new Murtoluku(0,2)));
     }
+
+    @Test
+    public void oikeaMaaraOperaattoreita() throws Exception {
+        PeliTilanne tilanne = new PeliTilanne();
+        tilanne.setOpLkm(5);
+        
+        l = new Lauseke(tilanne);
+        assertTrue(l.operaattoriText().length==4);
+    }
     
+    @Test
+    public void oikeaMaaraOperandeja() throws Exception {
+        PeliTilanne tilanne = new PeliTilanne();
+        tilanne.setOpLkm(5);
+        
+        l = new Lauseke(tilanne);
+        assertTrue(l.operandiTaulukko().length==5);
+    }
+
+    /**
+     * Tutkii tuottaako murtolukuasetus todella murtolukuja. Teoriassa on
+     * mahdollista, että sattumalta kaikki luvut ovat kokonaislukuja, mutta
+     * se on hyvin epätodennäköistä.
+     * @throws Exception 
+     */
+    @Test
+    public void murtolukuasetusTuottaaMurtolukuja() throws Exception {
+        PeliTilanne tilanne = new PeliTilanne();
+        tilanne.setOpLkm(10);
+        tilanne.setMurtolukuja(true);
+        
+        l = new Lauseke(tilanne);
+        
+        boolean onkoJossainOperandissaJakoviivaa = false;
+        for (int i = 0; i < l.operandiTaulukko().length; i++) {
+            if (!l.operandiTaulukko()[i].lukuarvo().kokonaisluku()) {
+                onkoJossainOperandissaJakoviivaa = true;
+            }
+        }
+        
+        assertTrue(onkoJossainOperandissaJakoviivaa);
+        
+    }
+    
+    /**
+     * Jos sulut ovat käytössä, ohjelma jakaa lausekkeen aina kahteen osaan.
+     * @throws Exception 
+     */
+    @Test
+    public void oikeaMaaraOperandejaSulkulausekkeessa() throws Exception {
+        PeliTilanne tilanne = new PeliTilanne();
+        tilanne.setSulkuja(true);
+        tilanne.setOpLkm(5);
+        
+        l = new Lauseke(tilanne);
+        assertTrue(l.operandiTaulukko().length==2);
+    }
 }

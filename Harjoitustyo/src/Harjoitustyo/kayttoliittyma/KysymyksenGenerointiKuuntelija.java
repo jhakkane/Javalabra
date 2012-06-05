@@ -4,6 +4,7 @@
  */
 package Harjoitustyo.kayttoliittyma;
 
+import Harjoitustyo.sovelluslogiikka.Luokkakirjasto;
 import Harjoitustyo.sovelluslogiikka.Sovelluslogiikka;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -36,9 +37,7 @@ public class KysymyksenGenerointiKuuntelija implements ActionListener {
         kentta.setText("");
         kysymys.setText(kysymysString);
         
-        suhdeluku.setText("Nimesi:"+logiikka.getTilanne().getNimi()+"\n"
-                + "Oikeiden vastausten "
-                + "osuus kaikista vastauksista: "+logiikka.getTilanne().oikeitaVastauksiaSuhteellisesti()+"%");
+        suhdeluku.setText(Luokkakirjasto.suhdelukuKentanTeksti(logiikka.getTilanne()));
         
     }
     

@@ -5,18 +5,20 @@
 package Harjoitustyo.kayttoliittyma;
 
 import Harjoitustyo.sovelluslogiikka.PeliTilanne;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.*;
 
 /**Valikko, jossa pelaaja voi muuttaa pelin asetuksia kesken pelin.
  *
  * @author JH
  */
-public class Options implements ActionListener, Runnable {
-    JFrame frame2;
+public class Options implements Runnable {
+    JFrame frame;
     PeliTilanne tilanne;
     JCheckBox sulut;
     JCheckBox plus;
@@ -30,27 +32,29 @@ public class Options implements ActionListener, Runnable {
     JTextField opLkmField;
     JTextField kokoField;
     
-    @Override
-    public void actionPerformed(ActionEvent e) {
+    JButton lopeta;
+    
+    JLabel teksti1;
+    JLabel teksti2;
+    JLabel teksti3;
+    JLabel teksti4;
+    JLabel teksti5;
+    JLabel teksti6;
+    JLabel teksti7;
+    JLabel teksti8;
+    JLabel teksti9;
+  
+    JLabel eiAsetuksiaTeksti;
+    
+    /**
+     * Kun painetaan valmis-nappulaa, muutetaan asetukset mikäli pelaaja
+     * ei ole valinnut tasopeliä.
+     * @param e 
+     */
+    public void lopetaActionPerformed(ActionEvent e) {
         
         asetaTilanne();
-        
-        
-        int i=2;
-        try {
-            i = Integer.parseInt(opLkmField.getText());
-        } catch (Exception o) {
-            i=tilanne.getOpLkm();
-        }
-        tilanne.setOpLkm(i);
-        
-        try {
-            i = Integer.parseInt(kokoField.getText());
-        } catch (Exception o) {
-            i=tilanne.getOperandMax();
-        }
-        tilanne.setOperandMax(i);
-
+        frame.dispose();
     }
     
     public void asetaTilanne() {
@@ -96,24 +100,39 @@ public class Options implements ActionListener, Runnable {
             tilanne.setNegatiivisia(false);
         }
         
-        tilanne.yksiOperaatioSallitaanAina();
+        int i=2;
+        try {
+            i = Integer.parseInt(opLkmField.getText());
+        } catch (Exception o) {
+            i=tilanne.getOpLkm();
+        }
+        tilanne.setOpLkm(i);
+        
+        try {
+            i = Integer.parseInt(kokoField.getText());
+        } catch (Exception o) {
+            i=tilanne.getOperandMax();
+        }
+        tilanne.setOperandMax(i);
+        
     }
     
     @Override
     public void run() {
-        frame2.pack();
-        frame2.setVisible(true);      
+        frame.pack();
+        frame.setVisible(true);      
     }
     
     public Options(PeliTilanne tilanne) {
-        frame2 = new JFrame("Asetukset");
+        frame = new JFrame("Asetukset");
         this.tilanne=tilanne;
         
-        frame2.setPreferredSize(new Dimension(400,600));
-        frame2.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        frame.setPreferredSize(new Dimension(400,600));
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         
-        luoKomponentit(frame2.getContentPane());  
+        luoKomponentit(frame.getContentPane());     
     }
+    
     
     protected void luoKomponentit(Container container) {
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
@@ -138,53 +157,58 @@ public class Options implements ActionListener, Runnable {
         negatiivisia = new JCheckBox();
         negatiivisia.setSelected(tilanne.isNegatiivisia());
         
-        JLabel teksti1 = new JLabel("Käytetäänkö sulkuja?");    
-        JLabel teksti2 = new JLabel("Pluslaskuja?");   
-        JLabel teksti3 = new JLabel("Miinuslaskuja?");   
-        JLabel teksti4 = new JLabel("Kertolaskuja?");   
-        JLabel teksti5 = new JLabel("Jakolaskuja?");   
+        teksti1 = new JLabel("Käytetäänkö sulkuja?");    
+        teksti2 = new JLabel("Pluslaskuja?");   
+        teksti3 = new JLabel("Miinuslaskuja?");   
+        teksti4 = new JLabel("Kertolaskuja?");   
+        teksti5 = new JLabel("Jakolaskuja?");   
         
-        JLabel teksti6 = new JLabel("Saako laskuissa olla murtolukuja?");  
-        JLabel teksti7 = new JLabel("Saako laskuissa olla negatiivisia lukuja?");   
+        teksti6 = new JLabel("Saako laskuissa olla murtolukuja?");  
+        teksti7 = new JLabel("Saako laskuissa olla negatiivisia lukuja?");   
         
-        JLabel teksti8 = new JLabel("Kuinka monta lukua laskutoimituksessa?");
+        teksti8 = new JLabel("Kuinka monta lukua laskutoimituksessa?");
         opLkmField = new JTextField();
         opLkmField.setText(""+tilanne.getOpLkm());
 
-        JLabel teksti9 = new JLabel("Mikä on itseisarvoltaan suurin luku, joka saa esiintyä laskutoimituksessa?");
+        teksti9 = new JLabel("Mikä on itseisarvoltaan suurin luku, joka saa esiintyä laskutoimituksessa?");
         kokoField = new JTextField();
         kokoField.setText(""+tilanne.getOperandMax());
         
-        JButton lopeta = new JButton("Valmis");
-        lopeta.addActionListener(this);    
+        lopeta = new JButton("Valmis");
+        lopeta.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lopetaActionPerformed(evt);
+            }
+        });
         
-        frame2.add(teksti1);
-        frame2.add(sulut);
+        this.frame.add(teksti1);
+        this.frame.add(sulut);
         
-        frame2.add(teksti2);
-        frame2.add(plus);
+        this.frame.add(teksti2);
+        this.frame.add(plus);
         
-        frame2.add(teksti3);
-        frame2.add(miinus);
+        this.frame.add(teksti3);
+        this.frame.add(miinus);
         
-        frame2.add(teksti4);
-        frame2.add(kerto);
+        this.frame.add(teksti4);
+        this.frame.add(kerto);
         
-        frame2.add(teksti5);
-        frame2.add(jako);
+        this.frame.add(teksti5);
+        this.frame.add(jako);
 
-        frame2.add(teksti6);
-        frame2.add(murtolukuja);
+        this.frame.add(teksti6);
+        this.frame.add(murtolukuja);
         
-        frame2.add(teksti7);
-        frame2.add(negatiivisia);
+        this.frame.add(teksti7);
+        this.frame.add(negatiivisia);
         
-        frame2.add(teksti8);
-        frame2.add(opLkmField);
+        this.frame.add(teksti8);
+        this.frame.add(opLkmField);
 
-        frame2.add(teksti9);
-        frame2.add(kokoField);
+        this.frame.add(teksti9);
+        this.frame.add(kokoField);
         
-        frame2.add(lopeta);
+        this.frame.add(lopeta);
     }
 }

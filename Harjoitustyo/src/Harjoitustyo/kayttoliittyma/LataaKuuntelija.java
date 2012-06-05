@@ -4,7 +4,9 @@
  */
 package Harjoitustyo.kayttoliittyma;
 
+import Harjoitustyo.sovelluslogiikka.Luokkakirjasto;
 import Harjoitustyo.sovelluslogiikka.PeliTilanne;
+import Harjoitustyo.sovelluslogiikka.Sovelluslogiikka;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -13,9 +15,7 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 /**
  *
@@ -23,12 +23,17 @@ import javax.swing.JOptionPane;
  */
 public class LataaKuuntelija implements ActionListener {
     private JFrame frame;
-    private PeliTilanne tilanne;
+    private Sovelluslogiikka logiikka;
     private Scanner scan;
+    private JTextArea tekstiKentta;
+    private JTextArea suhdeluku;
     
-    public LataaKuuntelija(JFrame frame, PeliTilanne tilanne) {
+    public LataaKuuntelija(JFrame frame, Sovelluslogiikka logiikka,
+            JTextArea tekstiKentta, JTextArea suhdeluku) {
         this.frame=frame;
-        this.tilanne=tilanne;
+        this.logiikka = logiikka;
+        this.tekstiKentta=tekstiKentta;
+        this.suhdeluku=suhdeluku;
     }
 
     @Override
@@ -45,12 +50,7 @@ public class LataaKuuntelija implements ActionListener {
                     sisalto=sisalto+scan.nextLine()+"\n";
                 }
                 
-                //virheellinen save-tiedosto
-                try {
-                    tilanne.asetaAsetukset(sisalto);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(frame, "Tiedosto ei ole kelvollinen.");
-                }
+                asetaAsetuksetJaPaivitaTilanneTekstitiedostonPerusteella(sisalto);
                 
             } catch (IOException ex) {
                     JOptionPane.showMessageDialog(frame, "Tiedostoa ei voi avata.");
@@ -58,5 +58,23 @@ public class LataaKuuntelija implements ActionListener {
             
                      
         }
-    }   
+    }
+    
+    /**
+     * Asettaa tallennettun tiedoston sisällön perusteella asetukset ja antaa
+     * käyttäjälle uuden kysymyksen uusilla asetuksilla.
+     * @param sisalto 
+     */
+    private void asetaAsetuksetJaPaivitaTilanneTekstitiedostonPerusteella(String sisalto) {
+        try {
+            logiikka.getTilanne().asetaAsetukset(sisalto);
+            logiikka.getTilanne().setVaihe(2);
+            tekstiKentta.setText(logiikka.etene("")); 
+            suhdeluku.setText(Luokkakirjasto.suhdelukuKentanTeksti(logiikka.getTilanne()));
+        } catch (Exception ex) {
+            //virheellinen save-tiedosto
+            JOptionPane.showMessageDialog(frame, "Tiedosto ei ole kelvollinen.");
+        }         
+    }
+
 }
