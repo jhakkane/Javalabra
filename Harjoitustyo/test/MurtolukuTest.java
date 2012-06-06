@@ -16,6 +16,7 @@ public class MurtolukuTest {
     Murtoluku l1;
     Murtoluku l2;
     Murtoluku l3;
+    Murtoluku l4;
     
     public MurtolukuTest() {
     }
@@ -33,6 +34,7 @@ public class MurtolukuTest {
         l1 = new Murtoluku(3,6);
         l2 = new Murtoluku(0,3);
         l3 = new Murtoluku(1,3);
+        l4 = new Murtoluku(15,7);
     }
     
     @After
@@ -86,4 +88,16 @@ public class MurtolukuTest {
         assertFalse(l3.kokonaisluku());
     }
     
+    @Test
+    public void sekalukunaToimii() {
+        int[] sekalukuna = l4.sekalukuna();
+        assertTrue(sekalukuna[0]==2);
+        assertTrue(sekalukuna[1]==1);
+        assertTrue(sekalukuna[2]==7);
+    }
+    
+    @Test
+    public void sekalukuTarkistusToimii() {
+        assertTrue(l4.sekaluku());
+    }
 }

@@ -3,10 +3,7 @@
  * and open the template in the editor.
  */
 
-import Harjoitustyo.sovelluslogiikka.PeliTilanne;
-import Harjoitustyo.sovelluslogiikka.Lauseke;
-import Harjoitustyo.sovelluslogiikka.Sovelluslogiikka;
-import Harjoitustyo.sovelluslogiikka.Op;
+import Harjoitustyo.sovelluslogiikka.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -65,9 +62,29 @@ public class SovelluslogiikkaTest {
     @Test
     public void eteneEiEteneJosVastausOnTyhja() {
         logiikka.etene(""); //luo kysymyksen
-        assertTrue(logiikka.etene("").substring(0, 46).equals(
-                "Et antanut vastausta! Tässä kysymys uudelleen:"));
+        assertTrue(logiikka.etene("").substring(0, 30).equals(
+                Luokkakirjasto.kysymyksenVastausPelaajaEiAntanutVastausta(logiikka.getTilanne()).substring(0,30)));
     }
 
-
+    /**
+     * Tarkista, että tasopeliasetuksilla kierros todella vaihtuu kun oikeita
+     * vastauksia on tarpeeksi.
+     */
+    @Test
+    public void tasopelinToiminnanTestausta() {
+        logiikka.getTilanne().setTasopeli(true);
+        logiikka.etene(""); //luo ensimmäisen kysymyksen
+        
+        int alkuperainenKierros = logiikka.getTilanne().getKierros();
+        
+        //Huom. vastauksia on kaksinkertainen määrä, koska kysymysten välissä tulee
+        //"oikein vastattu" ilmoitus, johon pitää vastata myös.
+        for (int i = 0; i <= Luokkakirjasto.OIKEITA_VASTAUKSIA_JOTTA_KIERROS_VAIHTUU_TASOPELISSA*2; i++) {
+            logiikka.etene(""+logiikka.getTilanne().getKysymys().oikeaVastaus());
+        }
+        
+        assertTrue(logiikka.getTilanne().getKierros() > alkuperainenKierros);
+        
+    }
+    
 }

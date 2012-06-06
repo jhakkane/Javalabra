@@ -80,16 +80,12 @@ public class Lauseke implements Laskettava {
         
         //yhtenäinen sulkujen sisällä oleva kokonaisuus
         //tai laskutoimitus jossa ei ole sulkuja ollenkaan
-        if (sulkuja == false) {
-            
+        if (sulkuja == false) {           
             luoSulutonLauseke(tilanne);
-
         //vähintään 3 operandia
-        } else {
-            
+        } else {           
             luoSulullinenLauseke(tilanne);
         }
-        
         
         /*Tässä kohtaa muutellaan laskutoimitus sopivaksi siten, että siellä ei ole
          * nollalla jakoa ja että jakolaskuista tulee sopivia osamääriä.
@@ -98,45 +94,63 @@ public class Lauseke implements Laskettava {
        
     }
     
+    /**
+     * Asettaa operandit-taulukkoon tasan kaksi Laskettavaa. Nämä voivat olla joko
+     * kaksi lauseketta tai yksi lauseke ja yksi satunnaisluku.
+     * @param tilanne 
+     */
     private void luoSulullinenLauseke(PeliTilanne tilanne) {
-        //jaetaan luvut kahteen lausekkeeseen tai yhteen lausekkeeseen ja yhteen satunnaislukuun
 
         this.operandit = new Laskettava[2];
         this.operaattorit = new Op[1];
 
         Random r = new Random();
-        int vali = r.nextInt(opLkm-1)+1;
+        
+        int operandienMaara = r.nextInt(opLkm-1)+1;
+        asetaOperandeihinSatunnaislukuTaiLauseke(0, operandienMaara, tilanne);
 
-        int vanhaOpLkm = tilanne.getOpLkm();
-
-        tilanne.setOpLkm(vali);
-        if (vali == 1) {
-            operandit[0]=satunnaisluku(true,murtolukuOperandi);                        
-        } else {
-            try {
-                operandit[0]=new Lauseke(tilanne);
-            } catch (Exception ex) {
-                Logger.getLogger(Lauseke.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        vali=opLkm-vali;
-        tilanne.setOpLkm(vali);
-        if (vali == 1) {
-            operandit[1]=satunnaisluku(true,murtolukuOperandi);                        
-        } else {
-            try {
-                operandit[1]=new Lauseke(tilanne);
-            } catch (Exception ex) {
-                Logger.getLogger(Lauseke.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        tilanne.setOpLkm(vanhaOpLkm);
+        operandienMaara=opLkm-operandienMaara;
+        asetaOperandeihinSatunnaislukuTaiLauseke(1, operandienMaara, tilanne);
 
         arvoOperaattorit(tilanne);
     }
     
+    /**
+     * Asettaa operandien kohtaan taulukonIndeksi joko satunnaisen Murtoluvun tai
+     * Lausekkeen. Tämä riippuu operandienMaarasta. Jos se on yksi, luodaan Murtoluku,
+     * jos enemmän, luodaan Lauseke. Metodi käyttää apuna tilanne-muuttujaa, jonka
+     * opLkm-arvoa muutetaan ja joka palautetaan takaisin vanhaksi kun sitä ei enää
+     * tarvita.
+     * @param taulukonIndeksi
+     * @param operandienMaara
+     * @param tilanne
+     * @param vanhaOpLkm 
+     */
+    private void asetaOperandeihinSatunnaislukuTaiLauseke(int taulukonIndeksi, int operandienMaara,
+            PeliTilanne tilanne) {
+        int vanhaOpLkm = tilanne.getOpLkm();
+        
+        tilanne.setOpLkm(operandienMaara);
+        
+        operandienMaara=opLkm-operandienMaara;
+        tilanne.setOpLkm(operandienMaara);
+        if (operandienMaara == 1) {
+            operandit[taulukonIndeksi]=satunnaisluku(true,murtolukuOperandi);                        
+        } else {
+            try {
+                operandit[taulukonIndeksi]=new Lauseke(tilanne);
+            } catch (Exception ex) {
+                Logger.getLogger(Lauseke.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        tilanne.setOpLkm(vanhaOpLkm);
+    }
+    
+    /**
+     * Asettaa operandit ja operaattorit asetusten mukaan siten, että
+     * tähän Lausekkeeseen ei tule sulkuja.
+     * @param tilanne 
+     */
     private void luoSulutonLauseke(PeliTilanne tilanne) {
         this.operandit = new Laskettava[opLkm];
         this.operaattorit = new Op[opLkm-1];
@@ -145,12 +159,17 @@ public class Lauseke implements Laskettava {
         arvoOperanditSuluttomaanLausekkeeseen(tilanne);  
     }
     
+    /**
+     * Arpoo satunnaiset Murtoluvut Lausekkeeseen, jossa ei ole sulkuja.
+     * Tämä metodi pitää huolen siitä, että yksikään operandi ei ole nolla,
+     * jos Lauseke sisältää vain jakolaskuja.
+     * @param tilanne 
+     */
     private void arvoOperanditSuluttomaanLausekkeeseen(PeliTilanne tilanne) {
         boolean saaOllaNolla;
         
         for (int i = 0; i < opLkm; i++) {
         
-            //ei saa olla nolla, jos on vain jakolaskuja
             if (!plus && !miinus && !kerto && jako) {
                 saaOllaNolla=false;   
             } else {
@@ -192,12 +211,19 @@ public class Lauseke implements Laskettava {
         return sopiva;
     }
     
-    private void poistaNollallaJako(PeliTilanne tilanne) {
-        
+    /**
+     * Käy läpi operandit ja operaattorit ja tarkistaa jaetaanko jossakin
+     * kohdassa nollalla. Mikäli jaetaan, muutetaan operaattori
+     * sopivaOperaattori-metodin palauttamaksi operaattoriksi.
+     * 
+     * Huomaa, että pelkästään jakolaskuja sisältävässä laskutoimituksessa
+     * ei voida joutua tilanteeseen, jossa jaetaan nollalla, sillä 
+     * sellaiseen laskutoimitukseen ei luoda yhtään 0-operandia.
+     * @param tilanne 
+     */
+    private void poistaNollallaJako(PeliTilanne tilanne) {   
         for (int i = 1; i < operandit.length; i++) {
             if (operandit[i].lukuarvo().onNolla() && operaattorit[i-1]==Op.DIV) {
-                //Huomaa, että pelkästään jakolaskuja sisältävässä laskutoimituksessa
-                //ei voida joutua tähän, sillä siihen ei luoda yhtään 0-operandia.
                 operaattorit[i-1]=sopivaOperaattori(tilanne);
             }     
         }
@@ -323,13 +349,17 @@ public class Lauseke implements Laskettava {
 
     }
     
+    /**
+     * Käy läpi Lausekkeen ja tarkistaa onko operandeina erikoismerkkejä. Jos
+     * on, muttaa ne nolliksi.
+     * @param operanditTemp 
+     */
     private void lukuarvonLaskentaMuutaErikoismerkitNolliksi(ArrayList<Murtoluku> operanditTemp) {
         for (Murtoluku murtoluku : operanditTemp) {
             if (murtoluku.onErikoisMerkki()) {
                 murtoluku.setArvo(NOLLA);
             }
-        }
-        
+        }        
     }
     
     private void lukuarvonLaskentaPlusJaMiinus(ArrayList<Murtoluku> operanditTemp,

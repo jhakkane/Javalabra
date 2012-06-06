@@ -121,7 +121,7 @@ public class Sovelluslogiikka {
         if (tilanne.isTasopeli()) {
             oikeitaVastauksiaTallaKierroksella++;
 
-            if (oikeitaVastauksiaTallaKierroksella > 3) {
+            if (oikeitaVastauksiaTallaKierroksella > Luokkakirjasto.OIKEITA_VASTAUKSIA_JOTTA_KIERROS_VAIHTUU_TASOPELISSA) {
                 kierros++;
                 oikeitaVastauksiaTallaKierroksella=0;
                 vaihtuikoKierros = true;

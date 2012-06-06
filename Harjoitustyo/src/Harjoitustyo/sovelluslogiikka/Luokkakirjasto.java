@@ -11,6 +11,8 @@ package Harjoitustyo.sovelluslogiikka;
  */
 public class Luokkakirjasto {
     
+    public static final int OIKEITA_VASTAUKSIA_JOTTA_KIERROS_VAIHTUU_TASOPELISSA = 5;
+    
     public static final String alkuTervehdys = "Tervetuloa aritmetiikan pariin. Paina alla olevaa"
                 + " nappulaa generoidaksesi kysymyksen.\n"
                 + "Anna vastaus joko murtolukuna ('x/y'), kokonaislukuna ('x')\n"

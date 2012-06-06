@@ -122,14 +122,14 @@ public class LausekeTest {
         
         l = new Lauseke(tilanne);
         
-        boolean onkoJossainOperandissaJakoviivaa = false;
+        boolean lausekkeessaMurtoluku = false;
         for (int i = 0; i < l.operandiTaulukko().length; i++) {
             if (!l.operandiTaulukko()[i].lukuarvo().kokonaisluku()) {
-                onkoJossainOperandissaJakoviivaa = true;
+                lausekkeessaMurtoluku = true;
             }
         }
         
-        assertTrue(onkoJossainOperandissaJakoviivaa);
+        assertTrue(lausekkeessaMurtoluku);
         
     }
     
@@ -145,5 +145,32 @@ public class LausekeTest {
         
         l = new Lauseke(tilanne);
         assertTrue(l.operandiTaulukko().length==2);
+    }
+    
+    /**
+     * Satunnaisgeneroi Lausekkeen asetuksilla, joilla hyvin todennäköisesti
+     * tulisi nollia Lausekkeeseen, mikäli sitä ei tarkistettaisi ja estettäisi.
+     * Varmistaa, että nollia ei tosiaankaan ole. Periaatteessa on mahdollista
+     * että näin kävisi myös sattumalta.
+     * @throws Exception 
+     */
+    @Test
+    public void vainJakolaskujaSisaltavaLausekeEiSisallaNollia() throws Exception {
+        PeliTilanne tilanne = new PeliTilanne();
+        tilanne.setJako(true);
+        tilanne.setPlus(false);
+        tilanne.setOpLkm(10);
+        tilanne.setOperandMax(1);
+        
+        l = new Lauseke(tilanne);      
+
+        boolean lausekkeessaNolla = false;
+        for (int i = 0; i < l.operandiTaulukko().length; i++) {
+            if (l.operandiTaulukko()[i].lukuarvo().onNolla()) {
+                lausekkeessaNolla = true;
+            }
+        }
+        
+        assertFalse(lausekkeessaNolla);
     }
 }
