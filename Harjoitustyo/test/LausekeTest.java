@@ -12,7 +12,9 @@ import java.util.logging.Logger;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-/**Testaa Lauseke-luokan toimintaa.
+/**Testaa Lauseke-luokan toimintaa. Monessa testissä on periaatteessa mahdollista,
+ * että testi epäonnistuu "vahingossa", sillä Lauseke satunnaisgeneroidaan, mutta
+ * tämän todennäköisyys on hyvin pieni.
  *
  * @author JH
  */
@@ -117,12 +119,44 @@ public class LausekeTest {
     }
     
     @Test
+    public void lausekkeenRatkaisuOnOikein4() {
+        Murtoluku[] oper = new Murtoluku[3];
+        oper[0] = new Murtoluku(10,3);
+        oper[1] = new Murtoluku(10,2);
+        oper[2] = new Murtoluku(10,1);
+
+        Op[] ops = new Op[2];
+        ops[0]=Op.MUL;
+        ops[1]=Op.MUL;
+
+        l = new Lauseke(oper,ops);   
+        
+        assertTrue(l.lukuarvo().samaLuku(new Murtoluku(500,3)));
+    }
+    
+    @Test
+    public void lausekkeenRatkaisuOnOikein5() {
+        Murtoluku[] oper = new Murtoluku[3];
+        oper[0] = new Murtoluku(10,3);
+        oper[1] = new Murtoluku(10,2);
+        oper[2] = new Murtoluku(10,1);
+
+        Op[] ops = new Op[2];
+        ops[0]=Op.DIV;
+        ops[1]=Op.DIV;
+
+        l = new Lauseke(oper,ops);   
+        
+        assertTrue(l.lukuarvo().samaLuku(new Murtoluku(2,30)));
+    }
+    
+    @Test
     public void oikeaMaaraOperaattoreita() throws Exception {
         PeliTilanne tilanne = new PeliTilanne();
         tilanne.setOpLkm(5);
         
         l = new Lauseke(tilanne);
-        assertTrue(l.operaattoriText().length==4);
+        assertTrue(l.operaattoriTaulukko().length==4);
     }
     
     @Test
@@ -198,5 +232,30 @@ public class LausekeTest {
         }
         
         assertFalse(lausekkeessaNolla);
+    }
+    
+    @Test
+    public void operaattorienMaaraOnOikea() throws Exception {
+        PeliTilanne tilanne = new PeliTilanne();
+        tilanne.setOpLkm(8);
+        l = new Lauseke(tilanne);
+        assertTrue(l.operaattoriTaulukko().length==7);
+    }
+    
+    @Test
+    public void negaatioAsetuksetTuottavatNegatiivisiaLukuja() throws Exception {
+        PeliTilanne tilanne = new PeliTilanne();
+        tilanne.setOpLkm(30);
+        tilanne.setNegatiivisia(true);
+        l = new Lauseke(tilanne);   
+        
+        boolean lausekkeessaNegatiivinen = false;
+        for (int i = 0; i < l.operandiTaulukko().length; i++) {
+            if (l.operandiTaulukko()[i].lukuarvo().negatiivinen()) {
+                lausekkeessaNegatiivinen = true;
+            }
+        }
+        
+        assertTrue(lausekkeessaNegatiivinen);
     }
 }

@@ -102,7 +102,22 @@ public class Lauseke implements Laskettava {
         operanditTemp.get(i).setArvo(POISTETTU);
         operaattoritTemp.set(i+1, operaattoritTemp.get(i));
         operaattoritTemp.set(i, Op.PLUS);
-        return;
+    }
+
+    private void lukuarvonLaskentaJakoOperaatio(ArrayList<Murtoluku> operanditTemp, int i, ArrayList<Op> operaattoritTemp) {
+        Murtoluku tulos;
+        tulos = operanditTemp.get(i).lukuarvo().jaettuna(operanditTemp.get(i+1).lukuarvo());
+        operanditTemp.get(i).setArvo(POISTETTU);
+        operanditTemp.get(i+1).setArvo(tulos);
+        operaattoritTemp.set(i, Op.PLUS);
+    }
+
+    private void lukuarvonLaskentaKertoOperaatio(ArrayList<Murtoluku> operanditTemp, int i, ArrayList<Op> operaattoritTemp) {
+        Murtoluku tulos;
+        tulos = operanditTemp.get(i).lukuarvo().tulo(operanditTemp.get(i+1).lukuarvo());
+        operanditTemp.get(i).setArvo(POISTETTU);
+        operanditTemp.get(i+1).setArvo(tulos);
+        operaattoritTemp.set(i, Op.PLUS);
     }
 
     private void lukuarvonLaskentaMiinusOperaatio(ArrayList<Murtoluku> operanditTemp, int i, ArrayList<Op> operaattoritTemp) {
@@ -119,6 +134,16 @@ public class Lauseke implements Laskettava {
         operanditTemp.get(i).setArvo(POISTETTU);
         operanditTemp.get(i+1).setArvo(tulos);
         operaattoritTemp.set(i, Op.PLUS);
+    }
+
+    private void lukuarvonLaskentaTilapaisenOperandiTaulukonAlustus(ArrayList<Murtoluku> operanditTemp) {
+        for (int i = 0; i < operandit.length; i++) {
+            //välttämätöntä luoda uusi Kysymys ja Luku, sillä muuten
+            //olemassa olevat oliot menevät sekaisin
+            int tempOsoittaja = operandit[i].lukuarvo().getOsoittaja();
+            int tempNimittaja = operandit[i].lukuarvo().getNimittaja();
+            operanditTemp.add(new Murtoluku(tempOsoittaja,tempNimittaja));
+        }
     }
 
     
@@ -256,7 +281,6 @@ public class Lauseke implements Laskettava {
         }
     }
     
-    
     /**
      * Luo Luku-tyyppisen muuttujan annettujen parametrien ja 
      * tilanne-olion mukaisesti.
@@ -271,7 +295,7 @@ public class Lauseke implements Laskettava {
             if (murtoluku) {      
                 asetaSatunnaisluvunOsoittajaJaNimittajaSaaOllaNollaTaiMurtoluku(satunnaisluku);
             } else {
-                asetaSatunnaisluvunOsoittajaJaNimittajaEiSaaOllaNollaTaiMurtoluku(satunnaisluku);
+                asetaSatunnaisluvunOsoittajaJaNimittajaEiVoiOllaNollaTaiMurtoluku(satunnaisluku);
             }
 
         } else {
@@ -310,7 +334,7 @@ public class Lauseke implements Laskettava {
         luku.setNimittaja((int)Math.round(Math.random()*(nimittajanMaksimiSuuruus-1)+1));
     }
     
-    private void asetaSatunnaisluvunOsoittajaJaNimittajaEiSaaOllaNollaTaiMurtoluku(Murtoluku luku) {
+    private void asetaSatunnaisluvunOsoittajaJaNimittajaEiVoiOllaNollaTaiMurtoluku(Murtoluku luku) {
         luku.setOsoittaja((int)Math.round(Math.random()*operandinMaksimiSuuruus));
         luku.setNimittaja(1);
     }
@@ -339,14 +363,14 @@ public class Lauseke implements Laskettava {
     }
 
     /**
-     * Palauttaa tekstitaulukkona kaikki operaattorit. Käyttö pääasiassa testitarkoituksiin
+     * Palauttaa taulukkona kaikki operaattorit. Käyttö pääasiassa testitarkoituksiin
      * ja voidaan poistaa myöhemmin.
      * @return 
      */
-    public String[] operaattoriText() {
-        String[] teksti = new String[operaattorit.length];
+    public Op[] operaattoriTaulukko() {
+        Op[] teksti = new Op[operaattorit.length];
         for (int i = 0; i < operaattorit.length; i++) {
-            teksti[i]=operaattorit[i].toString();        
+            teksti[i]=operaattorit[i];        
         }
         return teksti;
     }
@@ -366,22 +390,14 @@ public class Lauseke implements Laskettava {
     @Override
     public Murtoluku lukuarvo() {
         
-        Murtoluku tulos = new Murtoluku(0,1);
-        
         ArrayList<Murtoluku> operanditTemp = new ArrayList<Murtoluku>();
         ArrayList<Op> operaattoritTemp = new ArrayList<Op>();
-        for (int i = 0; i < operandit.length; i++) {
-            //välttämätöntä luoda uusi Kysymys ja Luku, sillä muuten
-            //olemassa olevat oliot menevät sekaisin
-            int tempOsoittaja = operandit[i].lukuarvo().getOsoittaja();
-            int tempNimittaja = operandit[i].lukuarvo().getNimittaja();
-            operanditTemp.add(new Murtoluku(tempOsoittaja,tempNimittaja));
-        }
+        
+        lukuarvonLaskentaTilapaisenOperandiTaulukonAlustus(operanditTemp);
         operaattoritTemp.addAll(Arrays.asList(operaattorit));
 
-        
-        lukuarvonLaskentaKertoJaJako(operanditTemp, operaattoritTemp, tulos);
-        lukuarvonLaskentaPlusJaMiinus(operanditTemp, operaattoritTemp, tulos);
+        lukuarvonLaskentaKertoJaJako(operanditTemp, operaattoritTemp);
+        lukuarvonLaskentaPlusJaMiinus(operanditTemp, operaattoritTemp);
         
         lukuarvonLaskentaMuutaErikoismerkitNolliksi(operanditTemp);
         lukuarvonLaskentaLaskeJaljellaOlevatYhteen(operanditTemp, operaattoritTemp);
@@ -423,7 +439,7 @@ public class Lauseke implements Laskettava {
     }
     
     private void lukuarvonLaskentaPlusJaMiinus(ArrayList<Murtoluku> operanditTemp,
-        ArrayList<Op> operaattoritTemp, Murtoluku tulos) {
+        ArrayList<Op> operaattoritTemp) {
         //plus- ja vähennyslaskut
         for (int i = 0; i < operaattoritTemp.size(); i++) {
             
@@ -449,22 +465,13 @@ public class Lauseke implements Laskettava {
     }
     
     private void lukuarvonLaskentaKertoJaJako(ArrayList<Murtoluku> operanditTemp,
-        ArrayList<Op> operaattoritTemp, Murtoluku tulos) {
+        ArrayList<Op> operaattoritTemp) {
 
         for (int i = 0; i < operaattoritTemp.size(); i++) {
-
             if (operaattoritTemp.get(i)==Op.MUL) {
-                tulos = operanditTemp.get(i).lukuarvo().tulo(operanditTemp.get(i+1).lukuarvo());
-
-                operanditTemp.get(i).setArvo(POISTETTU);
-                operanditTemp.get(i+1).setArvo(tulos);
-                operaattoritTemp.set(i, Op.PLUS);
+                lukuarvonLaskentaKertoOperaatio(operanditTemp, i, operaattoritTemp);
             } else if (operaattoritTemp.get(i)==Op.DIV) {
-                tulos = operanditTemp.get(i).lukuarvo().jaettuna(operanditTemp.get(i+1).lukuarvo());
-
-                operanditTemp.get(i).setArvo(POISTETTU);
-                operanditTemp.get(i+1).setArvo(tulos);
-                operaattoritTemp.set(i, Op.PLUS);
+                lukuarvonLaskentaJakoOperaatio(operanditTemp, i, operaattoritTemp);
             }
         }
     }
@@ -479,8 +486,7 @@ public class Lauseke implements Laskettava {
     @Override
     public String toString() {
         String teksti="";
-        
-       
+          
         for (int i = 0; i < operandit.length; i++) {
             if (operandit[i].onLauseke() == false) {
                 teksti=teksti+operandit[i].toString();

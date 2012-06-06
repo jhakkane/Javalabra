@@ -58,48 +58,29 @@ public class Options implements Runnable {
     }
     
     public void asetaTilanne() {
-        if (sulut.isSelected()) {
-            tilanne.setSulkuja(true);
-        } else {
-            tilanne.setSulkuja(false);
-        }
-
-        if (plus.isSelected()) {
-            tilanne.setPlus(true);
-        } else {
-            tilanne.setPlus(false);
-        }
-
-        if (miinus.isSelected()) {
-            tilanne.setMiinus(true);
-        } else {
-            tilanne.setMiinus(false);
-        }
+        asetaSulkuAsetukset();
+        asetaPlusAsetukset();
+        asetaMiinusAsetukset();
+        asetaKertoAsetukset();
+        asetaJakoAsetukset();
+        asetaMurtolukuAsetukset();
+        asetaNegatiivisuusAsetukset();
+        asetaOpLkm();
+        asetaMaxOpAsetukset();
         
-        if (kerto.isSelected()) {
-            tilanne.setKerto(true);
-        } else {
-            tilanne.setKerto(false);
-        }
+    }
 
-        if (jako.isSelected()) {
-            tilanne.setJako(true);
-        } else {
-            tilanne.setJako(false);
+    private void asetaMaxOpAsetukset() {
+        int i = 20;
+        try {
+            i = Integer.parseInt(kokoField.getText());
+        } catch (Exception o) {
+            i=tilanne.getOperandMax();
         }
-        
-        if (murtolukuja.isSelected()) {
-            tilanne.setMurtolukuja(true);
-        } else {
-            tilanne.setMurtolukuja(false);
-        }
+        tilanne.setOperandMax(i);
+    }
 
-        if (negatiivisia.isSelected()) {
-            tilanne.setNegatiivisia(true);
-        } else {
-            tilanne.setNegatiivisia(false);
-        }
-        
+    private void asetaOpLkm() {
         int i=2;
         try {
             i = Integer.parseInt(opLkmField.getText());
@@ -107,14 +88,62 @@ public class Options implements Runnable {
             i=tilanne.getOpLkm();
         }
         tilanne.setOpLkm(i);
-        
-        try {
-            i = Integer.parseInt(kokoField.getText());
-        } catch (Exception o) {
-            i=tilanne.getOperandMax();
+    }
+
+    private void asetaNegatiivisuusAsetukset() {
+        if (negatiivisia.isSelected()) {
+            tilanne.setNegatiivisia(true);
+        } else {
+            tilanne.setNegatiivisia(false);
         }
-        tilanne.setOperandMax(i);
-        
+    }
+
+    private void asetaMurtolukuAsetukset() {
+        if (murtolukuja.isSelected()) {
+            tilanne.setMurtolukuja(true);
+        } else {
+            tilanne.setMurtolukuja(false);
+        }
+    }
+
+    private void asetaJakoAsetukset() {
+        if (jako.isSelected()) {
+            tilanne.setJako(true);
+        } else {
+            tilanne.setJako(false);
+        }
+    }
+
+    private void asetaKertoAsetukset() {
+        if (kerto.isSelected()) {
+            tilanne.setKerto(true);
+        } else {
+            tilanne.setKerto(false);
+        }
+    }
+
+    private void asetaMiinusAsetukset() {
+        if (miinus.isSelected()) {
+            tilanne.setMiinus(true);
+        } else {
+            tilanne.setMiinus(false);
+        }
+    }
+
+    private void asetaPlusAsetukset() {
+        if (plus.isSelected()) {
+            tilanne.setPlus(true);
+        } else {
+            tilanne.setPlus(false);
+        }
+    }
+
+    private void asetaSulkuAsetukset() {
+        if (sulut.isSelected()) {
+            tilanne.setSulkuja(true);
+        } else {
+            tilanne.setSulkuja(false);
+        }
     }
     
     @Override
@@ -136,44 +165,20 @@ public class Options implements Runnable {
     
     protected void luoKomponentit(Container container) {
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-        sulut = new JCheckBox();
-        sulut.setSelected(tilanne.isSulkuja());
-        
-        plus = new JCheckBox();
-        plus.setSelected(tilanne.isPlus());
-        
-        miinus = new JCheckBox();
-        miinus.setSelected(tilanne.isMiinus());
-        
-        kerto = new JCheckBox();
-        kerto.setSelected(tilanne.isKerto());
-    
-        jako = new JCheckBox();
-        jako.setSelected(tilanne.isJako());
-        
-        murtolukuja = new JCheckBox();
-        murtolukuja.setSelected(tilanne.isMurtolukuja());
-        
-        negatiivisia = new JCheckBox();
-        negatiivisia.setSelected(tilanne.isNegatiivisia());
-        
-        teksti1 = new JLabel("Käytetäänkö sulkuja?");    
-        teksti2 = new JLabel("Pluslaskuja?");   
-        teksti3 = new JLabel("Miinuslaskuja?");   
-        teksti4 = new JLabel("Kertolaskuja?");   
-        teksti5 = new JLabel("Jakolaskuja?");   
-        
-        teksti6 = new JLabel("Saako laskuissa olla murtolukuja?");  
-        teksti7 = new JLabel("Saako laskuissa olla negatiivisia lukuja?");   
-        
-        teksti8 = new JLabel("Kuinka monta lukua laskutoimituksessa?");
-        opLkmField = new JTextField();
-        opLkmField.setText(""+tilanne.getOpLkm());
+        luoSulkuKysymysJaTeksti();
+        luoPluslaskuKysymysJaTeksti();
+        luoMiinuslaskuKysymysJaTeksti();
+        luoKertolaskuKysymysJaTeksti();
+        luoJakolaskuKysymysJaTeksti();
+        luoMurtolukuKysymysJaTeksti();
+        luoNegatiivisuusKysymysJaTeksti();     
+        luoOpLkmKysymysJaTeksti();
+        luoOpMaxKokoKysymysJaTeksti();
+        luoLopetaNappula();  
 
-        teksti9 = new JLabel("Mikä on itseisarvoltaan suurin luku, joka saa esiintyä laskutoimituksessa?");
-        kokoField = new JTextField();
-        kokoField.setText(""+tilanne.getOperandMax());
-        
+    }
+
+    private void luoLopetaNappula() {
         lopeta = new JButton("Valmis");
         lopeta.addActionListener(new java.awt.event.ActionListener() {
             @Override
@@ -181,34 +186,78 @@ public class Options implements Runnable {
                 lopetaActionPerformed(evt);
             }
         });
-        
-        this.frame.add(teksti1);
-        this.frame.add(sulut);
-        
-        this.frame.add(teksti2);
-        this.frame.add(plus);
-        
-        this.frame.add(teksti3);
-        this.frame.add(miinus);
-        
-        this.frame.add(teksti4);
-        this.frame.add(kerto);
-        
-        this.frame.add(teksti5);
-        this.frame.add(jako);
+        this.frame.add(lopeta);
+    }
 
-        this.frame.add(teksti6);
-        this.frame.add(murtolukuja);
-        
-        this.frame.add(teksti7);
-        this.frame.add(negatiivisia);
-        
-        this.frame.add(teksti8);
-        this.frame.add(opLkmField);
-
+    private void luoOpMaxKokoKysymysJaTeksti() {
+        teksti9 = new JLabel("Mikä on itseisarvoltaan suurin luku, joka saa esiintyä laskutoimituksessa?");
+        kokoField = new JTextField();
+        kokoField.setText(""+tilanne.getOperandMax());
         this.frame.add(teksti9);
         this.frame.add(kokoField);
-        
-        this.frame.add(lopeta);
+    }
+
+    private void luoOpLkmKysymysJaTeksti() {
+        teksti8 = new JLabel("Kuinka monta lukua laskutoimituksessa?");
+        opLkmField = new JTextField();
+        opLkmField.setText(""+tilanne.getOpLkm());
+        this.frame.add(teksti8);
+        this.frame.add(opLkmField);
+    }
+
+    private void luoNegatiivisuusKysymysJaTeksti() {
+        teksti7 = new JLabel("Saako laskuissa olla negatiivisia lukuja?");   
+        negatiivisia = new JCheckBox();
+        negatiivisia.setSelected(tilanne.isNegatiivisia());
+        this.frame.add(teksti7);
+        this.frame.add(negatiivisia);
+    }
+
+    private void luoMurtolukuKysymysJaTeksti() {
+        teksti6 = new JLabel("Saako laskuissa olla murtolukuja?");  
+        murtolukuja = new JCheckBox();
+        murtolukuja.setSelected(tilanne.isMurtolukuja());
+        this.frame.add(teksti6);
+        this.frame.add(murtolukuja);
+    }
+
+    private void luoJakolaskuKysymysJaTeksti() {
+        teksti5 = new JLabel("Jakolaskuja?");   
+        jako = new JCheckBox();
+        jako.setSelected(tilanne.isJako());
+        this.frame.add(teksti5);
+        this.frame.add(jako);
+    }
+
+    private void luoKertolaskuKysymysJaTeksti() {
+        teksti4 = new JLabel("Kertolaskuja?"); 
+        kerto = new JCheckBox();
+        kerto.setSelected(tilanne.isKerto());
+        this.frame.add(teksti4);
+        this.frame.add(kerto);
+    }
+
+    private void luoMiinuslaskuKysymysJaTeksti() {
+        teksti3 = new JLabel("Miinuslaskuja?");   
+        miinus = new JCheckBox();
+        miinus.setSelected(tilanne.isMiinus());
+        this.frame.add(teksti3);
+        this.frame.add(miinus);
+    }
+
+    private void luoPluslaskuKysymysJaTeksti() {
+        teksti2 = new JLabel("Pluslaskuja?");   
+        plus = new JCheckBox();
+        plus.setSelected(tilanne.isPlus());
+        this.frame.add(teksti2);
+        this.frame.add(plus);
+    }
+
+    private void luoSulkuKysymysJaTeksti() {
+        teksti1 = new JLabel("Käytetäänkö sulkuja?");    
+        sulut = new JCheckBox();
+        sulut.setSelected(tilanne.isSulkuja());
+        this.frame.add(teksti1);
+        this.frame.add(sulut);
     }
 }

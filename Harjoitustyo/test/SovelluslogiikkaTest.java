@@ -56,7 +56,31 @@ public class SovelluslogiikkaTest {
     @Test
     public void eteneEteneeOikeallaVastauksella() {
         logiikka.etene(""); //luo kysymyksen
-        assertTrue(logiikka.etene(""+logiikka.getKysymys().oikeaVastaus()).substring(0, 7).equals("Oikein!"));
+        String ilmoitus = Luokkakirjasto.kysymyksenVastausOikeaVastausKierrosEiVaihdu(
+                logiikka.getKysymys().oikeaVastaus());
+        assertTrue(logiikka.etene(""+logiikka.getKysymys().oikeaVastaus()).substring(0, 15).equals(
+                ilmoitus.substring(0,15)));
+    }
+    
+    @Test
+    public void eteneEteneeOikealleaMurtolukuVastauksella() {
+        logiikka.getTilanne().setMurtolukuja(true);
+        logiikka.getTilanne().setOpLkm(7);
+        logiikka.etene(""); //luo kysymyksen
+        String ilmoitus = Luokkakirjasto.kysymyksenVastausOikeaVastausKierrosEiVaihdu(
+                logiikka.getKysymys().oikeaVastaus());
+        assertTrue(logiikka.etene(""+logiikka.getKysymys().oikeaVastaus()).substring(0, 15).equals(
+                ilmoitus.substring(0,15)));     
+    }
+    
+    @Test
+    public void eteneEteneeVaarallaVastauksella() {
+        logiikka.etene(""); //luo kysymyksen
+        logiikka.getTilanne().setNegatiivisia(false);
+        String ilmoitus = Luokkakirjasto.kysymyksenVastausVaaraVastaus(
+                logiikka.getKysymys().oikeaVastaus());
+        assertTrue(logiikka.etene("-1").substring(0, 15).equals(
+                ilmoitus.substring(0,15)));
     }
     
     @Test

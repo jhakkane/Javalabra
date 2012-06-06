@@ -201,7 +201,7 @@ public class Murtoluku implements Laskettava {
             teksti=teksti+osoittaja;
         } else {
             if (sekaluku()) {
-                teksti=teksti+sekalukuna()[0]+"  "+sekalukuna()[1]
+                teksti=teksti+sekalukuna()[0]+" "+sekalukuna()[1]
                         +"/"+sekalukuna()[2];
             } else {
                 teksti=teksti+osoittaja+"/"+nimittaja;   

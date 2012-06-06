@@ -73,4 +73,15 @@ public class PeliTilanneTest {
         
         assertTrue(tilanne.isPlus());
     }
+    
+    @Test
+    public void oikeitaVastauksiaSuhteellisestiToimii() {
+        for (int i = 0; i < 9; i++) {
+            tilanne.vastattu(true);
+            
+        }
+        tilanne.vastattu(false);
+        
+        assertTrue(tilanne.oikeitaVastauksiaSuhteellisesti()==90);
+    }
 }
