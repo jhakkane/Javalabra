@@ -58,17 +58,7 @@ public class Lauseke implements Laskettava {
      * @throws Exception 
      */
     public Lauseke(PeliTilanne tilanne) throws Exception {
-
-        //PeliTilanteen muuttujia ei saa muuttaa, koska muuten pelin asetuksetkin muuttuvat.
-        opLkm=tilanne.getOpLkm();
-        sulkuja=tilanne.isSulkuja();
-        plus=tilanne.isPlus();
-        miinus=tilanne.isMiinus();
-        kerto=tilanne.isKerto();
-        jako=tilanne.isJako();
-        operandinMaksimiSuuruus=tilanne.getOperandMax();
-        murtolukuOperandi=tilanne.isMurtolukuja();
-        negatiivisia=tilanne.isNegatiivisia();
+        attribuuttienAlustus(tilanne);
         
         if (opLkm < 2) {
             throw new Exception("Operandien määrän pitää olla vähintään 2");
@@ -93,6 +83,44 @@ public class Lauseke implements Laskettava {
         poistaNollallaJako(tilanne);
        
     }
+
+    private void attribuuttienAlustus(PeliTilanne tilanne) {
+        //PeliTilanteen muuttujia ei saa muuttaa, koska muuten pelin asetuksetkin muuttuvat.
+        opLkm=tilanne.getOpLkm();
+        sulkuja=tilanne.isSulkuja();
+        plus=tilanne.isPlus();
+        miinus=tilanne.isMiinus();
+        kerto=tilanne.isKerto();
+        jako=tilanne.isJako();
+        operandinMaksimiSuuruus=tilanne.getOperandMax();
+        murtolukuOperandi=tilanne.isMurtolukuja();
+        negatiivisia=tilanne.isNegatiivisia();
+    }
+
+    private void lukuarvonLaskentaErikoismerkkiKohdattu(ArrayList<Murtoluku> operanditTemp, int i, ArrayList<Op> operaattoritTemp) {
+        operanditTemp.get(i+1).setArvo(operanditTemp.get(i));
+        operanditTemp.get(i).setArvo(POISTETTU);
+        operaattoritTemp.set(i+1, operaattoritTemp.get(i));
+        operaattoritTemp.set(i, Op.PLUS);
+        return;
+    }
+
+    private void lukuarvonLaskentaMiinusOperaatio(ArrayList<Murtoluku> operanditTemp, int i, ArrayList<Op> operaattoritTemp) {
+        Murtoluku tulos;
+        tulos = operanditTemp.get(i).lukuarvo().vahennys(operanditTemp.get(i+1).lukuarvo());
+        operanditTemp.get(i).setArvo(POISTETTU);
+        operanditTemp.get(i+1).setArvo(tulos);
+        operaattoritTemp.set(i, Op.PLUS);
+    }
+
+    private void lukuarvonLaskentaPlusOperaatio(ArrayList<Murtoluku> operanditTemp, int i, ArrayList<Op> operaattoritTemp) {
+        Murtoluku tulos;
+        tulos = operanditTemp.get(i).lukuarvo().summa(operanditTemp.get(i+1).lukuarvo());
+        operanditTemp.get(i).setArvo(POISTETTU);
+        operanditTemp.get(i+1).setArvo(tulos);
+        operaattoritTemp.set(i, Op.PLUS);
+    }
+
     
     /**
      * Asettaa operandit-taulukkoon tasan kaksi Laskettavaa. Nämä voivat olla joko
@@ -135,7 +163,7 @@ public class Lauseke implements Laskettava {
         operandienMaara=opLkm-operandienMaara;
         tilanne.setOpLkm(operandienMaara);
         if (operandienMaara == 1) {
-            operandit[taulukonIndeksi]=satunnaisluku(true,murtolukuOperandi);                        
+            operandit[taulukonIndeksi]=satunnaisluku(true, murtolukuOperandi);                        
         } else {
             try {
                 operandit[taulukonIndeksi]=new Lauseke(tilanne);
@@ -187,7 +215,6 @@ public class Lauseke implements Laskettava {
         if (kerto) { sallitutOperaattorit.add(Op.MUL); }
         if (jako) { sallitutOperaattorit.add(Op.DIV); }
         
-        
         for (int i = 0; i < operaattorit.length; i++) {
             Random r = new Random();
             int opnro = r.nextInt(sallitutOperaattorit.size());
@@ -238,42 +265,66 @@ public class Lauseke implements Laskettava {
      * @return 
      */
     private Murtoluku satunnaisluku(boolean saaOllaNolla, boolean murtoluku) {
-        int osoittaja=0;
-        int nimittaja=1;
-        Murtoluku luku;
+        Murtoluku satunnaisluku = new Murtoluku(0,1);
         
         if (saaOllaNolla) {
             if (murtoluku) {      
-                //(nimittaja*operandinMaksimiSuuruus)/nimittaja = operandinMaksimiSuuruus
-                nimittaja=(int)Math.round(Math.random()*(nimittajanMaksimiSuuruus-1)+1);
-                osoittaja=(int)Math.round(Math.random()*operandinMaksimiSuuruus);           
+                asetaSatunnaisluvunOsoittajaJaNimittajaSaaOllaNollaTaiMurtoluku(satunnaisluku);
             } else {
-                nimittaja=1;
-                osoittaja=(int)Math.round(Math.random()*operandinMaksimiSuuruus);                   
+                asetaSatunnaisluvunOsoittajaJaNimittajaEiSaaOllaNollaTaiMurtoluku(satunnaisluku);
             }
 
         } else {
             if (murtoluku) {
-                //(nimittaja*operandinMaksimiSuuruus)/nimittaja = operandinMaksimiSuuruus
-                nimittaja=(int)Math.round(Math.random()*(nimittajanMaksimiSuuruus-1)+1);
-                osoittaja=(int)Math.round(Math.random()*(operandinMaksimiSuuruus-1)+1);  
+                asetaSatunnaisluvunOsoittajaJaNimittaja_EiVoiOllaNolla_VoiOllaMurtoluku(satunnaisluku);
             } else {
-                //(nimittaja*operandinMaksimiSuuruus)/nimittaja = operandinMaksimiSuuruus
-                nimittaja=1;
-                osoittaja=(int)Math.round(Math.random()*nimittaja*(operandinMaksimiSuuruus-1)+1);                        
+                asetaSatunnaisluvunOsoittajaJaNimittaja_EiVoiOllaNolla_EiVoiOllaMurtoluku(satunnaisluku);                   
             }
         }
-
-        int negaatio=1;
+        
         if (negatiivisia) {
-            negaatio = (int)Math.round(Math.random()*2-1);   
+            muutaLukuSatunnaisestiNegatiiviseksi(satunnaisluku);
         }
                
-        osoittaja=osoittaja*negaatio;
-        luku = new Murtoluku(osoittaja,nimittaja);   
-        return luku;
+        return satunnaisluku;
     }
 
+    /**
+     * Muuttaa parametrina annetun luvun satunnaisesti negatiiviseksi.
+     * @param luku 
+     */
+    private void muutaLukuSatunnaisestiNegatiiviseksi(Murtoluku luku) {
+        int negaatio=1;
+        int negaatioRoll=0;
+        negaatioRoll = (int)Math.random()*100;
+        
+        if (negaatioRoll < Luokkakirjasto.NEG_LUKUJEN_OSUUS_OPERANDEISTA_PROSENTTEINA_KUN_NEG_LUVUT_PAALLA) {
+            negaatio=-1;
+        }
+        
+        luku.setOsoittaja(negaatio*luku.getOsoittaja());
+    }
+    
+    private void asetaSatunnaisluvunOsoittajaJaNimittajaSaaOllaNollaTaiMurtoluku(Murtoluku luku) {
+        luku.setOsoittaja((int)Math.round(Math.random()*operandinMaksimiSuuruus));
+        luku.setNimittaja((int)Math.round(Math.random()*(nimittajanMaksimiSuuruus-1)+1));
+    }
+    
+    private void asetaSatunnaisluvunOsoittajaJaNimittajaEiSaaOllaNollaTaiMurtoluku(Murtoluku luku) {
+        luku.setOsoittaja((int)Math.round(Math.random()*operandinMaksimiSuuruus));
+        luku.setNimittaja(1);
+    }
+    
+    private void asetaSatunnaisluvunOsoittajaJaNimittaja_EiVoiOllaNolla_VoiOllaMurtoluku(Murtoluku luku) {
+        luku.setOsoittaja((int)Math.round(Math.random()*(operandinMaksimiSuuruus-1)+1));
+        luku.setNimittaja((int)Math.round(Math.random()*(nimittajanMaksimiSuuruus-1)+1));
+    }
+    
+    private void asetaSatunnaisluvunOsoittajaJaNimittaja_EiVoiOllaNolla_EiVoiOllaMurtoluku(Murtoluku luku) {
+        luku.setOsoittaja((int)Math.round(Math.random()*(operandinMaksimiSuuruus-1)+1));
+        luku.setNimittaja(1);        
+    }
+    
     /**
      * Palauttaa taulukkona kaikki operandit. Käyttö pääasiassa testitarkoituksiin
      * ja voidaan poistaa myöhemmin.
@@ -333,9 +384,22 @@ public class Lauseke implements Laskettava {
         lukuarvonLaskentaPlusJaMiinus(operanditTemp, operaattoritTemp, tulos);
         
         lukuarvonLaskentaMuutaErikoismerkitNolliksi(operanditTemp);
+        lukuarvonLaskentaLaskeJaljellaOlevatYhteen(operanditTemp, operaattoritTemp);
 
+        //pitäisi olla vain 1 luku jäljellä, taulukon viimeiesessä solussa
+        return operanditTemp.get(operanditTemp.size()-1).lukuarvo();
+
+    }
+    
+    /**
+     * Käy läpi tilapäisen operandilistan kaikki alkiot ja laskee ne yhteen.
+     * @param operanditTemp
+     * @param operaattoritTemp 
+     */
+    private void lukuarvonLaskentaLaskeJaljellaOlevatYhteen(ArrayList<Murtoluku> operanditTemp, ArrayList<Op> operaattoritTemp) {
+        Murtoluku tulos;
         //lasketaan jäljellä olevat yhteen
-        tulos.asetaLuvuksi(0,1);
+        //tulos.asetaLuvuksi(0,1); --- POISTA JOS NÄYTTÄÄ ETTÄ EI TAPAHDU KAUHEITA
         for (int i = 0; i < operaattorit.length; i++) {
             tulos = operanditTemp.get(i).lukuarvo().summa(operanditTemp.get(i+1).lukuarvo());
 
@@ -343,10 +407,6 @@ public class Lauseke implements Laskettava {
             operanditTemp.get(i+1).setArvo(tulos);
             operaattoritTemp.set(i, Op.PLUS);
         }
-
-        //pitäisi olla vain 1 luku jäljellä, taulukon viimeiesessä solussa
-        return operanditTemp.get(operanditTemp.size()-1).lukuarvo();
-
     }
     
     /**
@@ -375,30 +435,15 @@ public class Lauseke implements Laskettava {
             //Siirretään lukua ja operaatiota yksi askel eteenpäin
             //jos _SEURAAVA_ merkki on erikoismerkki
             if (operanditTemp.get(i+1).onErikoisMerkki()) {
-
-                operanditTemp.get(i+1).setArvo(operanditTemp.get(i));
-                operanditTemp.get(i).setArvo(POISTETTU);
-
-                operaattoritTemp.set(i+1, operaattoritTemp.get(i));        
-                operaattoritTemp.set(i, Op.PLUS);
+                lukuarvonLaskentaErikoismerkkiKohdattu(operanditTemp, i, operaattoritTemp);
                 continue;
             }
             
-            
+            //muussa tapauksessa suoritetaan operaatio normaalisti
             if (operaattoritTemp.get(i) == Op.PLUS) {
-                
-                tulos = operanditTemp.get(i).lukuarvo().summa(operanditTemp.get(i+1).lukuarvo());
-
-                operanditTemp.get(i).setArvo(POISTETTU);
-                operanditTemp.get(i+1).setArvo(tulos);
-                operaattoritTemp.set(i, Op.PLUS);
+                lukuarvonLaskentaPlusOperaatio(operanditTemp, i, operaattoritTemp);
             } else if (operaattoritTemp.get(i) == Op.MIN) {
-                
-                tulos = operanditTemp.get(i).lukuarvo().vahennys(operanditTemp.get(i+1).lukuarvo());
-
-                operanditTemp.get(i).setArvo(POISTETTU);
-                operanditTemp.get(i+1).setArvo(tulos);
-                operaattoritTemp.set(i, Op.PLUS);
+                lukuarvonLaskentaMiinusOperaatio(operanditTemp, i, operaattoritTemp);
             }
         }
     }

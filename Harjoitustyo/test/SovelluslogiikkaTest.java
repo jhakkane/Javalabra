@@ -87,4 +87,14 @@ public class SovelluslogiikkaTest {
         
     }
     
+    @Test
+    public void oikeitaVastauksiaOikeaMaara() {
+        logiikka.etene(""); //luo ensimmäisen kysymyksen
+        for (int i = 0; i < 18; i++) {
+            logiikka.etene(""+logiikka.getTilanne().getKysymys().oikeaVastaus());
+        }
+        
+        assertTrue(logiikka.getTilanne().getOikeitaVastauksia()==9);
+    }
+    
 }

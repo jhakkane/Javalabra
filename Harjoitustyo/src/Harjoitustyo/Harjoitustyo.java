@@ -20,6 +20,8 @@ import javax.swing.SwingUtilities;
 public class Harjoitustyo {
 
     /**
+     * Luo sovelluslogiikan ja käyttöliittymän sekä käynnistää
+     * käyttöliittymän SwingUtilitiesin avulla.
      * @param args the command line arguments
      */
     public static void main(String[] args) {

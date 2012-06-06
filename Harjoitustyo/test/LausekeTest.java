@@ -90,6 +90,32 @@ public class LausekeTest {
         assertTrue(l.lukuarvo().samaLuku(new Murtoluku(0,2)));
     }
 
+    /**
+     * Laske -1/2 + 12/3 / 8 * 10/2 + (-3/3) + 1 = 0
+     */
+    @Test
+    public void lausekkeenRatkaisuOnOikein3() {
+        Murtoluku[] oper = new Murtoluku[6];
+        
+        oper[0] = new Murtoluku(-1,2);
+        oper[1] = new Murtoluku(12,3);
+        oper[2] = new Murtoluku(8,1);
+        oper[3] = new Murtoluku(10,2);
+        oper[4] = new Murtoluku(-3,3);
+        oper[5] = new Murtoluku(1,1);
+        
+        Op[] ops = new Op[5];
+        ops[0]=Op.PLUS;
+        ops[1]=Op.DIV;
+        ops[2]=Op.MUL;
+        ops[3]=Op.PLUS;
+        ops[4]=Op.PLUS;
+
+        l = new Lauseke(oper,ops);   
+        
+        assertTrue(l.lukuarvo().samaLuku(new Murtoluku(4,2)));
+    }
+    
     @Test
     public void oikeaMaaraOperaattoreita() throws Exception {
         PeliTilanne tilanne = new PeliTilanne();

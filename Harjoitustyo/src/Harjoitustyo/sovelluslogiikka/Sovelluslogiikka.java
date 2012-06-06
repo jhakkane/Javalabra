@@ -62,21 +62,22 @@ public class Sovelluslogiikka {
      */
     private String tarkistaPelaajanVastaus(String vastaus) {
         
-        if (vastaus.isEmpty()) {
-            //huom. vaihe ei muutu, käyttäjä yrittää uudelleen
+        try {
+            Murtoluku pelaajanVastaus = parsePelaajanVastaus(vastaus);
+        
+            tilanne.setVaihe(2);
+
+            Murtoluku oikeaVastaus = tilanne.getKysymys().oikeaVastaus();        
+
+            if (pelaajanVastaus.samaLuku(oikeaVastaus)) {
+                return pelaajaVastasiKysymykseenOikein(oikeaVastaus);
+            } else {
+                return pelaajaVastasiKysymykseenVaarin(oikeaVastaus);
+            }
+        } catch (Exception e) {
             return Luokkakirjasto.kysymyksenVastausPelaajaEiAntanutVastausta(tilanne);
         }
         
-        tilanne.setVaihe(2);
-        
-        Murtoluku oikeaVastaus = tilanne.getKysymys().oikeaVastaus(); 
-        Murtoluku pelaajanVastaus = parsePelaajanVastaus(vastaus);       
-        
-        if (pelaajanVastaus.samaLuku(oikeaVastaus)) {
-            return pelaajaVastasiKysymykseenOikein(oikeaVastaus);
-        } else {
-            return pelaajaVastasiKysymykseenVaarin(oikeaVastaus);
-        }
     }
     
     /**
@@ -157,37 +158,72 @@ public class Sovelluslogiikka {
     
     /**
      * Tulkitsee parametrina annetun String-muuttujan ja muuttaa sen
-     * Murtoluvuksi, mikäli mahdollista.
+     * Murtoluvuksi, mikäli mahdollista. Mikäli pelaajan vastaus on väärän
+     * muotoinen, heitetään poikkeus.
      * @param vastaus
      * @return 
      */
-    private Murtoluku parsePelaajanVastaus(String vastaus) {
+    private Murtoluku parsePelaajanVastaus(String vastaus) throws Exception {
         //pelaajan vastaus on muotoa x y/z
         String vastauksenOsat[] = vastaus.split("[ /]");
-        int vastausKokonaisluku= 0;
-        int vastausOsoittaja = 0;
-        int vastausNimittaja = 1;    
+        Murtoluku vastausLuku; 
         
         //pelaaja vastasi sekaluvulla
         if (vastauksenOsat.length==3) {
-            vastausKokonaisluku= Integer.parseInt(vastauksenOsat[0]);
-            vastausNimittaja = Integer.parseInt(vastauksenOsat[2]);            
-            vastausOsoittaja = Integer.parseInt(vastauksenOsat[1])
-                    +vastausKokonaisluku*vastausNimittaja;
-       
+            vastausLuku = parsePelaajanVastausSekaluku(vastauksenOsat);    
         } else if (vastauksenOsat.length==2) {
             //pelaaja vastasi murtoluvulla
-            vastausOsoittaja = Integer.parseInt(vastauksenOsat[0]);
-            vastausNimittaja = Integer.parseInt(vastauksenOsat[1]);
-                     
+            vastausLuku = parsePelaajanVastausMurtoluku(vastauksenOsat);
         } else if (vastauksenOsat.length==1) {
             //pelaaja vastasi kokonaisluvulla
-            vastausKokonaisluku= Integer.parseInt(vastauksenOsat[0]);
-            vastausNimittaja = 1;
-            vastausOsoittaja = vastausKokonaisluku;
-        }    
+            vastausLuku = parsePelaajanVastausKokonaisluku(vastauksenOsat);
+        } else {
+            //pelaajan vastaus on virheellinen
+            throw new Exception();
+        }
         
-        return new Murtoluku(vastausOsoittaja, vastausNimittaja);    
+        return vastausLuku;
+    }
+    
+    /**
+     * Käsittelee String-taulukon, joka sisältää kolme kokonaislukua
+     * ja tekee niistä Murtoluvun.
+     * @param vastauksenOsat
+     * @return 
+     */
+    private Murtoluku parsePelaajanVastausSekaluku(String vastauksenOsat[]) {
+        int vastausKokonaisluku= Integer.parseInt(vastauksenOsat[0]);
+        int vastausNimittaja = Integer.parseInt(vastauksenOsat[2]);            
+        int vastausOsoittaja = Integer.parseInt(vastauksenOsat[1])
+                +vastausKokonaisluku*vastausNimittaja;    
+       
+        return new Murtoluku(vastausOsoittaja, vastausNimittaja);
+    }
+    
+    /**
+     * Käsittelee String-taulukon, joka sisältää kaksi kokonaislukua
+     * ja tekee siitä Murtoluvun.
+     * @param vastauksenOsat
+     * @return 
+     */
+    private Murtoluku parsePelaajanVastausMurtoluku(String vastauksenOsat[]) {
+        int vastausOsoittaja = Integer.parseInt(vastauksenOsat[0]);
+        int vastausNimittaja = Integer.parseInt(vastauksenOsat[1]);
+       
+        return new Murtoluku(vastausOsoittaja, vastausNimittaja);
+    }
+    
+    /**
+     * Käsittelee String-taulukon, joka sisältää tasan yhden kokonaislukua
+     * kuvaavan numeron ja tekee siitä Murtoluvun.
+     * @param vastauksenOsat
+     * @return 
+     */
+    private Murtoluku parsePelaajanVastausKokonaisluku(String vastauksenOsat[]) {
+        int vastausNimittaja = 1;
+        int vastausOsoittaja = Integer.parseInt(vastauksenOsat[0]);   
+
+        return new Murtoluku(vastausOsoittaja, vastausNimittaja);
     }
     
     /**
