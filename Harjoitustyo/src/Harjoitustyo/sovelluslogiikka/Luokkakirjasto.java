@@ -13,6 +13,7 @@ public class Luokkakirjasto {
     
     public static final int OIKEITA_VASTAUKSIA_JOTTA_KIERROS_VAIHTUU_TASOPELISSA = 5;
     public static final int NEG_LUKUJEN_OSUUS_OPERANDEISTA_PROSENTTEINA_KUN_NEG_LUVUT_PAALLA = 50;
+    public static final int SUURIN_MAHDOLLINEN_EKSPONENTTI=3;
     
     public static final String alkuTervehdys = "Tervetuloa aritmetiikan pariin. Paina alla olevaa"
                 + " nappulaa generoidaksesi kysymyksen.\n"

@@ -55,8 +55,8 @@ public class OptionsAlku extends Options implements Runnable {
                 component.setVisible(true);   
             }
         
-            for (Component component1 : ainaNakyvatKomponentit) {
-                if (component == component1 || component == lopeta) {
+            for (Component ainaNakyva : ainaNakyvatKomponentit) {
+                if (component == ainaNakyva || component == lopeta) {
                     component.setVisible(true);
                 }
             }   
@@ -74,33 +74,41 @@ public class OptionsAlku extends Options implements Runnable {
         
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
         
-        tekstiA1 = new JLabel("Mikä on nimesi?");
-        nimiField = new JTextField();
-        
-        container.add(tekstiA1);
-        container.add(nimiField);
-
-        tekstiA2 = new JLabel("Haluatko, että peli säätää asetukset itse "
-                + "pelin aikana?");
-        tasopeli = new JCheckBox();
-        
-        tasopeli.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tasopeliActionPerformed(evt);
-            }
-        });
-        
-        container.add(tekstiA2);
-        container.add(tasopeli);
+        luoNimiTekstiJaKentta(container);        
+        luoTasopeliTekstiJaCheckBox(container);
         
         lisaaAinaNakyvatKomponentit();
 
         super.luoKomponentit(container);
         
     }
+
+    private void luoNimiTekstiJaKentta(Container container) {
+        tekstiA1 = new JLabel("Mikä on nimesi?");
+        nimiField = new JTextField();
+        container.add(tekstiA1);
+        container.add(nimiField);
+    }
+
+    private void luoTasopeliTekstiJaCheckBox(Container container) {
+        tekstiA2 = new JLabel("Haluatko, että peli säätää asetukset itse "
+                + "pelin aikana?");
+        tasopeli = new JCheckBox();
+        tasopeli.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tasopeliActionPerformed(evt);
+            }
+        });        
+        container.add(tekstiA2);
+        container.add(tasopeli);
+    }
     
-    public void lisaaAinaNakyvatKomponentit() {
+    /**
+     * Lisää ainaNakyvatKomponentit-taulukkoon ne komponentit, joiden on
+     * tarkoitus näkyä koko ajan, silloinkin kun pelaaja on valinnut tasopelin.
+     */
+    private void lisaaAinaNakyvatKomponentit() {
         ainaNakyvatKomponentit.add(tekstiA1);
         ainaNakyvatKomponentit.add(nimiField);
         ainaNakyvatKomponentit.add(tekstiA2);

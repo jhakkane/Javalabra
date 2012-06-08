@@ -26,6 +26,7 @@ public class PeliTilanne {
     private boolean murtolukuja=false;
     private boolean negatiivisia=false;
     private boolean tasopeli=false;
+    private boolean potenssi=false;
     private int oikeitaVastauksiaTallaKierroksella;
     private int kierros=0;
     private int vaihe=2;
@@ -77,6 +78,14 @@ public class PeliTilanne {
 
     public void setKierros(int kierros) {
         this.kierros = kierros;
+    }
+
+    public boolean isPotenssi() {
+        return potenssi;
+    }
+
+    public void setPotenssi(boolean potenssi) {
+        this.potenssi = potenssi;
     }
 
     public int getKierros() {

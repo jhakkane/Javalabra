@@ -28,6 +28,7 @@ public class Options implements Runnable {
     
     JCheckBox murtolukuja;
     JCheckBox negatiivisia;
+    JCheckBox potenssi;
     
     JTextField opLkmField;
     JTextField kokoField;
@@ -43,6 +44,7 @@ public class Options implements Runnable {
     JLabel teksti7;
     JLabel teksti8;
     JLabel teksti9;
+    JLabel potenssiTxt;
   
     JLabel eiAsetuksiaTeksti;
     
@@ -138,6 +140,14 @@ public class Options implements Runnable {
         }
     }
 
+    private void asetaPotenssiAsetukset() {
+        if (potenssi.isSelected()) {
+            tilanne.setPotenssi(true);
+        } else {
+            tilanne.setPotenssi(false);
+        }
+    }
+    
     private void asetaSulkuAsetukset() {
         if (sulut.isSelected()) {
             tilanne.setSulkuja(true);
@@ -172,6 +182,7 @@ public class Options implements Runnable {
         luoJakolaskuKysymysJaTeksti();
         luoMurtolukuKysymysJaTeksti();
         luoNegatiivisuusKysymysJaTeksti();     
+        luoPotenssiKysymysJaTeksti();
         luoOpLkmKysymysJaTeksti();
         luoOpMaxKokoKysymysJaTeksti();
         luoLopetaNappula();  
@@ -205,6 +216,14 @@ public class Options implements Runnable {
         this.frame.add(opLkmField);
     }
 
+    private void luoPotenssiKysymysJaTeksti() {
+        potenssiTxt= new JLabel("Saako mukana olla potenssilaskuja?");   
+        potenssi = new JCheckBox();
+        potenssi.setSelected(tilanne.isNegatiivisia());
+        this.frame.add(potenssiTxt);
+        this.frame.add(potenssi);
+    }
+    
     private void luoNegatiivisuusKysymysJaTeksti() {
         teksti7 = new JLabel("Saako laskuissa olla negatiivisia lukuja?");   
         negatiivisia = new JCheckBox();

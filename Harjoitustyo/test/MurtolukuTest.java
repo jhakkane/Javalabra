@@ -71,6 +71,17 @@ public class MurtolukuTest {
     }
     
     @Test
+    public void eksponenttiToimii() {
+        assertTrue(l1.korotaPotenssiin(2).samaLuku(new Murtoluku(1,4)));     
+        assertTrue(l1.korotaPotenssiin(3).samaLuku(new Murtoluku(1,16)));     
+        
+        assertTrue(l2.korotaPotenssiin(2).samaLuku(new Murtoluku(0,1))); 
+        
+        assertTrue(l3.korotaPotenssiin(2).samaLuku(new Murtoluku(1,9)));     
+        assertTrue(l3.korotaPotenssiin(3).samaLuku(new Murtoluku(1,81)));    
+    }
+    
+    @Test
     public void samaLukuToimii() {
         assertTrue(l1.samaLuku(new Murtoluku(12,24)));
         assertFalse(l1.samaLuku(new Murtoluku(11,24)));

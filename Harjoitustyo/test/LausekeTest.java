@@ -117,6 +117,8 @@ public class LausekeTest {
         
         assertTrue(l.lukuarvo().samaLuku(new Murtoluku(4,2)));
     }
+
+
     
     @Test
     public void lausekkeenRatkaisuOnOikein4() {

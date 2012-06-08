@@ -23,7 +23,8 @@ public class Lauseke implements Laskettava {
     
     private Laskettava[] operandit; //sisältää siis sekä Lukuja että Lausekkeita
     private Op[] operaattorit;
-
+    private int eksponentti=1;
+    
     private int opLkm;
     private boolean sulkuja=false;
     private boolean plus=true;
@@ -50,9 +51,8 @@ public class Lauseke implements Laskettava {
         this.operaattorit=operaattorit;
     }
     
-    /**Luo Lausekkeen PeliTilanteen asetusten perusteella. On virhetilanne yrittää
-     * luoda lauseketta, jossa on vain yksi operandi. Sitä tarkoitusta varten on olemassa
-     * Murtoluku.
+    /**Luo Lausekkeen PeliTilanteen asetusten perusteella. On mahdollista luoda
+     * myös yhden operandin lausekkeita.
      * 
      * @param tilanne
      * @throws Exception 
@@ -61,9 +61,10 @@ public class Lauseke implements Laskettava {
         attribuuttienAlustus(tilanne);
         
         if (opLkm < 2) {
-            throw new Exception("Operandien määrän pitää olla vähintään 2");
+            luoYhdenLuvunLauseke(tilanne);
         }
         
+        //ei sulkuja yksittäisten operandien ympärillä: ei siis esim. (2) + (5)
         if (opLkm == 2) {
             sulkuja=false;
         }
@@ -77,11 +78,15 @@ public class Lauseke implements Laskettava {
             luoSulullinenLauseke(tilanne);
         }
         
-        /*Tässä kohtaa muutellaan laskutoimitus sopivaksi siten, että siellä ei ole
-         * nollalla jakoa ja että jakolaskuista tulee sopivia osamääriä.
-        */
         poistaNollallaJako(tilanne);
        
+    }
+    
+    private void luoYhdenLuvunLauseke(PeliTilanne tilanne) {
+        this.operandit = new Laskettava[1];
+        this.operaattorit=null;
+        this.eksponentti=(int)(Math.round(Math.random()*Luokkakirjasto.SUURIN_MAHDOLLINEN_EKSPONENTTI));
+        operandit[0]=satunnaisluku(true, murtolukuOperandi);     
     }
 
     private void attribuuttienAlustus(PeliTilanne tilanne) {
@@ -181,6 +186,7 @@ public class Lauseke implements Laskettava {
      */
     private void asetaOperandeihinSatunnaislukuTaiLauseke(int taulukonIndeksi, int operandienMaara,
             PeliTilanne tilanne) {
+        
         int vanhaOpLkm = tilanne.getOpLkm();
         
         tilanne.setOpLkm(operandienMaara);
@@ -379,7 +385,10 @@ public class Lauseke implements Laskettava {
      * Palauttaa Luku-tyyppisen muuttujan, jonka arvo on sama kuin tämän
      * kysymyksen ratkaisu.
      * 
-     * Toiminta perustuu siihen, että ensin lasketaan kaikki kerto- ja jakolaskut
+     * Jos operanditaulukossa on vain yksi alkio, käsitellään se suoraan
+     * palauttamalla tämä luku korotettuna eksponentin ilmoittamaan potenssiin.
+     * 
+     * Muussa tapauksessa toiminta perustuu siihen, että ensin lasketaan kaikki kerto- ja jakolaskut
      * ja kerrottavan tai jakajan paikalle laitetaan tulo tai osamäärä.
      * Jaettavan tai kerrottavan paikalle laitetaan erikoismerkki 0/0.
      * Sitten lasketaan plus- ja vähennyslaskut jäljelle jääneillä operandeilla.
@@ -390,8 +399,13 @@ public class Lauseke implements Laskettava {
     @Override
     public Murtoluku lukuarvo() {
         
+        if (operandit.length==1) {
+            return lukuarvonLaskentaVainYksioperandi();
+        }
+        
         ArrayList<Murtoluku> operanditTemp = new ArrayList<Murtoluku>();
         ArrayList<Op> operaattoritTemp = new ArrayList<Op>();
+        Murtoluku lukuarvo;
         
         lukuarvonLaskentaTilapaisenOperandiTaulukonAlustus(operanditTemp);
         operaattoritTemp.addAll(Arrays.asList(operaattorit));
@@ -403,8 +417,20 @@ public class Lauseke implements Laskettava {
         lukuarvonLaskentaLaskeJaljellaOlevatYhteen(operanditTemp, operaattoritTemp);
 
         //pitäisi olla vain 1 luku jäljellä, taulukon viimeiesessä solussa
-        return operanditTemp.get(operanditTemp.size()-1).lukuarvo();
-
+        lukuarvo = operanditTemp.get(operanditTemp.size()-1).lukuarvo();
+        lukuarvo = lukuarvo.korotaPotenssiin(eksponentti);
+        return lukuarvo;
+    }
+    
+    /**
+     * Palauttaa operanditaulukon ainoan alkion korotettuna eksponentin
+     * ilmoittamaan potenssiin.
+     * @return 
+     */
+    private Murtoluku lukuarvonLaskentaVainYksioperandi() {
+        Murtoluku lukuarvo = operandit[0].lukuarvo();
+        lukuarvo = lukuarvo.korotaPotenssiin(eksponentti);
+        return lukuarvo;
     }
     
     /**
@@ -486,7 +512,11 @@ public class Lauseke implements Laskettava {
     @Override
     public String toString() {
         String teksti="";
-          
+        
+        if (eksponentti != 1) {
+            teksti=teksti+"(";
+        }
+        
         for (int i = 0; i < operandit.length; i++) {
             if (operandit[i].onLauseke() == false) {
                 teksti=teksti+operandit[i].toString();
@@ -497,6 +527,10 @@ public class Lauseke implements Laskettava {
             if (i < operaattorit.length) {
                 teksti=teksti+" "+operaattorit[i].toString()+" ";
             }
+        }
+        
+        if (eksponentti != 1) {
+            teksti=teksti+")^"+eksponentti;
         }
         
         return teksti;

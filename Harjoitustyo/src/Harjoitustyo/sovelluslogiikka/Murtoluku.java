@@ -14,8 +14,9 @@ import java.util.ArrayList;
  */
 public class Murtoluku implements Laskettava {
     
-    private int osoittaja;
-    private int nimittaja;
+    private int osoittaja=1;
+    private int nimittaja=1;
+    private int eksponentti=1;
 
     /**
      * Ainut tapa luoda murtoluku 0/0. Tarpeen vain erikoislukuna esim. Lausekkeessa,
@@ -50,6 +51,14 @@ public class Murtoluku implements Laskettava {
 
     public int getNimittaja() {
         return nimittaja;
+    }
+
+    public void setEksponentti(int eksponentti) {
+        this.eksponentti = eksponentti;
+    }
+
+    public int getEksponentti() {
+        return eksponentti;
     }
     
     
@@ -120,6 +129,25 @@ public class Murtoluku implements Laskettava {
     }
     
 
+    /**
+     * Palauttaa uuden Murtoluvun, jonka arvo on tämä Murtoluku potenssiin
+     * eksponentti.
+     * @param luku
+     * @return 
+     */
+    public Murtoluku korotaPotenssiin(int eksponentti) {
+        Murtoluku korotettu = new Murtoluku(this.osoittaja,this.nimittaja);
+        
+        if (eksponentti == 0) {
+            return new Murtoluku(1,1);
+        }
+        
+        for (int i = 1; i < eksponentti; i++) {
+            korotettu = korotettu.tulo(korotettu);
+        }
+        return korotettu;
+    }
+    
     /**
      * Laskee tämän Murtoluvun ja parametrina annettavan Murtoluvun l tulon
      * ja antaa sen paluuarvona. Metodi ei yritä sieventää tuloa.
@@ -279,7 +307,7 @@ public class Murtoluku implements Laskettava {
     }
 
     /**
-     * Asettaa tällä murtuluvulle saman arvon kuin parametrina annetulle Murtoluvulle m.
+     * Asettaa tällä murtoluvulle saman arvon kuin parametrina annetulle Murtoluvulle m.
      * @param m 
      */
     public void setArvo(Murtoluku m) {
