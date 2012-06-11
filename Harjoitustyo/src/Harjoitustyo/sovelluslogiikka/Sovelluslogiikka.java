@@ -60,8 +60,7 @@ public class Sovelluslogiikka {
      * @param vastaus
      * @return 
      */
-    private String tarkistaPelaajanVastaus(String vastaus) {
-        
+    private String tarkistaPelaajanVastaus(String vastaus) {        
         try {
             Murtoluku pelaajanVastaus = parsePelaajanVastaus(vastaus);
         

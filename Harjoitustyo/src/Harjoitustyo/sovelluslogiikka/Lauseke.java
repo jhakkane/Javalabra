@@ -114,7 +114,7 @@ public class Lauseke implements Laskettava {
     private void luoYhdenLuvunLauseke(PeliTilanne tilanne) {
         this.operandit = new Laskettava[1];
         this.operaattorit = null;
-        this.eksponentti = (int) (Math.round(Math.random() * Luokkakirjasto.EKSPONENTTI_MAX));
+        this.eksponentti = (int) (Math.round(Math.random() * Luokkakirjasto.PELITILANNE_EKSPONENTTI_MAX));
         operandit[0] = satunnaisluku(true, murtolukuOperandi);
     }
 
@@ -398,7 +398,7 @@ public class Lauseke implements Laskettava {
      */
     private int arvoSopivaEksponenttiMurtoluvulle(Murtoluku luku) {
         if (potenssi && !luku.onNolla()) {
-            return (int)(Math.round(Math.random()*Luokkakirjasto.EKSPONENTTI_MAX));
+            return (int)(Math.round(Math.random()*Luokkakirjasto.PELITILANNE_EKSPONENTTI_MAX));
         }
         return 1;
     }

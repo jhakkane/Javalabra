@@ -5,8 +5,9 @@
 package Harjoitustyo.sovelluslogiikka;
 
 /**
- *Sisältää kaikki pelissä esiintyvät, käyttäjälle näkyvät tekstit.
- * Saattaa sisältää tulevaisuudessa myös erilaisia metodeja ja vakioita.
+ * Sisältää kaikki pelissä esiintyvät, käyttäjälle näkyvät tekstit sekä
+ * erilaisia vakioita.
+ *
  * @author JH
  */
 public class Luokkakirjasto {
@@ -14,9 +15,12 @@ public class Luokkakirjasto {
     public static final int OIKEITA_VASTAUKSIA_JOTTA_KIERROS_VAIHTUU_TASOPELISSA = 5;
     public static final int NEG_LUKUJEN_OSUUS_OPERANDEISTA_PROSENTTEINA_KUN_NEG_LUVUT_PAALLA = 50;
     
-    public static final int EKSPONENTTI_MAX=3;
-    public static final int OPERANDIEN_LUKUMAARA_MAX=9;
-    public static final int OPERANDIN_KOKO_MAX=1000;
+    /**
+     * Suurin mahdollinen eksponentti pelissä.
+     */
+    public static final int PELITILANNE_EKSPONENTTI_MAX=2;
+    public static final int PELITILANNE_OLETUS_OPERANDIEN_LKM = 2;
+    public static final int PELITILANNE_OLETUS_OPERANDIN_KOKO = 20;
     
     public static final String alkuTervehdys = "Tervetuloa aritmetiikan pariin. Paina alla olevaa"
                 + " nappulaa generoidaksesi kysymyksen.\n\n"
@@ -54,5 +58,9 @@ public class Luokkakirjasto {
     public static String joitainAsetuksiaMuutettiinKoskaMuutenLiianIsojaLukuja() {
         return "Nämä asetukset olisivat tuottaneet liian "
                     + "isoja lukuja. Joitain asetuksia muutetiin.";
+    }
+
+    public static String asetuksetOvatVirheellisia() {
+        return "Antamasi asetukset ovat virheellisiä. Joitain asetuksia on muutettu.";
     }
 }

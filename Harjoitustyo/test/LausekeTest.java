@@ -316,21 +316,7 @@ public class LausekeTest {
         
         assertTrue(l.lukuarvo().samaLuku(new Murtoluku(2,1)));
     }
-    
-    @Test
-    public void eksponenttiLausekkeenRatkaisuonOikein11() {
-        Laskettava[] oper = new Laskettava[2];
-        oper[0] = new Lauseke(new Murtoluku(600,1),3);
-        oper[1] = new Lauseke(new Murtoluku(600,1),3);
-
-        Op[] ops = new Op[1];
-        ops[0]=Op.MUL;
-        
-        l = new Lauseke(oper, ops);
-        
-        assertTrue(l.lukuarvo().samaLuku(new Murtoluku(2,1)));
-    }
-    
+   
     
     @Test
     public void oikeaMaaraOperaattoreita() throws Exception {

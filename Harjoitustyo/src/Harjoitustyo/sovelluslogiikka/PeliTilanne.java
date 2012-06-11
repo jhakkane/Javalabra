@@ -16,8 +16,8 @@ public class PeliTilanne {
     private String nimi="Anonyymi";
     private int vastattuja=0;
     private int oikeitaVastauksia=0;
-    private int opLkm=2;
-    private int operandMax=20;
+    private int opLkm = Luokkakirjasto.PELITILANNE_OLETUS_OPERANDIEN_LKM;
+    private int operandMax = Luokkakirjasto.PELITILANNE_OLETUS_OPERANDIN_KOKO;
     private boolean sulkuja=false;
     private boolean plus=true;
     private boolean miinus=false;
@@ -112,62 +112,148 @@ public class PeliTilanne {
         return plus;
     }
 
-    /**
-     * Setterinä toimimisen lisäksi tarkistaa, että vähintään yksi operaatio
-     * on aina sallittu. Jos pelaaja yrittää ottaa kaikki operaatiot pois käytöstä,
-     * sallitaan pluslasku.
-     * @param plus 
-     */
     public void setPlus(boolean plus) {
         this.plus = plus;
-        yksiOperaatioSallitaanAina();
     }
 
-    /**
-     * Setterinä toimimisen lisäksi tarkistaa, että vähintään yksi operaatio
-     * on aina sallittu. Jos pelaaja yrittää ottaa kaikki operaatiot pois käytöstä,
-     * sallitaan pluslasku.
-     * @param miinus 
-     */
     public void setMiinus(boolean miinus) {
         this.miinus = miinus;
-        yksiOperaatioSallitaanAina();
     }
 
-    /**
-     * Setterinä toimimisen lisäksi tarkistaa, että vähintään yksi operaatio
-     * on aina sallittu. Jos pelaaja yrittää ottaa kaikki operaatiot pois käytöstä,
-     * sallitaan pluslasku.
-     * @param kerto 
-     */
     public void setKerto(boolean kerto) {
         this.kerto = kerto;
-        yksiOperaatioSallitaanAina();
+    }
+
+    public void setJako(boolean jako) {
+        this.jako = jako;
     }
 
     /**
-     * Setterinä toimimisen lisäksi tarkistaa, että vähintään yksi operaatio
-     * on aina sallittu. Jos pelaaja yrittää ottaa kaikki operaatiot pois käytöstä,
-     * sallitaan pluslasku.
-     * @param jako 
+     * Pienentää operandien lukumäärää yhdellä jos se on yli kaksi.
+     * Muutoin jaksaa operandin maksimikoon kahdella.
      */
-    public void setJako(boolean jako) {
-        this.jako = jako;
-        yksiOperaatioSallitaanAina();
+    private void muutaAsetuksiaNiinEttaSuurinMahdollinenLukuOnPienempi() {
+        //jos isoLuku on yli rajan, tehdään muutoksia asetuksiin
+        if (getOpLkm() > 2) {
+            setOpLkm(getOpLkm()-1);
+        } else {
+            setOperandMax((int)(getOperandMax()/2));
+        }
+    }
+
+    /**
+     * Selvittää, onko näillä asetuksilla saatava suurin mahdollinen luku
+     * osoittajassa tai nimittäjässä suurempi kuin mitä int-muuttujaan mahtuun.
+     * 
+     * Tässä oletetaan, että suurin mahdollinen nimittäjä on pienempi tai
+     * yhtäsuuri kuin suurin mahdollinen operandi.
+     * @param isoluku
+     * @param isoLukuAlleRajan
+     * @return 
+     */
+    private boolean selvitaOnkoIsoinMahdollinenLukuAlleIntRajan(boolean isoLukuAlleRajan) {
+        long isoluku = (long)Math.pow(getOperandMax(),
+            Luokkakirjasto.PELITILANNE_EKSPONENTTI_MAX);
+        
+        for (int i = 0; i < getOpLkm()-1; i++) {
+            if (isJako() || isKerto()) {
+                if (isPotenssi()) {
+                    isoluku = isoluku*(long)Math.pow(getOperandMax(),
+                        Luokkakirjasto.PELITILANNE_EKSPONENTTI_MAX);                             
+                } else {
+                    isoluku = isoluku*Luokkakirjasto.PELITILANNE_EKSPONENTTI_MAX;
+                }
+           
+            } else {
+                isoluku = isoluku+(long)Math.pow(getOperandMax(),
+                    Luokkakirjasto.PELITILANNE_EKSPONENTTI_MAX);           
+            }
+
+                if (isoluku > 2147483647) {
+                    isoLukuAlleRajan = false;
+                    break;
+                }    
+        }
+        return isoLukuAlleRajan;
     }
 
     /**
      * Tarkistaa, että vähintään yksi operaatio
      * on aina sallittu. Jos pelaaja yrittää ottaa kaikki operaatiot pois käytöstä,
-     * sallitaan pluslasku.
+     * sallitaan pluslasku. Palauttaa true, jos jouduttiin tekemään muutoksia.
      */
-    private void yksiOperaatioSallitaanAina() {
+    private boolean yksiOperaatioSallitaanAina() {
         if ((isJako() == false) && (isKerto() == false) &&
                 (isMiinus() == false) && (isPlus() == false)) {
             setPlus(true);
+            return true;
         }
+        return false;
     }
 
+    /**
+     * Käy läpi asetukset ja katsoo onko niissä virheitä. Esim. kahta pienempi
+     * operandien lukumäärä tai se, että mikään operaatio ei ole sallittu,
+     * ovat virheitä. Virheet korjataan ja palautetaan oikea virhetyyppi
+     * int-muuttujassa.
+     * 
+     * 0 = ei virhettä
+     * 1 = asetukset mahdollistavat liian suuria lukuja (eivät mahdu int-muuttujaan)
+     * 2 = muu virhe, kuten kahta pienempi operandien lukumäärä
+     * @return 
+     */
+    public int tarkistaJaMuutaSopimattomatAsetukset() {
+        int virhetyyppi=0;
+        
+        if (yksiOperaatioSallitaanAina()) {
+            virhetyyppi = 2;
+        }
+        
+        if (tarkistaMahdollistavatkoAsetuksetLiianSuuriaLukuja()) {
+            virhetyyppi = 1;
+        }
+        
+        if (getOperandMax() < 1) {
+            setOperandMax(Luokkakirjasto.PELITILANNE_OLETUS_OPERANDIN_KOKO);
+            virhetyyppi = 2;
+        }
+
+        if (getOpLkm() < 2) {
+            setOpLkm(Luokkakirjasto.PELITILANNE_OLETUS_OPERANDIEN_LKM);
+            virhetyyppi = 2;
+        }
+        
+        return virhetyyppi;
+    }
+    
+    /**
+     * Laskee long-muuttujaan apuna käyttäen miten iso luku näillä
+     * asetuksilla voi enintään tulla osoittajaan tai nimittäjään. Jos se on suurempi kuin
+     * int-muuttujan maksimiarvo, muutetaan asetuksia niin kauan kunnes
+     * long-muuttujan arvo on alle int-arvon maksimiarvo.
+     * @return 
+     */
+    private boolean tarkistaMahdollistavatkoAsetuksetLiianSuuriaLukuja() {
+        boolean muutettiinkoJotain = false;
+        
+        while (true) {
+            boolean isoLukuAlleRajan = true;
+
+            isoLukuAlleRajan = selvitaOnkoIsoinMahdollinenLukuAlleIntRajan(isoLukuAlleRajan);
+        
+            if (isoLukuAlleRajan) {
+                break;
+            } else {
+                muutaAsetuksiaNiinEttaSuurinMahdollinenLukuOnPienempi();
+                
+                muutettiinkoJotain = true;
+            }
+        }
+        
+        return muutettiinkoJotain;
+    }
+    
+    
     public int getOpLkm() {
         return opLkm;
     }

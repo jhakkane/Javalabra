@@ -50,6 +50,14 @@ public class Options implements Runnable {
     JLabel eiAsetuksiaTeksti;
     
     /**
+     * Muuttuja, joka kertoo tapahtuiko asetusten asettamisessa virheitä.
+     * 0 = ei virheitä
+     * 1 = asetukset mahdollistavat liian suuria lukuja
+     * 2 = asetukset ovat muuten vääränlaiset, esim. kirjaimia
+     */
+    private int virhetyyppi = 0;
+    
+    /**
      * Kun painetaan valmis-nappulaa, muutetaan asetukset mikäli pelaaja
      * ei ole valinnut tasopeliä.
      * @param e 
@@ -76,91 +84,56 @@ public class Options implements Runnable {
         asetaMaxOpAsetukset();
         asetaPotenssiAsetukset();
         
-        //muutaSopimattomatAsetukset();
+        muutaSopimattomatAsetukset();
     }
 
     
     /**
-     * Tarkistetaan, etteivät asetukset mahdollista liian suuria lukuja eli
-     * lukuja jotka eivät mahdu int-muuttujaan.
+     * Kutsutaan PeliTilanteen metodia, joka muuttaa sopimattomat asetukset sopiviksi.
+     * Näytetään pelaajalle virheilmoitus joko kyseisen metodin paluuarvon perusteella
+     * tai mikäli pelaaja antoi virheellisen syötteen tekstikenttiin.
      */
     private void muutaSopimattomatAsetukset() {
-        boolean muutettiinkoJotain = false;
         
-        if (tilanne.getOperandMax() > Luokkakirjasto.OPERANDIN_KOKO_MAX) {
-            tilanne.setOperandMax(Luokkakirjasto.OPERANDIN_KOKO_MAX);
-            muutettiinkoJotain=true;
-        }
-        if (tilanne.getOpLkm() > Luokkakirjasto.OPERANDIEN_LUKUMAARA_MAX) {
-            tilanne.setOpLkm(Luokkakirjasto.OPERANDIEN_LUKUMAARA_MAX);
-            muutettiinkoJotain=true;
-        }
+        virhetyyppi = tilanne.tarkistaJaMuutaSopimattomatAsetukset();
         
-        long isoluku = (long)Math.pow(tilanne.getOperandMax(),
-                Luokkakirjasto.EKSPONENTTI_MAX);
-        for (int i = 0; i < tilanne.getOpLkm()-1; i++) {
-            isoluku = isoluku*(long)Math.pow(tilanne.getOperandMax(),
-                Luokkakirjasto.EKSPONENTTI_MAX);
-
-                if (isoluku > 2147483647) {
-                    System.out.println(isoluku);
-                    tilanne.setOperandMax(9);
-                    muutettiinkoJotain = true;
-                    break;
-                }    
-        }        
-        
-        if (muutettiinkoJotain) {
+        if (virhetyyppi == 1) {
             JOptionPane.showMessageDialog(frame,
                     Luokkakirjasto.joitainAsetuksiaMuutettiinKoskaMuutenLiianIsojaLukuja());
+        } else if (virhetyyppi == 2) {
+            JOptionPane.showMessageDialog(frame,
+                    Luokkakirjasto.asetuksetOvatVirheellisia());    
         }
     }
     
-    private void tarkistaMahdollistavatkoAsetuksetLiianSuuriaLukuja() {
-        boolean isoLukuAlleRajan = true;
-        
-        long isoluku = (long)Math.pow(tilanne.getOperandMax(),
-                Luokkakirjasto.EKSPONENTTI_MAX);
-        
-        while (true) {
-            for (int i = 0; i < tilanne.getOpLkm()-1; i++) {
-                isoluku = isoluku*(long)Math.pow(tilanne.getOperandMax(),
-                    Luokkakirjasto.EKSPONENTTI_MAX);
 
-                    if (isoluku > 2147483647) {
-                        System.out.println(isoluku);
-                        tilanne.setOperandMax(10);
-                        isoLukuAlleRajan = false;
-                        break;
-                    }    
-            }
-        
-            if (isoLukuAlleRajan) {
-                break;
-            }
-
-            //jos isoLuku on yli rajan, tehdään muutoksia asetuksiin
-            tilanne.setOperandMax((int)(tilanne.getOperandMax()/2));
-        }
-        
-    }
     
+    /**
+     * Käsittelee maksimioperandikentän ja yrittää asettaa asetukset
+     * sen mukaisesti. Mikäli ei onnistu, asetetaan virhetyyppi sopivasti.
+     */
     private void asetaMaxOpAsetukset() {
         int i = 20;
         try {
             i = Integer.parseInt(kokoField.getText());
         } catch (Exception o) {
             i=tilanne.getOperandMax();
+            virhetyyppi = 2;
         }
         tilanne.setOperandMax(i);
     }
 
+    /**
+     * Käsittelee operandien lukumääräkentän ja yrittää asettaa asetukset
+     * sen mukaisesti. Mikäli ei onnistu, asetetaan virhetyyppi sopivasti.
+     */
     private void asetaOpLkm() {
         int i=2;
         try {
             i = Integer.parseInt(opLkmField.getText());
         } catch (Exception o) {
             i=tilanne.getOpLkm();
+            virhetyyppi = 2;
         }
         tilanne.setOpLkm(i);
     }
