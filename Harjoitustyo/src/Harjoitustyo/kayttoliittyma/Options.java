@@ -4,6 +4,7 @@
  */
 package Harjoitustyo.kayttoliittyma;
 
+import Harjoitustyo.sovelluslogiikka.Luokkakirjasto;
 import Harjoitustyo.sovelluslogiikka.PeliTilanne;
 import java.awt.Component;
 import java.awt.Container;
@@ -59,6 +60,10 @@ public class Options implements Runnable {
         frame.dispose();
     }
     
+    /**
+     * Asettaa asetukset pelaajan valintojen mukaan ja lopuksi muuttaa
+     * virheelliset asetukset.
+     */
     public void asetaTilanne() {
         asetaSulkuAsetukset();
         asetaPlusAsetukset();
@@ -69,9 +74,48 @@ public class Options implements Runnable {
         asetaNegatiivisuusAsetukset();
         asetaOpLkm();
         asetaMaxOpAsetukset();
+        asetaPotenssiAsetukset();
         
+        muutaSopimattomatAsetukset();
     }
 
+    
+    /**
+     * Tarkistetaan, etteivät asetukset mahdollista liian suuria lukuja eli
+     * lukuja jotka eivät mahdu int-muuttujaan.
+     */
+    private void muutaSopimattomatAsetukset() {
+        boolean muutettiinkoJotain = false;
+        
+        if (tilanne.getOperandMax() > Luokkakirjasto.OPERANDIN_KOKO_MAX) {
+            tilanne.setOperandMax(Luokkakirjasto.OPERANDIN_KOKO_MAX);
+            muutettiinkoJotain=true;
+        }
+        if (tilanne.getOpLkm() > Luokkakirjasto.OPERANDIEN_LUKUMAARA_MAX) {
+            tilanne.setOpLkm(Luokkakirjasto.OPERANDIEN_LUKUMAARA_MAX);
+            muutettiinkoJotain=true;
+        }
+        
+        long isoluku = (long)Math.pow(tilanne.getOperandMax(),
+                Luokkakirjasto.EKSPONENTTI_MAX);
+        for (int i = 0; i < tilanne.getOpLkm()-1; i++) {
+            isoluku = isoluku*(long)Math.pow(tilanne.getOperandMax(),
+                Luokkakirjasto.EKSPONENTTI_MAX);
+
+                if (isoluku > 2147483647) {
+                    System.out.println(isoluku);
+                    tilanne.setOperandMax(10);
+                    muutettiinkoJotain = true;
+                    break;
+                }    
+        }        
+        
+        if (muutettiinkoJotain) {
+            JOptionPane.showMessageDialog(frame,
+                    Luokkakirjasto.joitainAsetuksiaMuutettiinKoskaMuutenLiianIsojaLukuja());
+        }
+    }
+    
     private void asetaMaxOpAsetukset() {
         int i = 20;
         try {
@@ -219,7 +263,7 @@ public class Options implements Runnable {
     private void luoPotenssiKysymysJaTeksti() {
         potenssiTxt= new JLabel("Saako mukana olla potenssilaskuja?");   
         potenssi = new JCheckBox();
-        potenssi.setSelected(tilanne.isNegatiivisia());
+        potenssi.setSelected(tilanne.isPotenssi());
         this.frame.add(potenssiTxt);
         this.frame.add(potenssi);
     }

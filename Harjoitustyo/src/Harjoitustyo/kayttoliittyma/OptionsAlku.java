@@ -52,7 +52,7 @@ public class OptionsAlku extends Options implements Runnable {
             if (tasopeli.isSelected()) {
                 component.setVisible(false);
             } else {
-                component.setVisible(true);   
+                component.setVisible(true);  
             }
         
             for (Component ainaNakyva : ainaNakyvatKomponentit) {

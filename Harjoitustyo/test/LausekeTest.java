@@ -3,10 +3,7 @@
  * and open the template in the editor.
  */
 
-import Harjoitustyo.sovelluslogiikka.Lauseke;
-import Harjoitustyo.sovelluslogiikka.Murtoluku;
-import Harjoitustyo.sovelluslogiikka.Op;
-import Harjoitustyo.sovelluslogiikka.PeliTilanne;
+import Harjoitustyo.sovelluslogiikka.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.*;
@@ -152,6 +149,189 @@ public class LausekeTest {
         assertTrue(l.lukuarvo().samaLuku(new Murtoluku(2,30)));
     }
     
+    /**
+     * (10/1 + 10/2 + 10/10)^2 = 16^2 = 256
+     */
+    @Test
+    public void eksponenttiLausekkeenRatkaisuonOikein() {
+        Murtoluku[] oper = new Murtoluku[3];
+        oper[0] = new Murtoluku(10,1);
+        oper[1] = new Murtoluku(10,2);
+        oper[2] = new Murtoluku(10,10);
+        
+        Op[] ops = new Op[2];
+        ops[0]=Op.PLUS;
+        ops[1]=Op.PLUS;
+        
+        l = new Lauseke(oper, ops, 2);
+        assertTrue(l.lukuarvo().samaLuku(new Murtoluku(256,1)));
+    }
+    
+    /**
+     * (7/9)^3 = 343/729
+     */
+    @Test
+    public void eksponenttiLausekkeenRatkaisuonOikein2() {
+        Murtoluku[] oper = new Murtoluku[1];
+        oper[0] = new Murtoluku(7,9);
+        
+        Op[] ops = null;
+        
+        l = new Lauseke(oper, ops, 3);
+        assertTrue(l.lukuarvo().samaLuku(new Murtoluku(343,729)));
+    }
+    
+    /**
+     * (-7/9)^3 = 343/729
+     */
+    @Test
+    public void eksponenttiLausekkeenRatkaisuonOikein3() {
+        Murtoluku[] oper = new Murtoluku[1];
+        oper[0] = new Murtoluku(-7,9);
+        
+        Op[] ops = null;
+        
+        l = new Lauseke(oper, ops, 3);
+        assertTrue(l.lukuarvo().samaLuku(new Murtoluku(-343,729)));
+    }
+  
+    /**
+     * (-7/9)^2 = 49/81
+     */
+    @Test
+    public void eksponenttiLausekkeenRatkaisuonOikein4() {
+        Murtoluku[] oper = new Murtoluku[1];
+        oper[0] = new Murtoluku(-7,9);
+        
+        Op[] ops = null;
+        
+        l = new Lauseke(oper, ops, 2);
+        assertTrue(l.lukuarvo().samaLuku(new Murtoluku(-49,-81)));
+    }
+
+    /**
+     * ((-3/2)^3 + (3/2)^3)^3=0
+     */
+    @Test
+    public void eksponenttiLausekkeenRatkaisuonOikein5() {
+        Laskettava[] oper = new Laskettava[2];
+        oper[0] = new Lauseke(new Murtoluku(-3,2),3);
+        oper[1] = new Lauseke(new Murtoluku(3,2),3);
+        
+        Op[] ops = new Op[1];
+        ops[0]=Op.PLUS;
+        
+        l = new Lauseke(oper, ops, 3);
+        
+        assertTrue(l.lukuarvo().samaLuku(new Murtoluku(0,4)));
+    }
+    
+    /**
+     * ((-3/2)^2 + (3/2)^2)^2=324/16
+     */
+    @Test
+    public void eksponenttiLausekkeenRatkaisuonOikein6() {
+        Laskettava[] oper = new Laskettava[2];
+        oper[0] = new Lauseke(new Murtoluku(-3,2),2);
+        oper[1] = new Lauseke(new Murtoluku(3,2),2);
+        
+        Op[] ops = new Op[1];
+        ops[0]=Op.PLUS;
+        
+        l = new Lauseke(oper, ops, 2);
+        
+        assertTrue(l.lukuarvo().samaLuku(new Murtoluku(324,16)));
+    }
+    
+    @Test
+    public void eksponenttiLausekkeenRatkaisuonOikein7() {
+        Laskettava[] oper = new Laskettava[5];
+        oper[0] = new Murtoluku(5,1);
+        oper[1] = new Murtoluku(15,1);
+        oper[2] = new Murtoluku(3,1);
+        oper[3] = new Murtoluku(-19,1);
+        oper[4] = new Lauseke(new Murtoluku(18,1),2);
+        
+        Op[] ops = new Op[4];
+        ops[0]=Op.PLUS;
+        ops[1]=Op.PLUS;
+        ops[2]=Op.PLUS;
+        ops[3]=Op.PLUS;
+        
+        l = new Lauseke(oper, ops);
+        
+        assertTrue(l.lukuarvo().samaLuku(new Murtoluku(328,1)));
+    }
+
+    @Test
+    public void eksponenttiLausekkeenRatkaisuonOikein8() {
+        Laskettava[] oper = new Laskettava[5];
+        oper[0] = new Lauseke(new Murtoluku(2,1),1);
+        oper[1] = new Lauseke(new Murtoluku(-3,1),2);
+        oper[2] = new Lauseke(new Murtoluku(-1,1),1);
+        oper[3] = new Lauseke(new Murtoluku(-1,1),1);
+        oper[4] = new Lauseke(new Murtoluku(-1,1),1);
+        
+        Op[] ops = new Op[4];
+        ops[0]=Op.MIN;
+        ops[1]=Op.MIN;
+        ops[2]=Op.MIN;
+        ops[3]=Op.MIN;
+        
+        l = new Lauseke(oper, ops);
+        
+        assertTrue(l.lukuarvo().samaLuku(new Murtoluku(-4,1)));
+    }
+    
+    @Test
+    public void eksponenttiLausekkeenRatkaisuonOikein9() {
+        Laskettava[] oper = new Laskettava[5];
+        oper[0] = new Lauseke(new Murtoluku(11,1),1);
+        oper[1] = new Lauseke(new Murtoluku(0,1),1);
+        oper[2] = new Lauseke(new Murtoluku(9,1),1);
+        oper[3] = new Lauseke(new Murtoluku(8,1),1);
+        oper[4] = new Lauseke(new Murtoluku(20,1),2);
+        
+        Op[] ops = new Op[4];
+        ops[0]=Op.PLUS;
+        ops[1]=Op.MIN;
+        ops[2]=Op.MIN;
+        ops[3]=Op.PLUS;
+        
+        l = new Lauseke(oper, ops);
+        
+        assertTrue(l.lukuarvo().samaLuku(new Murtoluku(394,1)));
+    }
+    
+    @Test
+    public void eksponenttiLausekkeenRatkaisuonOikein10() {
+        Laskettava[] oper = new Laskettava[2];
+        oper[0] = new Lauseke(new Murtoluku(2,1),1);
+        oper[1] = new Lauseke(new Murtoluku(0,1),1);
+        
+        Op[] ops = new Op[1];
+        ops[0]=Op.MIN;
+        
+        l = new Lauseke(oper, ops);
+        
+        assertTrue(l.lukuarvo().samaLuku(new Murtoluku(2,1)));
+    }
+    
+    @Test
+    public void eksponenttiLausekkeenRatkaisuonOikein11() {
+        Laskettava[] oper = new Laskettava[2];
+        oper[0] = new Lauseke(new Murtoluku(600,1),3);
+        oper[1] = new Lauseke(new Murtoluku(600,1),3);
+
+        Op[] ops = new Op[1];
+        ops[0]=Op.MUL;
+        
+        l = new Lauseke(oper, ops);
+        
+        assertTrue(l.lukuarvo().samaLuku(new Murtoluku(2,1)));
+    }
+    
+    
     @Test
     public void oikeaMaaraOperaattoreita() throws Exception {
         PeliTilanne tilanne = new PeliTilanne();
@@ -260,4 +440,92 @@ public class LausekeTest {
         
         assertTrue(lausekkeessaNegatiivinen);
     }
+    
+
+    @Test
+    public void toStringNayttaaOikealta() {
+
+        Laskettava[] oper = new Laskettava[3];
+        oper[0] = new Lauseke(new Murtoluku(6,3),3);
+        oper[1] = new Lauseke(new Murtoluku(10,7),2);
+        oper[2] = new Murtoluku(1,2);
+  
+        Op[] ops = new Op[2];
+        ops[0]=Op.MUL;
+        ops[1]=Op.DIV;
+
+        l = new Lauseke(oper,ops);   
+
+    }
+    
+    @Test
+    public void toStringNayttaaOikealta2() {
+        Laskettava[] oper = new Laskettava[5];
+        oper[0] = new Murtoluku(5,1);
+        oper[1] = new Murtoluku(15,1);
+        oper[2] = new Murtoluku(3,1);
+        oper[3] = new Murtoluku(-19,1);
+        oper[4] = new Lauseke(new Murtoluku(18,1),2);
+        
+        Op[] ops = new Op[4];
+        ops[0]=Op.PLUS;
+        ops[1]=Op.PLUS;
+        ops[2]=Op.PLUS;
+        ops[3]=Op.PLUS;
+        
+        l = new Lauseke(oper,ops);   
+
+    }
+    
+    @Test
+    public void toStringNayttaaOikealta3() {
+        Laskettava[] oper = new Laskettava[5];
+        oper[0] = new Lauseke(new Murtoluku(2,1),1);
+        oper[1] = new Lauseke(new Murtoluku(-3,1),2);
+        oper[2] = new Lauseke(new Murtoluku(-1,1),1);
+        oper[3] = new Lauseke(new Murtoluku(-1,1),1);
+        oper[4] = new Lauseke(new Murtoluku(-1,1),1);
+        
+        Op[] ops = new Op[4];
+        ops[0]=Op.MIN;
+        ops[1]=Op.MIN;
+        ops[2]=Op.MIN;
+        ops[3]=Op.MIN;
+        
+        l = new Lauseke(oper, ops);
+        
+    }
+
+    /**
+     * Luodaan lauseke, jossa kaikki operandit ovat nollia ja sallitut
+     * operaattorit plus ja jako. Tarkistetaan että kaikki operaattorit
+     * muutetaan plussiksi.
+     * @throws Exception 
+     */
+    @Test
+    public void poistetaanNollallaJaot() throws Exception {
+        PeliTilanne tilanne = new PeliTilanne();
+        tilanne.setOpLkm(30);
+        tilanne.setOperandMax(0);
+        tilanne.setJako(true);
+        tilanne.setPlus(true);
+        
+        l = new Lauseke(tilanne);
+        boolean eiNollallaJakoa = true;
+        
+        Op[] ops = l.operaattoriTaulukko();
+        Laskettava[] lk = l.operandiTaulukko();
+        
+        for (int i = 0; i < ops.length; i++) {
+            if (ops[i]==Op.DIV && lk[i+1].lukuarvo().onNolla()) {
+                eiNollallaJakoa=false;
+                break;
+            }    
+        }
+        
+        assertTrue(eiNollallaJakoa);
+    }
+    
+
+
 }

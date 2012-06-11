@@ -7,6 +7,7 @@ package Harjoitustyo.kayttoliittyma;
 import Harjoitustyo.sovelluslogiikka.Luokkakirjasto;
 import Harjoitustyo.sovelluslogiikka.PeliTilanne;
 import Harjoitustyo.sovelluslogiikka.Sovelluslogiikka;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -42,21 +43,29 @@ public class LataaKuuntelija implements ActionListener {
         int ok = valitsin.showOpenDialog(frame);
         
         if (ok==JFileChooser.APPROVE_OPTION) {
-            File file = valitsin.getSelectedFile();
-            try {
-                scan = new Scanner(file);
-                String sisalto="";
-                while (scan.hasNextLine()) {
-                    sisalto=sisalto+scan.nextLine()+"\n";
-                }
-                
-                asetaAsetuksetJaPaivitaTilanneTekstitiedostonPerusteella(sisalto);
-                
-            } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(frame, "Tiedostoa ei voi avata.");
+            selvitaTallennusTiedostonSisaltoJaAsetaAsetukset(valitsin);              
+        }
+    }
+
+    /**
+     * Käy läpi pelaajan valitseman tiedoston, muuttaa sen tekstimuotoon ja
+     * asettaa asetukset sen perusteella.
+     * @param valitsin
+     * @throws HeadlessException 
+     */
+    private void selvitaTallennusTiedostonSisaltoJaAsetaAsetukset(JFileChooser valitsin) throws HeadlessException {
+        File file = valitsin.getSelectedFile();
+        try {
+            scan = new Scanner(file);
+            String sisalto="";
+            while (scan.hasNextLine()) {
+                sisalto=sisalto+scan.nextLine()+"\n";
             }
             
-                     
+            asetaAsetuksetJaPaivitaTilanneTekstitiedostonPerusteella(sisalto);
+            
+        } catch (IOException ex) {
+                JOptionPane.showMessageDialog(frame, "Tiedostoa ei voi avata.");
         }
     }
     

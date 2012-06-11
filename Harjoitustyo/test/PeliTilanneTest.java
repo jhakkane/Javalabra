@@ -59,7 +59,7 @@ public class PeliTilanneTest {
     @Test
     public void onnistuukoAsetustenVaihtoPeliTilanteenKautta() throws Exception {
         String uudetAsetukset="TestiNimi\n3\ntrue\ntrue\ntrue\n"
-                + "true\ntrue\ntrue\ntrue\n20\nfalse\n0\n0\n0\n0";
+                + "true\ntrue\ntrue\ntrue\n20\nfalse\n0\n0\n0\n0\ntrue";
         tilanne.asetaAsetukset(uudetAsetukset);
         assertTrue(tilanne.getOpLkm()==3);
     }

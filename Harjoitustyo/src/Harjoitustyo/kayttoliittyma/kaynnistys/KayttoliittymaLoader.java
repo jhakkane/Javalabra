@@ -8,6 +8,7 @@ import Harjoitustyo.kayttoliittyma.Kayttoliittyma;
 import Harjoitustyo.kayttoliittyma.OptionsAlku;
 import Harjoitustyo.kayttoliittyma.TallennaKuuntelija;
 import Harjoitustyo.sovelluslogiikka.Sovelluslogiikka;
+import java.awt.HeadlessException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
@@ -65,6 +66,20 @@ public class KayttoliittymaLoader extends javax.swing.JFrame implements Runnable
         initComponents();
     }
 
+    private void asetaAsetuksetTekstinPerusteellaJaLuoKayttoliittyma(String sisalto) throws HeadlessException {
+        //save virheellinen
+        try {
+            logiikka.getTilanne().asetaAsetukset(sisalto);
+            Kayttoliittyma kl = new Kayttoliittyma(logiikka);
+            SwingUtilities.invokeLater(kl);
+
+            this.dispose();
+        
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Tiedosto ei ole kelvollinen.");
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -80,7 +95,6 @@ public class KayttoliittymaLoader extends javax.swing.JFrame implements Runnable
         lopetaPeli = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(400, 600));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -113,9 +127,8 @@ public class KayttoliittymaLoader extends javax.swing.JFrame implements Runnable
                 .addGap(61, 61, 61)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lopetaPeli, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(lataaPeli, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
-                        .addComponent(uusiPeli, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(lataaPeli, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                    .addComponent(uusiPeli, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(66, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -150,6 +163,20 @@ public class KayttoliittymaLoader extends javax.swing.JFrame implements Runnable
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void kayLapiTiedostoAsetaAsetuksetJaLuoKayttoliittyma(JFileChooser valitsin, String sisalto) throws HeadlessException {
+        File file = valitsin.getSelectedFile();
+        try {
+            scan = new Scanner(file);
+            while (scan.hasNextLine()) {
+                sisalto=sisalto+scan.nextLine()+"\n";
+            }
+            asetaAsetuksetTekstinPerusteellaJaLuoKayttoliittyma(sisalto);
+                            
+        } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, "Tiedostoa ei voi avata.");
+        }
+    }
+
     private void uusiPeliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uusiPeliActionPerformed
         OptionsAlku options = new OptionsAlku(logiikka);
         SwingUtilities.invokeLater(options);
@@ -158,34 +185,11 @@ public class KayttoliittymaLoader extends javax.swing.JFrame implements Runnable
 
     private void lataaPeliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lataaPeliActionPerformed
         JFileChooser valitsin = new JFileChooser();
+        String sisalto="";
         int ok = valitsin.showOpenDialog(this);
         
         if (ok==JFileChooser.APPROVE_OPTION) {
-            File file = valitsin.getSelectedFile();
-            try {
-                scan = new Scanner(file);
-                String sisalto="";
-                while (scan.hasNextLine()) {
-                    sisalto=sisalto+scan.nextLine()+"\n";
-                }
-                
-                //save virheellinen
-                try {
-                    logiikka.getTilanne().asetaAsetukset(sisalto);
-                    Kayttoliittyma kl = new Kayttoliittyma(logiikka);
-                    SwingUtilities.invokeLater(kl);
-
-                    this.dispose();
-                
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Tiedosto ei ole kelvollinen.");
-                }
-                                
-            } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(this, "Tiedostoa ei voi avata.");
-            }
-            
-                     
+            kayLapiTiedostoAsetaAsetuksetJaLuoKayttoliittyma(valitsin, sisalto);
         }
     }//GEN-LAST:event_lataaPeliActionPerformed
 

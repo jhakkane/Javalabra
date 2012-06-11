@@ -16,7 +16,6 @@ public class Murtoluku implements Laskettava {
     
     private int osoittaja=1;
     private int nimittaja=1;
-    private int eksponentti=1;
 
     /**
      * Ainut tapa luoda murtoluku 0/0. Tarpeen vain erikoislukuna esim. Lausekkeessa,
@@ -52,14 +51,6 @@ public class Murtoluku implements Laskettava {
     public int getNimittaja() {
         return nimittaja;
     }
-
-    public void setEksponentti(int eksponentti) {
-        this.eksponentti = eksponentti;
-    }
-
-    public int getEksponentti() {
-        return eksponentti;
-    }
     
     
     /**
@@ -86,6 +77,8 @@ public class Murtoluku implements Laskettava {
      * Kertoo onko luku kokonaisluku vai ei.
      * @return 
      */
+
+    @Override
     public boolean kokonaisluku() {
         double osamaara=osoittaja*1.0/nimittaja;
         if (osamaara == Math.round(osamaara)) {
@@ -94,6 +87,7 @@ public class Murtoluku implements Laskettava {
         
         return false;
     }
+    
     
     /**
      * Kertoo onko tämä Murtoluku sama kuin parametrina annettava Murtoluku p.
@@ -136,14 +130,17 @@ public class Murtoluku implements Laskettava {
      * @return 
      */
     public Murtoluku korotaPotenssiin(int eksponentti) {
-        Murtoluku korotettu = new Murtoluku(this.osoittaja,this.nimittaja);
-        
         if (eksponentti == 0) {
             return new Murtoluku(1,1);
         }
+        if (eksponentti == 1) {
+            return this;
+        }
+        
+        Murtoluku korotettu = new Murtoluku(this.osoittaja,this.nimittaja);
         
         for (int i = 1; i < eksponentti; i++) {
-            korotettu = korotettu.tulo(korotettu);
+            korotettu = korotettu.tulo(this);
         }
         return korotettu;
     }
@@ -228,16 +225,17 @@ public class Murtoluku implements Laskettava {
         if (nimittaja==1) {
             teksti=teksti+osoittaja;
         } else {
-            if (sekaluku()) {
-                teksti=teksti+sekalukuna()[0]+" "+sekalukuna()[1]
+            if (sekaluku()) {        
+                //osoittaja on nolla, näytetään vain kokonaisosa siis
+                if (sekalukuna()[1]==0) {
+                    teksti=teksti+sekalukuna()[0];
+                } else {
+                    teksti=teksti+sekalukuna()[0]+" "+sekalukuna()[1]
                         +"/"+sekalukuna()[2];
+                }
             } else {
                 teksti=teksti+osoittaja+"/"+nimittaja;   
             }
-        }
-        
-        if (negatiivinen()) {
-            teksti="("+teksti+")";
         }
         
         return teksti;

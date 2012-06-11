@@ -70,7 +70,7 @@ public class Sovelluslogiikka {
             Murtoluku oikeaVastaus = tilanne.getKysymys().oikeaVastaus();        
 
             if (pelaajanVastaus.samaLuku(oikeaVastaus)) {
-                return pelaajaVastasiKysymykseenOikein(oikeaVastaus);
+                return pelaajaVastasiKysymykseenOikein(vastaus);
             } else {
                 return pelaajaVastasiKysymykseenVaarin(oikeaVastaus);
             }
@@ -89,16 +89,17 @@ public class Sovelluslogiikka {
     private String pelaajaVastasiKysymykseenVaarin(Murtoluku oikeaVastaus) {
         tilanne.vastattu(false);
         tilanne.getKysymys().setOikeinVastattu(false);
-        return Luokkakirjasto.kysymyksenVastausVaaraVastaus(oikeaVastaus);  
+        return Luokkakirjasto.kysymyksenVastausVaaraVastaus(tilanne.getKysymys(), oikeaVastaus); 
     }
     
     /**
-     * Päivittää PeliTilanteen ja Kysymyksen sekä palauttaa pelaajalle näkyvän
-     * tekstin, kun pelaaja vastasi kysymykseen oikein.
+     * Päivittää PeliTilanteen ja Kysymyksen sekä palauttaa pelaajaa
+     * onnittelevan tekstin. Ottaa paremetriksi pelaajan antaman
+     * syötteen sellaisenaan.
      * @param vastaus
      * @return 
      */
-    private String pelaajaVastasiKysymykseenOikein(Murtoluku vastaus) {
+    private String pelaajaVastasiKysymykseenOikein(String vastaus) {
             tilanne.vastattu(true);
             tilanne.getKysymys().setOikeinVastattu(true);
             

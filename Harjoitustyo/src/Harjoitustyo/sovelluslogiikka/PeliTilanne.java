@@ -254,6 +254,7 @@ public class PeliTilanne {
             kierros = Integer.parseInt(asetuksetTaulukko[12]); 
             vaihe = Integer.parseInt(asetuksetTaulukko[13]); 
             vastattuja = Integer.parseInt(asetuksetTaulukko[14]); 
+            potenssi = Boolean.parseBoolean(asetuksetTaulukko[15]); 
             
         } catch (Exception e) {
             throw e;
@@ -278,6 +279,7 @@ public class PeliTilanne {
         teksti=teksti+kierros+"\n";
         teksti=teksti+vaihe+"\n";        
         teksti=teksti+vastattuja+"\n";  
+        teksti=teksti+potenssi+"\n";
         
         return teksti;
     }

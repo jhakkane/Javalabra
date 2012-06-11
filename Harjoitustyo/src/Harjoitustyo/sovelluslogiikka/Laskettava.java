@@ -23,4 +23,11 @@ public interface Laskettava {
      * @return 
      */
     public Murtoluku lukuarvo();
+    
+    /**
+     * Kertoo onko Laskettava positiivinen kokonaisluku ja myös sen muotoinen. 
+     * 4/2 ei siis ole kokonaislukumuotoinen. Vaikuttaa Lausekkeiden tekstimuotoiseen esitykseen.
+     * @return 
+     */
+    public boolean kokonaisluku();
 }

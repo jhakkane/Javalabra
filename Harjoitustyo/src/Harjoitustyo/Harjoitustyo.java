@@ -25,7 +25,6 @@ public class Harjoitustyo {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
         Sovelluslogiikka logiikka = new Sovelluslogiikka();
         KayttoliittymaLoader kl = new KayttoliittymaLoader(logiikka);
         SwingUtilities.invokeLater(kl);

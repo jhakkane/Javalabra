@@ -13,10 +13,13 @@ public class Luokkakirjasto {
     
     public static final int OIKEITA_VASTAUKSIA_JOTTA_KIERROS_VAIHTUU_TASOPELISSA = 5;
     public static final int NEG_LUKUJEN_OSUUS_OPERANDEISTA_PROSENTTEINA_KUN_NEG_LUVUT_PAALLA = 50;
-    public static final int SUURIN_MAHDOLLINEN_EKSPONENTTI=3;
+    
+    public static final int EKSPONENTTI_MAX=3;
+    public static final int OPERANDIEN_LUKUMAARA_MAX=9;
+    public static final int OPERANDIN_KOKO_MAX=1000;
     
     public static final String alkuTervehdys = "Tervetuloa aritmetiikan pariin. Paina alla olevaa"
-                + " nappulaa generoidaksesi kysymyksen.\n"
+                + " nappulaa generoidaksesi kysymyksen.\n\n"
                 + "Anna vastaus joko murtolukuna ('x/y'), kokonaislukuna ('x')\n"
                 + "tai sekalukuna ('x y/z').";
     
@@ -32,17 +35,24 @@ public class Luokkakirjasto {
                     +tilanne.getKysymys();
     }
     
-    public static String kysymyksenVastausVaaraVastaus(Murtoluku oikeaVastaus) {
-        return "Väärin! Oikea vastaus on "+oikeaVastaus+".";
+    public static String kysymyksenVastausVaaraVastaus(Kysymys kysymys, Murtoluku oikeaVastaus) {
+        String teksti = "Väärin! Oikea vastaus olisi: "+
+                kysymys.getLauseke()+" = "+oikeaVastaus+".";
+        return teksti;
     }
     
-    public static String kysymyksenVastausOikeaVastausJaKierrosVaihtuu(Murtoluku vastaus) {
+    public static String kysymyksenVastausOikeaVastausJaKierrosVaihtuu(String vastaus) {
         return "Oikein! Vastaus on juuri "+vastaus
                         + ". Sinulla menee pelissä niin hyvin, että "
                         + "voimme nyt nostaa vaikeustasoa.";
     }
 
-    public static String kysymyksenVastausOikeaVastausKierrosEiVaihdu(Murtoluku vastaus) {
+    public static String kysymyksenVastausOikeaVastausKierrosEiVaihdu(String vastaus) {
         return "Oikein! Vastaus on juuri "+vastaus+".";    
+    }
+    
+    public static String joitainAsetuksiaMuutettiinKoskaMuutenLiianIsojaLukuja() {
+        return "Nämä asetukset olisivat tuottaneet liian "
+                    + "isoja lukuja. Joitain asetuksia muutetiin.";
     }
 }

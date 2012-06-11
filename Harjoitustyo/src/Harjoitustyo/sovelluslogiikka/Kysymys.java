@@ -50,5 +50,10 @@ public class Kysymys {
     public boolean isOikeinVastattu() {
         return oikeinVastattu;
     }
+
+    public Lauseke getLauseke() {
+        return lauseke;
+    }
+    
     
 }
