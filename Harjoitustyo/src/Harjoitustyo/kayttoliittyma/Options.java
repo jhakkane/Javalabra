@@ -76,7 +76,7 @@ public class Options implements Runnable {
         asetaMaxOpAsetukset();
         asetaPotenssiAsetukset();
         
-        muutaSopimattomatAsetukset();
+        //muutaSopimattomatAsetukset();
     }
 
     
@@ -104,7 +104,7 @@ public class Options implements Runnable {
 
                 if (isoluku > 2147483647) {
                     System.out.println(isoluku);
-                    tilanne.setOperandMax(10);
+                    tilanne.setOperandMax(9);
                     muutettiinkoJotain = true;
                     break;
                 }    
@@ -114,6 +114,35 @@ public class Options implements Runnable {
             JOptionPane.showMessageDialog(frame,
                     Luokkakirjasto.joitainAsetuksiaMuutettiinKoskaMuutenLiianIsojaLukuja());
         }
+    }
+    
+    private void tarkistaMahdollistavatkoAsetuksetLiianSuuriaLukuja() {
+        boolean isoLukuAlleRajan = true;
+        
+        long isoluku = (long)Math.pow(tilanne.getOperandMax(),
+                Luokkakirjasto.EKSPONENTTI_MAX);
+        
+        while (true) {
+            for (int i = 0; i < tilanne.getOpLkm()-1; i++) {
+                isoluku = isoluku*(long)Math.pow(tilanne.getOperandMax(),
+                    Luokkakirjasto.EKSPONENTTI_MAX);
+
+                    if (isoluku > 2147483647) {
+                        System.out.println(isoluku);
+                        tilanne.setOperandMax(10);
+                        isoLukuAlleRajan = false;
+                        break;
+                    }    
+            }
+        
+            if (isoLukuAlleRajan) {
+                break;
+            }
+
+            //jos isoLuku on yli rajan, tehdään muutoksia asetuksiin
+            tilanne.setOperandMax((int)(tilanne.getOperandMax()/2));
+        }
+        
     }
     
     private void asetaMaxOpAsetukset() {
