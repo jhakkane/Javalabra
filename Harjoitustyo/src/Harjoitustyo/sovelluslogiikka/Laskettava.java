@@ -29,5 +29,5 @@ public interface Laskettava {
      * 4/2 ei siis ole kokonaislukumuotoinen. Vaikuttaa Lausekkeiden tekstimuotoiseen esitykseen.
      * @return 
      */
-    public boolean kokonaisluku();
+    public boolean onKokonaisluku();
 }

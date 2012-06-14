@@ -62,6 +62,32 @@ public class SovelluslogiikkaTest {
                 ilmoitus.substring(0,15)));
     }
     
+    /**
+     * Annetaan logiikalle oikea vastaus, mutta muutetaan se ensin väärän muotoiseksi.
+     */
+    @Test
+    public void eteneEiEteneVaaranMuotoisellaVastauksella() {
+        logiikka.etene(""); //luo kysymyksen
+        String ilmoitus = Luokkakirjasto.kysymykseenAnnettuVaaranMuotoinenVastaus(logiikka.getTilanne());
+        
+        String testivastaus=logiikka.getKysymys().oikeaVastaus().toString();
+        
+        if (logiikka.getKysymys().oikeaVastaus().onMurtoluku()) {
+            testivastaus="0 "+testivastaus;
+        }
+        if (logiikka.getKysymys().oikeaVastaus().onKokonaisluku()) {
+            testivastaus=testivastaus+" 0/1";
+        }
+        if (logiikka.getKysymys().oikeaVastaus().onSekaluku()) {
+            testivastaus=logiikka.getKysymys().oikeaVastaus().getOsoittaja()+"/"+
+                    logiikka.getKysymys().oikeaVastaus().getNimittaja();
+        }
+        
+        assertTrue(logiikka.etene(testivastaus).substring(0,15).equals(
+                Luokkakirjasto.kysymykseenAnnettuVaaranMuotoinenVastaus(logiikka.getTilanne()).substring(0,15)));
+    }
+    
+    
     @Test
     public void eteneEteneeOikealleaMurtolukuVastauksella() {
         logiikka.getTilanne().setMurtolukuja(true);

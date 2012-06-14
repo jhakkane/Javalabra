@@ -6,7 +6,11 @@ package Harjoitustyo.sovelluslogiikka;
 
 import java.util.ArrayList;
 
-/**Luku, jolla ei ole kokonaisosaa, vaan vain osoittaja ja nimittäjä.
+/**
+ * Luku, jolla on osoittaja ja nimittäjä. Voi ilmaista myös kokonaislukuja
+ * ja sekalukuja. Olennaista on, että kaikki Murtoluku-luokan luvut voidaan
+ * esittää osoittajan ja nimittäjän avulla.
+ * 
  * Toteuttaa rajapinnan Laskettava joten sitä voidaan käyttää
  * laskutoimituksissa.
  *
@@ -77,9 +81,8 @@ public class Murtoluku implements Laskettava {
      * Kertoo onko luku kokonaisluku vai ei.
      * @return 
      */
-
     @Override
-    public boolean kokonaisluku() {
+    public boolean onKokonaisluku() {
         double osamaara=osoittaja*1.0/nimittaja;
         if (osamaara == Math.round(osamaara)) {
             return true;
@@ -88,6 +91,17 @@ public class Murtoluku implements Laskettava {
         return false;
     }
     
+    /**
+     * Palauttaa true, mikäli tätä lukua ei voi esittää kokonaislukuna tai
+     * sekalukuna. Muutoin palauttaa false.
+     * @return 
+     */
+    public boolean onMurtoluku() {
+        if (!onKokonaisluku() && !onSekaluku()) {
+            return true;
+        }
+        return false;
+    }
     
     /**
      * Kertoo onko tämä Murtoluku sama kuin parametrina annettava Murtoluku p.
@@ -216,7 +230,8 @@ public class Murtoluku implements Laskettava {
     }
 
     /**
-     * Tulostaa kokonaisluvun kokonaislukuna, murtoluku näkyy murtolukuna.
+     * Mikäli mahdollista, palauttaa kokonaisluvun. Jos se ei onnistu, niin
+     * sekaluvun. Jos tämäkään ei ole mahdollista, niin palautetaan murtoluku.
      * @return 
      */
     @Override
@@ -225,16 +240,17 @@ public class Murtoluku implements Laskettava {
         if (nimittaja==1) {
             teksti=teksti+osoittaja;
         } else {
-            if (sekaluku()) {        
-                //osoittaja on nolla, näytetään vain kokonaisosa siis
-                if (sekalukuna()[1]==0) {
-                    teksti=teksti+sekalukuna()[0];
-                } else {
-                    teksti=teksti+sekalukuna()[0]+" "+sekalukuna()[1]
-                        +"/"+sekalukuna()[2];
-                }
-            } else {
-                teksti=teksti+osoittaja+"/"+nimittaja;   
+            if (onKokonaisluku()) {
+                teksti=""+sekalukuna()[0];
+            }
+            
+            if (onSekaluku()) {        
+                teksti=sekalukuna()[0]+" "+sekalukuna()[1]
+                    +"/"+sekalukuna()[2];
+            }
+            
+            if (onMurtoluku()) {
+                teksti = osoittaja +"/"+ nimittaja;
             }
         }
         
@@ -263,8 +279,8 @@ public class Murtoluku implements Laskettava {
      * jos osoittaja on suurempi kuin nimittäjä ja luku ei ole kokonaisluku.
      * @return 
      */
-    public boolean sekaluku() {
-        if (osoittaja > nimittaja && nimittaja != 1) {
+    public boolean onSekaluku() {
+        if (osoittaja > nimittaja && !onKokonaisluku()) {
             return true;
         }
         return false;

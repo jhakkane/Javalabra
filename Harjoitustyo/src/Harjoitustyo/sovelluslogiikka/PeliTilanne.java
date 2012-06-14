@@ -129,6 +129,41 @@ public class PeliTilanne {
     }
 
     /**
+     * Kasvattaa isolukua siten, että se kasvaa niin paljon kuin
+     * yhdessä operaatiossa on mahdollista näillä asetuksilla.
+     * @param isoluku
+     * @return 
+     */
+    private long kasvataIsolukuaAsetustenMukaan(long isoluku) {
+        if (isJako() || isKerto()) {
+            isoluku = kasvataIsolukuaJosJakoTaiKerto(isoluku);
+        } else {
+            isoluku = kasvataIsolukuaJosEiJakoaTaiKertoa(isoluku);            
+        }
+        return isoluku;
+    }
+
+    private long kasvataIsolukuaJosEiJakoaTaiKertoa(long isoluku) {
+        if (isPotenssi()) {
+            isoluku = isoluku+(long)Math.pow(getOperandMax(),
+                Luokkakirjasto.PELITILANNE_EKSPONENTTI_MAX);                             
+        } else {
+            isoluku = isoluku+getOperandMax();
+        }
+        return isoluku;
+    }
+
+    private long kasvataIsolukuaJosJakoTaiKerto(long isoluku) {
+        if (isPotenssi()) {
+            isoluku = isoluku*(long)Math.pow(getOperandMax(),
+                Luokkakirjasto.PELITILANNE_EKSPONENTTI_MAX);                             
+        } else {
+            isoluku = isoluku*getOperandMax();
+        }
+        return isoluku;
+    }
+
+    /**
      * Pienentää operandien lukumäärää yhdellä jos se on yli kaksi.
      * Muutoin jaksaa operandin maksimikoon kahdella.
      */
@@ -156,18 +191,7 @@ public class PeliTilanne {
             Luokkakirjasto.PELITILANNE_EKSPONENTTI_MAX);
         
         for (int i = 0; i < getOpLkm()-1; i++) {
-            if (isJako() || isKerto()) {
-                if (isPotenssi()) {
-                    isoluku = isoluku*(long)Math.pow(getOperandMax(),
-                        Luokkakirjasto.PELITILANNE_EKSPONENTTI_MAX);                             
-                } else {
-                    isoluku = isoluku*Luokkakirjasto.PELITILANNE_EKSPONENTTI_MAX;
-                }
-           
-            } else {
-                isoluku = isoluku+(long)Math.pow(getOperandMax(),
-                    Luokkakirjasto.PELITILANNE_EKSPONENTTI_MAX);           
-            }
+            isoluku = kasvataIsolukuaAsetustenMukaan(isoluku);
 
                 if (isoluku > 2147483647) {
                     isoLukuAlleRajan = false;
@@ -175,6 +199,22 @@ public class PeliTilanne {
                 }    
         }
         return isoLukuAlleRajan;
+    }
+
+    private int tarkistaJaMuutaOpLkm(int virhetyyppi) {
+        if (getOpLkm() < 2) {
+            setOpLkm(Luokkakirjasto.PELITILANNE_OLETUS_OPERANDIEN_LKM);
+            virhetyyppi = 2;
+        }
+        return virhetyyppi;
+    }
+
+    private int tarkistaJaMuutaOperandMax(int virhetyyppi) {
+        if (getOperandMax() < 1) {
+            setOperandMax(Luokkakirjasto.PELITILANNE_OLETUS_OPERANDIN_KOKO);
+            virhetyyppi = 2;
+        }
+        return virhetyyppi;
     }
 
     /**
@@ -213,15 +253,8 @@ public class PeliTilanne {
             virhetyyppi = 1;
         }
         
-        if (getOperandMax() < 1) {
-            setOperandMax(Luokkakirjasto.PELITILANNE_OLETUS_OPERANDIN_KOKO);
-            virhetyyppi = 2;
-        }
-
-        if (getOpLkm() < 2) {
-            setOpLkm(Luokkakirjasto.PELITILANNE_OLETUS_OPERANDIEN_LKM);
-            virhetyyppi = 2;
-        }
+        virhetyyppi = tarkistaJaMuutaOperandMax(virhetyyppi);
+        virhetyyppi = tarkistaJaMuutaOpLkm(virhetyyppi);
         
         return virhetyyppi;
     }
@@ -286,6 +319,10 @@ public class PeliTilanne {
         return oikeitaVastauksia;
     }
     
+    /**
+     * Palauttaa oikeiden vastausten osuuden kaikista vastauksista prosentteina.
+     * @return 
+     */
     public int oikeitaVastauksiaSuhteellisesti() {
         if (vastattuja==0) {
             return 0;
@@ -319,9 +356,15 @@ public class PeliTilanne {
     }
 
     
+    /**
+     * Asettaa asetukset parametrina annettavan String-muuttujan perusteella.
+     * Muuttujan sisältävän tekstin täytyy olla samanmuotoinen kuin
+     * PeliTilanteen toString-metodin palauttama teksti. Mikäli näin ei ole,
+     * metodi heittää poikkeuksen.
+     * @param asetukset
+     * @throws Exception 
+     */
     public void asetaAsetukset(String asetukset) throws Exception {
-        //asetusten järjestys näkyy ylempää
-        
         String[] asetuksetTaulukko = asetukset.split("\n");
         
         try {
@@ -347,6 +390,12 @@ public class PeliTilanne {
         }
     }
     
+    /**
+     * Tekstiesitys sisältää kaikki PeliTilanteen sisältämät muuttujat
+     * erotettuna toisistaan rivinvaihdoilla. Tämä metodia on tarkoitus
+     * käyttää kun asetukset halutaan tallettaa tekstitiedostoon.
+     * @return 
+     */
     @Override
     public String toString() {
         String teksti="";

@@ -132,9 +132,9 @@ public class Lauseke implements Laskettava {
     }
 
     @Override
-    public boolean kokonaisluku() {
+    public boolean onKokonaisluku() {
         if (operandit.length==1) {
-            return operandit[0].kokonaisluku();
+            return operandit[0].onKokonaisluku();
         }
         return false;
     }
@@ -531,7 +531,6 @@ public class Lauseke implements Laskettava {
     private void lukuarvonLaskentaLaskeJaljellaOlevatYhteen(ArrayList<Murtoluku> operanditTemp, ArrayList<Op> operaattoritTemp) {
         Murtoluku tulos;
         //lasketaan jäljellä olevat yhteen
-        //tulos.asetaLuvuksi(0,1); --- POISTA JOS NÄYTTÄÄ ETTÄ EI TAPAHDU KAUHEITA
         for (int i = 0; i < operaattorit.length; i++) {
             tulos = operanditTemp.get(i).lukuarvo().summa(operanditTemp.get(i + 1).lukuarvo());
 
@@ -628,7 +627,7 @@ public class Lauseke implements Laskettava {
     private String toStringYksittainenLuku() {
         String teksti=operandit[0].toString();
         if (operandit[0].lukuarvo().negatiivinen() || 
-                (!kokonaisluku() && eksponentti != 1)) {
+                (!onKokonaisluku() && eksponentti != 1)) {
             teksti="("+teksti+")";
         }
         if (eksponentti != 1) {
@@ -645,14 +644,16 @@ public class Lauseke implements Laskettava {
         return teksti;
     }
     
+    /**
+     * Lisää toString-metodissa palautettavaan Stringiin tämän
+     * Lausekkeen sisältämät operandit ja operaattorit.
+     * @param teksti
+     * @return 
+     */
     private String toStringLisaaOperanditJaOperaattorit(String teksti) {
         for (int i = 0; i < operandit.length; i++) {
             if (operandit[i].onLauseke()) {
-                if (operandit[i].kokonaisluku()) {
-                    teksti = teksti+operandit[i].toString();        
-                } else {
-                    teksti = teksti + "("+operandit[i].toString()+")";          
-                }
+                teksti = teksti+operandit[i].toString();        
             } else {
                 if (operandit[i].lukuarvo().negatiivinen()) {
                     teksti=teksti + "("+operandit[i].toString()+")";

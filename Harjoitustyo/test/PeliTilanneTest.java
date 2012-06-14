@@ -65,11 +65,12 @@ public class PeliTilanneTest {
     }
     
     @Test
-    public void ainaVahintaanYksiOperaatioSallittu() {
+    public void asetustenTarkistusToimii() {
         tilanne.setJako(false);
         tilanne.setKerto(false);
         tilanne.setMiinus(false);
         tilanne.setPlus(false);
+        tilanne.tarkistaJaMuutaSopimattomatAsetukset();
         
         assertTrue(tilanne.isPlus());
     }

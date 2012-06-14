@@ -17,8 +17,10 @@ import java.util.logging.Logger;
  */
 public class Sovelluslogiikka {
     
-    //Vaihe 1 = Käyttäjälle näkyy kysymys
-    //Vaihe 2 = Käyttäjälle näkyy vastaus
+    /**
+     * Vaihe 1 = Käyttäjälle näkyy kysymys
+     * Vaihe 2 = Käyttäjälle näkyy vastaus
+     */
     private PeliTilanne tilanne;
     
     public Sovelluslogiikka() {
@@ -54,29 +56,48 @@ public class Sovelluslogiikka {
 
     /**
      * Tarkistaa käyttäjän antaman vastauksen ja palauttaa vastauksesta riippuen
-     * joko "oikein", "väärin" tai "ei vastausta" -paluuarvon. Mikäli vastaus on
-     * oikein tai väärin, pelitilanne etenee.
+     * joko "oikein", "väärin", "ei vastausta" tai "vastaus väärän muotoinen" -paluuarvon.
+     * Pelitilanne etenee eli vaihe muuttuu vain silloin kun vastaus on sekä
+     * oikein että oikean muotoinen.
      * 
      * @param vastaus
      * @return 
      */
     private String tarkistaPelaajanVastaus(String vastaus) {        
         try {
+            Murtoluku oikeaVastaus = tilanne.getKysymys().oikeaVastaus();
+            
             Murtoluku pelaajanVastaus = parsePelaajanVastaus(vastaus);
-        
-            tilanne.setVaihe(2);
-
-            Murtoluku oikeaVastaus = tilanne.getKysymys().oikeaVastaus();        
-
+            
             if (pelaajanVastaus.samaLuku(oikeaVastaus)) {
+                if (onkoKysymysVaaranMuotoinen(oikeaVastaus, vastaus)) return Luokkakirjasto.kysymykseenAnnettuVaaranMuotoinenVastaus(tilanne);
+            
+                tilanne.setVaihe(2);
                 return pelaajaVastasiKysymykseenOikein(vastaus);
             } else {
+                tilanne.setVaihe(2);
                 return pelaajaVastasiKysymykseenVaarin(oikeaVastaus);
             }
         } catch (Exception e) {
             return Luokkakirjasto.kysymyksenVastausPelaajaEiAntanutVastausta(tilanne);
         }
         
+    }
+
+    private boolean onkoKysymysVaaranMuotoinen(Murtoluku oikeaVastaus, String vastaus) {
+        if (oikeaVastaus.onKokonaisluku() && 
+                siistiJaPuraPelaajanVastaus(vastaus).length != 1) {
+            return true;
+        }
+        if (oikeaVastaus.onSekaluku() && 
+                siistiJaPuraPelaajanVastaus(vastaus).length != 3) {
+            return true;
+        }
+        if (oikeaVastaus.onMurtoluku() && 
+                siistiJaPuraPelaajanVastaus(vastaus).length != 2) {
+            return true;
+        }
+        return false;
     }
     
     /**
@@ -141,7 +162,7 @@ public class Sovelluslogiikka {
      * pärjännyt, sitä vaikeammat asetukset.
      */
     private void asetaAsetuksetKierroksenMukaanTasopelissa() {
-        //Kierros 0 = alkutilanne (ks. alkuarvot luokan alussa)
+        //Kierros 0 = alkutilanne (oletusarvot PeliTilanteessa)
         int kierros = tilanne.getKierros();
         
         if (kierros == 1) {
@@ -150,10 +171,48 @@ public class Sovelluslogiikka {
             tilanne.setKerto(true);
         } else if (kierros == 3) {
             tilanne.setOpLkm(3);
-        } else {
+        } else if (kierros == 4) {
+            tilanne.setOpLkm(2);
+            tilanne.setMiinus(false);
+            tilanne.setPlus(false);
+            tilanne.setKerto(false);
+            tilanne.setJako(true);
+        } else if (kierros == 5) {
+            tilanne.setMiinus(true);
+            tilanne.setPlus(true);
+            tilanne.setKerto(true);
+            tilanne.setMurtolukuja(true);
+        } else if (kierros == 6) {
+            tilanne.setMurtolukuja(false);
+            tilanne.setNegatiivisia(true);
+        } else if (kierros == 7) {
+            tilanne.setPotenssi(true);
+        } else if (kierros == 8) {
+            tilanne.setMurtolukuja(true);
+        } else if (kierros == 9) {
+            tilanne.setOpLkm(3);
+        } else if (kierros == 10) {
+            tilanne.setOpLkm(3);
+        } else if (kierros == 11) {
             tilanne.setSulkuja(true);
         }
         
+    }
+    
+    /**
+     * Puhdistaa parametrina annetun String-muuttujan alussa ja lopussa olevista
+     * välilyönneistä ja muuttaa useamman peräkkäisen välilyönnin yhdeksi.
+     * Jakaa Stringin välilyöntien ja kauttaviivojen perusteella ja palauttaa
+     * näin muodostetun String-taulukon.
+     * @param vastaus
+     * @return 
+     */
+    private String[] siistiJaPuraPelaajanVastaus(String vastaus) {
+        String siistiVastaus = vastaus.trim();
+        siistiVastaus.replaceAll(" +", " ");
+        String[] vastauksenOsat = siistiVastaus.split("[ /]");
+        
+        return vastauksenOsat;
     }
     
     /**
@@ -165,7 +224,7 @@ public class Sovelluslogiikka {
      */
     private Murtoluku parsePelaajanVastaus(String vastaus) throws Exception {
         //pelaajan vastaus on muotoa x y/z
-        String vastauksenOsat[] = vastaus.split("[ /]");
+        String vastauksenOsat[] = siistiJaPuraPelaajanVastaus(vastaus);
         Murtoluku vastausLuku; 
         
         //pelaaja vastasi sekaluvulla
@@ -194,10 +253,12 @@ public class Sovelluslogiikka {
     private Murtoluku parsePelaajanVastausSekaluku(String vastauksenOsat[]) {
         int vastausKokonaisluku= Integer.parseInt(vastauksenOsat[0]);
         int vastausNimittaja = Integer.parseInt(vastauksenOsat[2]);            
-        int vastausOsoittaja = Integer.parseInt(vastauksenOsat[1])
-                +vastausKokonaisluku*vastausNimittaja;    
+        int vastausOsoittaja = Integer.parseInt(vastauksenOsat[1]);
        
-        return new Murtoluku(vastausOsoittaja, vastausNimittaja);
+        int nimittaja = vastausNimittaja;
+        int osoittaja = vastausOsoittaja+vastausKokonaisluku*vastausNimittaja;
+        
+        return new Murtoluku(osoittaja, nimittaja);
     }
     
     /**

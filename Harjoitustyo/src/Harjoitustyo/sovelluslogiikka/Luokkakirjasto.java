@@ -12,7 +12,7 @@ package Harjoitustyo.sovelluslogiikka;
  */
 public class Luokkakirjasto {
     
-    public static final int OIKEITA_VASTAUKSIA_JOTTA_KIERROS_VAIHTUU_TASOPELISSA = 5;
+    public static final int OIKEITA_VASTAUKSIA_JOTTA_KIERROS_VAIHTUU_TASOPELISSA = 10;
     public static final int NEG_LUKUJEN_OSUUS_OPERANDEISTA_PROSENTTEINA_KUN_NEG_LUVUT_PAALLA = 50;
     
     /**
@@ -29,8 +29,9 @@ public class Luokkakirjasto {
     
     public static String suhdelukuKentanTeksti(PeliTilanne tilanne) {
         String teksti = ("Nimesi: "+tilanne.getNimi()+"\n\n"
-                + "Oikeiden vastausten "
-                + "osuus kaikista vastauksista: "+tilanne.oikeitaVastauksiaSuhteellisesti()+"%");
+                + "Oikeiden vastausten ("+tilanne.getOikeitaVastauksia()+") "+
+                "osuus kaikista vastauksista ("+tilanne.getKysyttyja()+
+                "): "+tilanne.oikeitaVastauksiaSuhteellisesti()+"%");
         return teksti;
     }
     
@@ -62,5 +63,13 @@ public class Luokkakirjasto {
 
     public static String asetuksetOvatVirheellisia() {
         return "Antamasi asetukset ovat virheellisiä. Joitain asetuksia on muutettu.";
+    }
+    
+    public static String kysymykseenAnnettuVaaranMuotoinenVastaus(PeliTilanne tilanne) {
+        return "Annoit vastauksesi väärän muotoisena. Jos kysymykseen on kokonaislukuvastaus, "
+                + "anna vastaus siinä muodossa. Jos se ei ole mahdollista, anna sekalukuvastaus. "
+                + "Jos tämäkään ei ole mahdollista, anna vastaus murtolukuna. Kysymys uudestaan:\n\n"+
+                tilanne.getKysymys();
+                   
     }
 }

@@ -95,7 +95,11 @@ public class Options implements Runnable {
      */
     private void muutaSopimattomatAsetukset() {
         
-        virhetyyppi = tilanne.tarkistaJaMuutaSopimattomatAsetukset();
+        if (virhetyyppi == 0) {
+            virhetyyppi = tilanne.tarkistaJaMuutaSopimattomatAsetukset();
+        } else {
+            tilanne.tarkistaJaMuutaSopimattomatAsetukset();
+        }
         
         if (virhetyyppi == 1) {
             JOptionPane.showMessageDialog(frame,
@@ -247,7 +251,7 @@ public class Options implements Runnable {
     }
 
     private void luoOpMaxKokoKysymysJaTeksti() {
-        teksti9 = new JLabel("Mikä on itseisarvoltaan suurin luku, joka saa esiintyä laskutoimituksessa?");
+        teksti9 = new JLabel("Itseisarvoltaan suurin luku, joka saa esiintyä laskutoimituksessa?");
         kokoField = new JTextField();
         kokoField.setText(""+tilanne.getOperandMax());
         this.frame.add(teksti9);
@@ -263,7 +267,7 @@ public class Options implements Runnable {
     }
 
     private void luoPotenssiKysymysJaTeksti() {
-        potenssiTxt= new JLabel("Saako mukana olla potenssilaskuja?");   
+        potenssiTxt= new JLabel("Potenssilaskuja?");   
         potenssi = new JCheckBox();
         potenssi.setSelected(tilanne.isPotenssi());
         this.frame.add(potenssiTxt);
@@ -271,7 +275,7 @@ public class Options implements Runnable {
     }
     
     private void luoNegatiivisuusKysymysJaTeksti() {
-        teksti7 = new JLabel("Saako laskuissa olla negatiivisia lukuja?");   
+        teksti7 = new JLabel("Negatiivisia lukuja?");   
         negatiivisia = new JCheckBox();
         negatiivisia.setSelected(tilanne.isNegatiivisia());
         this.frame.add(teksti7);
@@ -279,7 +283,7 @@ public class Options implements Runnable {
     }
 
     private void luoMurtolukuKysymysJaTeksti() {
-        teksti6 = new JLabel("Saako laskuissa olla murtolukuja?");  
+        teksti6 = new JLabel("Murtolukuja?");  
         murtolukuja = new JCheckBox();
         murtolukuja.setSelected(tilanne.isMurtolukuja());
         this.frame.add(teksti6);
@@ -319,7 +323,7 @@ public class Options implements Runnable {
     }
 
     private void luoSulkuKysymysJaTeksti() {
-        teksti1 = new JLabel("Käytetäänkö sulkuja?");    
+        teksti1 = new JLabel("Käytetäänkö kysymyksissä sulkuja? (Huom. neg. luvuissa aina sulut)");    
         sulut = new JCheckBox();
         sulut.setSelected(tilanne.isSulkuja());
         this.frame.add(teksti1);

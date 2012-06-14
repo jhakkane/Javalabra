@@ -25,7 +25,7 @@ public class Kayttoliittyma implements Runnable {
     public Kayttoliittyma(Sovelluslogiikka logiikka) {
         this.logiikka = logiikka;        
 
-        frame = new JFrame("Aritmetiikkaharjoituksia");
+        frame = new JFrame("Aritmetiikkaharjoittelu");
 
         frame.setPreferredSize(new Dimension(400,600));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -106,7 +106,7 @@ public class Kayttoliittyma implements Runnable {
     }
 
     private void luoTarkistaJaGeneroiNappula(Container container, JTextField tekstiKentta) {
-        JButton tarkistaJaGeneroiNappula = new JButton();
+        JButton tarkistaJaGeneroiNappula = new JButton("OK");
         container.add(tarkistaJaGeneroiNappula);
         KysymyksenGenerointiKuuntelija kgKuuntelija = 
                 new KysymyksenGenerointiKuuntelija(logiikka,kysymysKentta,tekstiKentta,

@@ -17,6 +17,7 @@ public class MurtolukuTest {
     Murtoluku l2;
     Murtoluku l3;
     Murtoluku l4;
+    Murtoluku l5;
     
     public MurtolukuTest() {
     }
@@ -35,6 +36,7 @@ public class MurtolukuTest {
         l2 = new Murtoluku(0,3);
         l3 = new Murtoluku(1,3);
         l4 = new Murtoluku(15,7);
+        l5 = new Murtoluku(8,2);
     }
     
     @After
@@ -98,9 +100,9 @@ public class MurtolukuTest {
     
     @Test
     public void kokonaislukuToimii() {
-        assertFalse(l1.kokonaisluku());
-        assertTrue(l2.kokonaisluku());
-        assertFalse(l3.kokonaisluku());
+        assertFalse(l1.onKokonaisluku());
+        assertTrue(l2.onKokonaisluku());
+        assertFalse(l3.onKokonaisluku());
     }
     
     @Test
@@ -113,6 +115,42 @@ public class MurtolukuTest {
     
     @Test
     public void sekalukuTarkistusToimii() {
-        assertTrue(l4.sekaluku());
+        assertTrue(l4.onSekaluku());
+    }
+    
+    @Test
+    public void onKokonaislukuToimii() {
+        assertFalse(l1.onKokonaisluku());
+        assertTrue(l2.onKokonaisluku());
+        assertFalse(l3.onKokonaisluku());
+        assertFalse(l4.onKokonaisluku());
+        assertTrue(l5.onKokonaisluku());
+    }
+    
+    @Test
+    public void onSekaluku() {
+        assertFalse(l1.onSekaluku());
+        assertFalse(l2.onSekaluku());
+        assertFalse(l3.onSekaluku());
+        assertTrue(l4.onSekaluku());
+        assertFalse(l5.onSekaluku());
+    }
+    
+    @Test
+    public void onMurtolukuToimii() {
+        assertTrue(l1.onMurtoluku());
+        assertFalse(l2.onMurtoluku());
+        assertTrue(l3.onMurtoluku());
+        assertFalse(l4.onMurtoluku());
+        assertFalse(l5.onMurtoluku());
+    }
+    
+    @Test
+    public void toStringitToimivatOikein() {
+        assertTrue(l1.toString().equals("3/6"));
+        assertTrue(l2.toString().equals("0"));
+        assertTrue(l3.toString().equals("1/3"));
+        assertTrue(l4.toString().equals("2 1/7"));
+        assertTrue(l5.toString().equals("4"));
     }
 }

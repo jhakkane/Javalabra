@@ -352,7 +352,7 @@ public class LausekeTest {
         
         boolean lausekkeessaMurtoluku = false;
         for (int i = 0; i < l.operandiTaulukko().length; i++) {
-            if (!l.operandiTaulukko()[i].lukuarvo().kokonaisluku()) {
+            if (!l.operandiTaulukko()[i].lukuarvo().onKokonaisluku()) {
                 lausekkeessaMurtoluku = true;
             }
         }
