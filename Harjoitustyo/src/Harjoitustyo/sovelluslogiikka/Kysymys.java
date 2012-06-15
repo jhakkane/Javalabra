@@ -30,6 +30,11 @@ public class Kysymys {
         }
     }
 
+    /**
+     * Palautta Kysymyksen sisältämän Lausekkeen tekstiesityksen
+     * eli toString-metodin palauttaman arvon.
+     * @return 
+     */
     @Override
     public String toString() {
         return lauseke.toString();
@@ -43,14 +48,27 @@ public class Kysymys {
         return lauseke.lukuarvo();
     }
 
+    /**
+     * Asettaa muuttujan, joka kertoo vastasiko pelaaja tähän
+     * Kysymykseen oikein vai ei.
+     * @param oikeinVastattu 
+     */
     public void setOikeinVastattu(boolean oikeinVastattu) {
         this.oikeinVastattu = oikeinVastattu;
     }
 
+    /**
+     * Kertoo vastasiko pelaaja tähän Kysymykseen oikein vai ei.
+     * @return 
+     */
     public boolean isOikeinVastattu() {
         return oikeinVastattu;
     }
 
+    /**
+     * Palauttaa Kysymyksen sisältämän Lausekkeen.
+     * @return 
+     */
     public Lauseke getLauseke() {
         return lauseke;
     }

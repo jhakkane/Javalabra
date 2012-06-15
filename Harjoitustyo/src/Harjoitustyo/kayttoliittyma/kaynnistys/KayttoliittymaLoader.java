@@ -19,7 +19,8 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
- *
+ * Ensimmäinen pelaajalle näkyvä ikkuna pelissä. Mahdollistaa pelin aloittamisen,
+ * lataamisen ja lopettamisen.
  * @author JH
  */
 public class KayttoliittymaLoader extends javax.swing.JFrame implements Runnable {
@@ -67,15 +68,16 @@ public class KayttoliittymaLoader extends javax.swing.JFrame implements Runnable
     }
 
     private void asetaAsetuksetTekstinPerusteellaJaLuoKayttoliittyma(String sisalto) throws HeadlessException {
-        //save virheellinen
         try {
             logiikka.getTilanne().asetaAsetukset(sisalto);
+            logiikka.getTilanne().setVaihe(2);
             Kayttoliittyma kl = new Kayttoliittyma(logiikka);
             SwingUtilities.invokeLater(kl);
 
             this.dispose();
         
         } catch (Exception ex) {
+            //save virheellinen
             JOptionPane.showMessageDialog(this, "Tiedosto ei ole kelvollinen.");
         }
     }

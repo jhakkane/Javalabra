@@ -19,7 +19,8 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 /**
- *
+ * Kuuntelija, joka avaa tiedostonvalitsimen, jolla pelaaja valitsee
+ * ladattavan tallennustiedoston.
  * @author jhakkane
  */
 public class LataaKuuntelija implements ActionListener {

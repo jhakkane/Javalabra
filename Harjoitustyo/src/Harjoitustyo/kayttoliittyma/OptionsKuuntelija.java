@@ -14,7 +14,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 /**
- *
+ * Kuuntelija, joka hoitaa asetusvalikon avaamisen pelin aikana.
  * @author JH
  */
 public class OptionsKuuntelija implements ActionListener {

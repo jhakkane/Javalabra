@@ -16,7 +16,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 
 /**
- *
+ * Kuuntelija, joka avaa tiedostonvalitsimen, jolla pelaaja voi tallentaa pelinsä.
  * @author JH
  */
 public class TallennaKuuntelija implements ActionListener {

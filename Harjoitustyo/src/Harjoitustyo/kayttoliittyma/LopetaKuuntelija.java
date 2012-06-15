@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 
 /**
- *
+ * Kuuntelija, joka hoitaa koko ohjelman suorituksen lopettamisen.
  * @author JH
  */
 public class LopetaKuuntelija implements ActionListener {

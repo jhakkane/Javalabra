@@ -18,6 +18,11 @@ public enum Op {
         this.txt=txt;
     }
 
+    /**
+     * Palauttaa tämän operaation String-muodossa. Plus-operaatio on
+     * +, miinus -, jako /, kerto * ja tyhjä operaatio N.
+     * @return 
+     */
     @Override
     public String toString() {
         return this.txt;

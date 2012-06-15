@@ -216,7 +216,7 @@ public class Options implements Runnable {
         frame = new JFrame("Asetukset");
         this.tilanne=tilanne;
         
-        frame.setPreferredSize(new Dimension(400,600));
+        frame.setPreferredSize(new Dimension(500,600));
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         
         luoKomponentit(frame.getContentPane());     

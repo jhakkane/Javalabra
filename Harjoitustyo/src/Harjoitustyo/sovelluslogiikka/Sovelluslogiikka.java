@@ -18,11 +18,20 @@ import java.util.logging.Logger;
 public class Sovelluslogiikka {
     
     /**
+     * Kuvaa tällä hetkellä vallitsevaa tilannetta pelissä, mm.
+     * asetuksia, pelaajalle näkyvää kysymystä ja oikeiden
+     * vastausten lukumäärää.
+     * 
      * Vaihe 1 = Käyttäjälle näkyy kysymys
      * Vaihe 2 = Käyttäjälle näkyy vastaus
      */
     private PeliTilanne tilanne;
     
+    /**
+     * Konstruktori, joka luo uuden pelin toimintaa ohjaavan
+     * Sovelluslogiikka-olion. Luo myös uuden pelin tilannetta
+     * kuvaavan PeliTilanne-olion.
+     */
     public Sovelluslogiikka() {
         tilanne=new PeliTilanne();
     }
@@ -51,6 +60,58 @@ public class Sovelluslogiikka {
             String output = tarkistaPelaajanVastaus(vastaus);
             return output;
         }
+    }
+
+    private void muutaAsetuksetTasopelissaKierros1() {
+        tilanne.setMiinus(true);
+    }
+
+    private void muutaAsetuksetTasopelissaKierros10() {
+        tilanne.setOpLkm(3);
+    }
+
+    private void muutaAsetuksetTasopelissaKierros11() {
+        tilanne.setSulkuja(true);
+    }
+
+    private void muutaAsetuksetTasopelissaKierros2() {
+        tilanne.setKerto(true);
+    }
+
+    private void muutaAsetuksetTasopelissaKierros3() {
+        tilanne.setOpLkm(3);
+    }
+
+    private void muutaAsetuksetTasopelissaKierros4() {
+        tilanne.setOpLkm(2);
+        tilanne.setMiinus(false);
+        tilanne.setPlus(false);
+        tilanne.setKerto(false);
+        tilanne.setJako(true);
+    }
+
+    private void muutaAsetuksetTasopelissaKierros5() {
+        tilanne.setMiinus(true);
+        tilanne.setPlus(true);
+        tilanne.setKerto(true);
+        tilanne.setMurtolukuja(true);
+    }
+
+    private void muutaAsetuksetTasopelissaKierros6() {
+        tilanne.setMurtolukuja(false);
+        tilanne.setNegatiivisia(true);
+    }
+
+    private void muutaAsetuksetTasopelissaKierros7() {
+        tilanne.setPotenssi(true);
+    }
+
+    private void muutaAsetuksetTasopelissaKierros8() {
+        tilanne.setMurtolukuja(true);
+    }
+
+    private void muutaAsetuksetTasopelissaKierros9() {
+        tilanne.setOpLkm(3);
     }
     
 
@@ -143,7 +204,7 @@ public class Sovelluslogiikka {
         if (tilanne.isTasopeli()) {
             oikeitaVastauksiaTallaKierroksella++;
 
-            if (oikeitaVastauksiaTallaKierroksella > Luokkakirjasto.OIKEITA_VASTAUKSIA_JOTTA_KIERROS_VAIHTUU_TASOPELISSA) {
+            if (oikeitaVastauksiaTallaKierroksella >= Luokkakirjasto.OIKEITA_VASTAUKSIA_JOTTA_KIERROS_VAIHTUU_TASOPELISSA) {
                 kierros++;
                 oikeitaVastauksiaTallaKierroksella=0;
                 vaihtuikoKierros = true;
@@ -166,35 +227,27 @@ public class Sovelluslogiikka {
         int kierros = tilanne.getKierros();
         
         if (kierros == 1) {
-            tilanne.setMiinus(true);
+            muutaAsetuksetTasopelissaKierros1();
         } else if (kierros == 2) {
-            tilanne.setKerto(true);
+            muutaAsetuksetTasopelissaKierros2();
         } else if (kierros == 3) {
-            tilanne.setOpLkm(3);
+            muutaAsetuksetTasopelissaKierros3();
         } else if (kierros == 4) {
-            tilanne.setOpLkm(2);
-            tilanne.setMiinus(false);
-            tilanne.setPlus(false);
-            tilanne.setKerto(false);
-            tilanne.setJako(true);
+            muutaAsetuksetTasopelissaKierros4();
         } else if (kierros == 5) {
-            tilanne.setMiinus(true);
-            tilanne.setPlus(true);
-            tilanne.setKerto(true);
-            tilanne.setMurtolukuja(true);
+            muutaAsetuksetTasopelissaKierros5();
         } else if (kierros == 6) {
-            tilanne.setMurtolukuja(false);
-            tilanne.setNegatiivisia(true);
+            muutaAsetuksetTasopelissaKierros6();
         } else if (kierros == 7) {
-            tilanne.setPotenssi(true);
+            muutaAsetuksetTasopelissaKierros7();
         } else if (kierros == 8) {
-            tilanne.setMurtolukuja(true);
+            muutaAsetuksetTasopelissaKierros8();
         } else if (kierros == 9) {
-            tilanne.setOpLkm(3);
+            muutaAsetuksetTasopelissaKierros9();
         } else if (kierros == 10) {
-            tilanne.setOpLkm(3);
+            muutaAsetuksetTasopelissaKierros10();
         } else if (kierros == 11) {
-            tilanne.setSulkuja(true);
+            muutaAsetuksetTasopelissaKierros11();
         }
         
     }
@@ -296,6 +349,11 @@ public class Sovelluslogiikka {
         return tilanne;
     }
 
+    /**
+     * Palauttaa tilanne-muuttujan sisältämän Kysymys-muuttujan
+     * eli tällä hetkellä aktiivisen Kysymyksen.
+     * @return 
+     */
     public Kysymys getKysymys() {
         return tilanne.getKysymys();
     }

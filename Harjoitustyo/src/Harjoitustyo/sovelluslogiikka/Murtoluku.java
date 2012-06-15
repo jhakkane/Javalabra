@@ -18,8 +18,8 @@ import java.util.ArrayList;
  */
 public class Murtoluku implements Laskettava {
     
-    private int osoittaja=1;
-    private int nimittaja=1;
+    private int osoittaja;
+    private int nimittaja;
 
     /**
      * Ainut tapa luoda murtoluku 0/0. Tarpeen vain erikoislukuna esim. Lausekkeessa,
@@ -48,10 +48,18 @@ public class Murtoluku implements Laskettava {
         if (nimittaja == 0) { nimittaja = 1; }
     }
 
+    /**
+     * Palauttaa Murtoluvun osoittajan.
+     * @return 
+     */
     public int getOsoittaja() {
         return osoittaja;
     }
 
+    /**
+     * Palauttaa Murtoluvun nimittäjän.
+     * @return 
+     */
     public int getNimittaja() {
         return nimittaja;
     }
@@ -66,6 +74,16 @@ public class Murtoluku implements Laskettava {
         if (nimittaja==0) {
             return true;
         }
+        return false;
+    }
+    
+    /**
+     * Rajapinnan vaatima metodi joka kertoo koostuuko tämä useammasta operandista.
+     * Murtoluku ei koskaan koostu useasta operandista.
+     * @return 
+     */
+    @Override
+    public boolean koostuuUseastaOperandista() {
         return false;
     }
     
@@ -297,10 +315,18 @@ public class Murtoluku implements Laskettava {
         return false;
     }
     
+    /**
+     * Asettaa nimittäjän parametrin mukaiseksi.
+     * @param nimittaja 
+     */
     public void setNimittaja(int nimittaja) {
         this.nimittaja = nimittaja;
     }
 
+    /**
+     * Asettaa osoittajan parametrin mukaiseksi.
+     * @param osoittaja 
+     */
     public void setOsoittaja(int osoittaja) {
         this.osoittaja = osoittaja;
     }
@@ -315,6 +341,12 @@ public class Murtoluku implements Laskettava {
         return false;
     }
 
+    /**
+     * Palauttaa Murtoluvun itsensä. Kertoo siis, mikä tämän Murtoluvun
+     * arvo on. Rajapinnan vaatima metodi, jota tarvitaan Lausekkeiden
+     * ratkaisussa.
+     * @return 
+     */
     @Override
     public Murtoluku lukuarvo() {
         return this;

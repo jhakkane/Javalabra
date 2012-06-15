@@ -5,7 +5,8 @@
 package Harjoitustyo.kayttoliittyma;
 
 /**
- *
+ * Asetusvalikko, joka näkyy pelaajalle, kun tasopeli on valittu.
+ * Ilmoittaa, että asetuksia ei voi säätää sillä tasopeli ei mahdollista sitä.
  * @author JH
  */
 public class OptionsTyhja extends javax.swing.JFrame implements Runnable {

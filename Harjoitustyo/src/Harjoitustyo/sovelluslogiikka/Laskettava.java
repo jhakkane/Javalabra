@@ -30,4 +30,11 @@ public interface Laskettava {
      * @return 
      */
     public boolean onKokonaisluku();
+    
+    /**
+     * Kertoo koostuuko Laskettava useasta operandista. Murtoluku ei koostu koskaan,
+     * Lauseke koostuu jos se sisältää monta lukua.
+     * @return 
+     */
+    public boolean koostuuUseastaOperandista();
 }

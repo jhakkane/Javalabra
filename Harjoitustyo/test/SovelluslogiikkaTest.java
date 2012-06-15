@@ -84,7 +84,7 @@ public class SovelluslogiikkaTest {
         }
         
         assertTrue(logiikka.etene(testivastaus).substring(0,15).equals(
-                Luokkakirjasto.kysymykseenAnnettuVaaranMuotoinenVastaus(logiikka.getTilanne()).substring(0,15)));
+                ilmoitus.substring(0,15)));
     }
     
     
@@ -127,14 +127,29 @@ public class SovelluslogiikkaTest {
         
         int alkuperainenKierros = logiikka.getTilanne().getKierros();
         
-        //Huom. vastauksia on kaksinkertainen määrä, koska kysymysten välissä tulee
-        //"oikein vastattu" ilmoitus, johon pitää vastata myös.
-        for (int i = 0; i <= Luokkakirjasto.OIKEITA_VASTAUKSIA_JOTTA_KIERROS_VAIHTUU_TASOPELISSA*2; i++) {
+        for (int i = 0; i <= Luokkakirjasto.OIKEITA_VASTAUKSIA_JOTTA_KIERROS_VAIHTUU_TASOPELISSA; i++) {
             logiikka.etene(""+logiikka.getTilanne().getKysymys().oikeaVastaus());
+            logiikka.etene(""); //ohitetaan vastausviesti
         }
         
         assertTrue(logiikka.getTilanne().getKierros() > alkuperainenKierros);
         
+    }
+    
+    @Test
+    public void tasoPeliMuuttaaAsetuksetKutenPitaa() {
+        logiikka.getTilanne().setTasopeli(true);
+        logiikka.etene(""); //luo ensimmäisen kysymyksen
+        
+        for (int i = 0; i <= Luokkakirjasto.OIKEITA_VASTAUKSIA_JOTTA_KIERROS_VAIHTUU_TASOPELISSA*11; i++) {
+            logiikka.etene(""+logiikka.getTilanne().getKysymys().oikeaVastaus());
+            logiikka.etene(""); //ohitetaan vastausviesti
+        }
+        
+        //11. kierroksela pitäisi olla 3 operandia ja kaikki asetukset päällä (huom. aloitetaan kierroksesta 0)
+        assertTrue(logiikka.getTilanne().isSulkuja() 
+                && logiikka.getTilanne().isPotenssi()
+                && logiikka.getTilanne().getOpLkm()==3);
     }
     
     @Test
