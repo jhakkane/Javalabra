@@ -22,6 +22,7 @@ public class Lauseke implements Laskettava {
 
     private final Murtoluku POISTETTU = new Murtoluku();
     private final Murtoluku NOLLA = new Murtoluku(0, 1);
+    
     private Laskettava[] operandit = null; //sisältää siis sekä Lukuja että Lausekkeita
     private Op[] operaattorit = null;
     private int eksponentti = 1;
@@ -131,6 +132,12 @@ public class Lauseke implements Laskettava {
         potenssi = tilanne.isPotenssi();
     }
 
+    
+    /**
+     * Kertoo kuvaako tämä Lauseke yhden ainoan kokonaisluvun. Näin on
+     * mikäli Lauseke koostuu yhdestä kokonaislukuoperandista.
+     * @return 
+     */
     @Override
     public boolean onKokonaisluku() {
         if (operandit.length==1) {
@@ -591,7 +598,13 @@ public class Lauseke implements Laskettava {
             }
         }
     }
-
+    
+    /**
+     * Palauttaa operanditaulukon koon Lausekkeessa. Lukuja laskutoimituksessa
+     * voi olla huomattavasti enemmän, sillä operandit saattavat olla itsekin
+     * Lausekkeita jotka sisältävät Murtolukuja ja Lausekkeita.
+     * @return 
+     */
     public int operandienMaara() {
         if (operandit == null) {
             return 1;

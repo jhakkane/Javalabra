@@ -13,117 +13,248 @@ import java.util.ArrayList;
  */
 public class PeliTilanne {
 
-    private String nimi="Anonyymi";
-    private int vastattuja=0;
-    private int oikeitaVastauksia=0;
-    private int opLkm = Luokkakirjasto.PELITILANNE_OLETUS_OPERANDIEN_LKM;
-    private int operandMax = Luokkakirjasto.PELITILANNE_OLETUS_OPERANDIN_KOKO;
-    private boolean sulkuja=false;
-    private boolean plus=true;
-    private boolean miinus=false;
-    private boolean kerto=false;
-    private boolean jako=false;
-    private boolean murtolukuja=false;
-    private boolean negatiivisia=false;
-    private boolean tasopeli=false;
-    private boolean potenssi=false;
+    private String nimi;
+    private int vastattuja;
+    private int oikeitaVastauksia;
+    private int opLkm;
+    private int operandMax;
+    private boolean sulkuja;
+    private boolean plus;
+    private boolean miinus;
+    private boolean kerto;
+    private boolean jako;
+    private boolean murtolukuja;
+    private boolean negatiivisia;
+    private boolean tasopeli;
+    private boolean potenssi;
     private int oikeitaVastauksiaTallaKierroksella;
-    private int kierros=0;
-    private int vaihe=2;
-    private Kysymys kysymys=null;
+    private int kierros;
+    private int vaihe;
+    private Kysymys kysymys;;
 
+    /**
+     * Luo PeliTilanne-muuttujan ja alustaa sen arvot oletusasetuksiksi.
+     */
+    public PeliTilanne() {
+        nimi="Anonyymi";
+        vastattuja=0;
+        oikeitaVastauksia=0;
+        opLkm = Luokkakirjasto.PELITILANNE_OLETUS_OPERANDIEN_LKM;
+        operandMax = Luokkakirjasto.PELITILANNE_OLETUS_OPERANDIN_KOKO;
+        sulkuja=false;
+        plus=true;
+        miinus=false;
+        kerto=false;
+        jako=false;
+        murtolukuja=false;
+        negatiivisia=false;
+        tasopeli=false;
+        potenssi=false;
+        oikeitaVastauksiaTallaKierroksella=0;
+        kierros=0;
+        vaihe=2;
+    }
+    
+    /**
+     * Palauttaa tämänhetkisen Kysymyksen, jota pelaajalta kysytään.
+     * @return 
+     */
     public Kysymys getKysymys() {
         return kysymys;
     }
 
+    /**
+     * Asettaa kysymyksen, jota pelaajalta kysytään.
+     * @param kysymys 
+     */
     public void setKysymys(Kysymys kysymys) {
         this.kysymys = kysymys;
     }
     
+    /**
+     * Palauttaa suurimman mahdollisen laskuissa esiintyvän operandin koon.
+     * @return 
+     */
     public int getOperandMax() {
         return operandMax;
     }
 
+    /**
+     * Palauttaa pelin vaiheen. 
+     * 1 = Käyttäjälle näkyy kysymys
+     * 2 = Käyttäjälle näkyy vastaus
+     * @return 
+     */
     public int getVaihe() {
         return vaihe;
     }
 
+    /**
+     * Asettaa pelin vaiheen.
+     * 1 = Käyttäjälle näkyy kysymys
+     * 2 = Käyttäjälle näkyy vastaus
+     * @param vaihe 
+     */
     public void setVaihe(int vaihe) {
         this.vaihe = vaihe;
     }
 
+    /**
+     * Asettaa suurimman mahdollisen laskuissa esiintyvän operandin koon.
+     * @return 
+     */
     public void setOperandMax(int operandMax) {
         this.operandMax = operandMax;
     }
     
+    /**
+     * Kertoo sallitaanko laskuissa jakolaskuja.
+     * @return 
+     */
     public boolean isJako() {
         return jako;
     }
-
+    
+    /**
+     * Asettaa pelin joko tasopelitilaan tai pois siitä.
+     * Tasopeli tarkoittaa, että pelaaja ei voi säätää asetuksia itse,
+     * vaan että peli itse muuttaa asetuksia pelaajan etenemisen mukaan.
+     * @param tasopeli 
+     */
     public void setTasopeli(boolean tasopeli) {
         this.tasopeli = tasopeli;
     }
 
+    /**
+     * Kertoo, onko peli tasopelissä vai ei.
+     * Tasopeli tarkoittaa, että pelaaja ei voi säätää asetuksia itse,
+     * vaan että peli itse muuttaa asetuksia pelaajan etenemisen mukaan.
+     * @param tasopeli 
+     */
     public boolean isTasopeli() {
         return tasopeli;
     }
 
+    /**
+     * Kertoo sallitaanko laskuissa kertolaskuja.
+     * @return 
+     */
     public boolean isKerto() {
         return kerto;
     }
 
+    /**
+     * Kertoo sallitaanko laskuissa murtolukuja.
+     * @param murtolukuja 
+     */
     public void setMurtolukuja(boolean murtolukuja) {
         this.murtolukuja = murtolukuja;
     }
 
+    /**
+     * Asettaa menossa olevan kierroksen tasopelissä. Tällä asetuksella
+     * on merkitystä vain tasopelissä. Asetukset riippuvat kierroksesta.
+     * @param kierros 
+     */
     public void setKierros(int kierros) {
         this.kierros = kierros;
     }
 
+    /**
+     * Kertoo sallitaanko laskuissa potenssilaskuja.
+     * @return 
+     */
     public boolean isPotenssi() {
         return potenssi;
     }
 
+    /**
+     * Asettaa potenssilaskut päälle tai pois laskuista.
+     * @param potenssi 
+     */
     public void setPotenssi(boolean potenssi) {
         this.potenssi = potenssi;
     }
 
+    /**
+     * Kertoo menossa olevan kierroksen tasopelissä. Tällä asetuksella
+     * on merkitystä vain tasopelissä. Asetukset riippuvat kierroksesta.
+     * @return 
+     */
     public int getKierros() {
         return kierros;
     }
 
+    /**
+     * Asettaa muuttujan, joka kertoo kuinka monta oikeaa vastausta tällä kierroksella
+     * on annettu. Tällä asetuksella on merkitystä vain tasopelissä.
+     * @param oikeitaVastauksiaTallaKierroksella 
+     */
     public void setOikeitaVastauksiaTallaKierroksella(int oikeitaVastauksiaTallaKierroksella) {
         this.oikeitaVastauksiaTallaKierroksella = oikeitaVastauksiaTallaKierroksella;
     }
 
+    /**
+     * Palauttaa muuttujan, joka kertoo kuinka monta oikeaa vastausta tällä kierroksella
+     * on annettu. Tällä asetuksella on merkitystä vain tasopelissä.
+     * @param oikeitaVastauksiaTallaKierroksella 
+     */
     public int getOikeitaVastauksiaTallaKierroksella() {
         return oikeitaVastauksiaTallaKierroksella;
     }
 
+    /**
+     * Kertoo sallitaanko laskuissa murtolukuja.
+     * @return 
+     */
     public boolean isMurtolukuja() {
         return murtolukuja;
     }
 
+    /**
+     * Kertoo sallitaanko laskuissa vähennyslaskuja.
+     * @return 
+     */
     public boolean isMiinus() {
         return miinus;
     }
 
+    /**
+     * Kertoo sallitaanko laskuissa yhteenlaskuja.
+     * @return 
+     */
     public boolean isPlus() {
         return plus;
     }
 
+    /**
+     * Asettaa yhteenlaskut päälle tai pois laskuista.
+     * @param plus 
+     */
     public void setPlus(boolean plus) {
         this.plus = plus;
     }
 
+    /**
+     * Asettaa vähennyslaksut päälle tai pois laskuista.
+     * @param miinus 
+     */
     public void setMiinus(boolean miinus) {
         this.miinus = miinus;
     }
 
+    /**
+     * Asettaa kertolaskut päälle tai pois laskuista.
+     * @param kerto 
+     */
     public void setKerto(boolean kerto) {
         this.kerto = kerto;
     }
 
+    /**
+     * Asettaa jakolaskut päälle tai pois laskuista.
+     * @param jako 
+     */
     public void setJako(boolean jako) {
         this.jako = jako;
     }
@@ -287,14 +418,25 @@ public class PeliTilanne {
     }
     
     
+    /**
+     * Palauttaa operandien lukumäärän laskuissa.
+     * @return 
+     */
     public int getOpLkm() {
         return opLkm;
     }
 
+    /**
+     * Asettaa negatiiviset luvut päälle tai pois laskuista.
+     */
     public void setNegatiivisia(boolean negatiivisia) {
         this.negatiivisia = negatiivisia;
     }
 
+    /**
+     * Kertoo, sallitaanko laskuissa negatiivisia lukuja.
+     * @return 
+     */
     public boolean isNegatiivisia() {
         return negatiivisia;
     }
@@ -311,10 +453,17 @@ public class PeliTilanne {
         vastattuja++;
     }
 
+    /**
+     * Kertoo kuinka monta kysymystä pelaajalta on kysytty tähän mennessä.
+     * @return 
+     */
     public int getKysyttyja() {
         return vastattuja;
     }
 
+    /**
+     * Kertoo kuinka monta oikeaa vastausta pelaaja on antanut tähän mennessä.
+     */
     public int getOikeitaVastauksia() {
         return oikeitaVastauksia;
     }
@@ -331,6 +480,11 @@ public class PeliTilanne {
         return (int)Math.floor((1.0*oikeitaVastauksia)/(1.0*vastattuja)*100.0);
     }
     
+    /**
+     * Asettaa operandien lukumäärän laskutoimituksissa. Jos yritetään antaa
+     * alle 2 operandia, muuttaa operandien lukumäärä kahdeksi.
+     * @param opLkm 
+     */
     public void setOpLkm(int opLkm) {
         this.opLkm = opLkm;
         
@@ -339,18 +493,37 @@ public class PeliTilanne {
         }
     }
 
+    /**
+     * Kertoo sallitaanko laskutoimituksissa sulkuja. Huom. negatiiviset luvut
+     * ja murtolukujen potenssilaskut merkitään suluilla riippumatta tästä
+     * asetuksesta.
+     * @return 
+     */
     public boolean isSulkuja() {
         return sulkuja;
     }
 
+    /**
+     * Palauttaa pelaajan nimen.
+     * @return 
+     */
     public String getNimi() {
         return nimi;
     }
 
+    /**
+     * Asettaa pelaajan nimen.
+     * @param nimi 
+     */
     public void setNimi(String nimi) {
         this.nimi = nimi;
     }
     
+    /**
+     * Asettaa asetuksen, joka määrää sallitaanko sulkuja
+     * laskutoimituksissa vai ei.
+     * @param sulkuja 
+     */
     public void setSulkuja(boolean sulkuja) {
         this.sulkuja = sulkuja;
     }
