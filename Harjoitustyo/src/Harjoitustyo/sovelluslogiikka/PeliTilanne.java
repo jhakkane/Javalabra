@@ -197,7 +197,7 @@ public class PeliTilanne {
     /**
      * Palauttaa muuttujan, joka kertoo kuinka monta oikeaa vastausta tällä kierroksella
      * on annettu. Tällä asetuksella on merkitystä vain tasopelissä.
-     * @param oikeitaVastauksiaTallaKierroksella 
+     * @return 
      */
     public int getOikeitaVastauksiaTallaKierroksella() {
         return oikeitaVastauksiaTallaKierroksella;
