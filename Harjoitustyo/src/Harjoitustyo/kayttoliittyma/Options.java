@@ -251,7 +251,7 @@ public class Options implements Runnable {
     }
 
     private void luoOpMaxKokoKysymysJaTeksti() {
-        teksti9 = new JLabel("Itseisarvoltaan suurin luku, joka saa esiintyä laskutoimituksessa?");
+        teksti9 = new JLabel("Itseisarvoltaan suurin luku, joka saa esiintyä kysymyksessä?");
         kokoField = new JTextField();
         kokoField.setText(""+tilanne.getOperandMax());
         this.frame.add(teksti9);

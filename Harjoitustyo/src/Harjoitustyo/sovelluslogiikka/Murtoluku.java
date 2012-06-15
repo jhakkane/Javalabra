@@ -263,8 +263,7 @@ public class Murtoluku implements Laskettava {
             }
             
             if (onSekaluku()) {        
-                teksti=sekalukuna()[0]+" "+sekalukuna()[1]
-                    +"/"+sekalukuna()[2];
+                teksti = toStringKasitteleSekaluku();
             }
             
             if (onMurtoluku()) {
@@ -272,6 +271,24 @@ public class Murtoluku implements Laskettava {
             }
         }
         
+        return teksti;
+    }
+
+    /**
+     * Hoitaa toStringin, kun Murtoluku on sekaluku. Ottaa huomioon, että
+     * pelin mukaan -3/2 = -1 -1/2, mutta ilmoittaa tällaiset luvut
+     * muodossa -1 1/2.
+     * @return 
+     */
+    private String toStringKasitteleSekaluku() {
+        String teksti;
+        if (sekalukuna()[0] < 0) {
+            teksti=sekalukuna()[0]+" "+sekalukuna()[1]*(-1)
+                +"/"+sekalukuna()[2];                            
+        } else {
+            teksti=sekalukuna()[0]+" "+sekalukuna()[1]
+                +"/"+sekalukuna()[2];                    
+        }
         return teksti;
     }
 
@@ -298,7 +315,7 @@ public class Murtoluku implements Laskettava {
      * @return 
      */
     public boolean onSekaluku() {
-        if (osoittaja > nimittaja && !onKokonaisluku()) {
+        if (Math.abs(osoittaja) > Math.abs(nimittaja) && !onKokonaisluku()) {
             return true;
         }
         return false;

@@ -143,6 +143,7 @@ public class SovelluslogiikkaTest {
         
         for (int i = 0; i <= Luokkakirjasto.OIKEITA_VASTAUKSIA_JOTTA_KIERROS_VAIHTUU_TASOPELISSA*11; i++) {
             logiikka.etene(""+logiikka.getTilanne().getKysymys().oikeaVastaus());
+            
             logiikka.etene(""); //ohitetaan vastausviesti
         }
         
@@ -161,6 +162,5 @@ public class SovelluslogiikkaTest {
         
         assertTrue(logiikka.getTilanne().getOikeitaVastauksia()==9);
     }
-    
-    
+   
 }

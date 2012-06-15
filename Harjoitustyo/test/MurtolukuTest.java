@@ -94,6 +94,13 @@ public class MurtolukuTest {
     }
     
     @Test
+    public void samaLukuToimii2() {
+        l1 = new Murtoluku(-1,2);
+        l2 = new Murtoluku(-2,4);
+        assertTrue(l1.samaLuku(l2));
+    }
+    
+    @Test
     public void toStringToimii() {
         assertTrue(l1.toString().equals("3/6"));
     }

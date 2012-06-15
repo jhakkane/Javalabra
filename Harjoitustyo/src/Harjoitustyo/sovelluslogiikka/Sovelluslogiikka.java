@@ -299,7 +299,9 @@ public class Sovelluslogiikka {
     
     /**
      * Käsittelee String-taulukon, joka sisältää kolme kokonaislukua
-     * ja tekee niistä Murtoluvun.
+     * ja tekee niistä Murtoluvun. Jos kokonaisosa on negatiivinen, myös
+     * osoittaja on negatiivinen. Siis -1 1/2 = -3/2. Ohjelma ymmärtää tämän, mutta
+     * toisaalta testeissä ohjelma itse merkitsee -3/2 = -1 -1/2. Myös tämä otetaan huomioon.
      * @param vastauksenOsat
      * @return 
      */
@@ -308,6 +310,10 @@ public class Sovelluslogiikka {
         int vastausNimittaja = Integer.parseInt(vastauksenOsat[2]);            
         int vastausOsoittaja = Integer.parseInt(vastauksenOsat[1]);
        
+        if (vastausKokonaisluku < 0 && vastausOsoittaja > 0) {
+            vastausOsoittaja = -vastausOsoittaja;
+        }
+        
         int nimittaja = vastausNimittaja;
         int osoittaja = vastausOsoittaja+vastausKokonaisluku*vastausNimittaja;
         
